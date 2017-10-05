@@ -10,8 +10,8 @@ namespace Explorer {
 	protected:
 		std::wstring _msg;
 	public:
-		virtual Exception();
-		virtual Exception(std::wstring msg);
+		Exception();
+		Exception(std::wstring msg);
 
 		void showMsg();
 	};

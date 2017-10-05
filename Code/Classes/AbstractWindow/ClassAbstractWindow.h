@@ -10,8 +10,8 @@
 #include "..\Exceptions\ClassWindowException\ClassWindowException.h"
 #include "..\Exceptions\ClassWindowClassException\ClassWindowClassException.h"
 
-#ifndef _CLASS_MAIN_WINDOW_H_
-#define _CLASS_MAIN_WINDOW_H_
+#ifndef _CLASS_WINDOW_H_
+#define _CLASS_WINDOW_H_
 
 namespace Explorer {
 
@@ -76,10 +76,10 @@ namespace Explorer {
 
 	private:
 		bool m_create();
-		bool m_create(Window& parent, int id);
 		bool m_createWindow();
-		bool m_createWindow(Window& parent, int id);
 	};
+
+	std::map<HWND, std::shared_ptr<Window>> Window::s_windowsMap;
 }
 
 #endif

@@ -1,13 +1,13 @@
 #pragma once
 
-#include <Windows.h>
+#include "..\AbstractWindow\ClassAbstractWindow.h"
 
 #ifndef _CLASS_MAIN_WINDOW_H_
 #define _CLASS_MAIN_WINDOW_H_
 
 namespace Explorer {
 
-	class MainWindow {
+	class MainWindow : public Window {
 	private:
 		int _width, _hieght;
 

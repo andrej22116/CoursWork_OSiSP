@@ -3,23 +3,32 @@
 namespace Explorer {
 	Window::Window(int pos_x, int pos_y) :
 		_windowName(L"Window"),
+		_pos_x(pos_x),
+		_pos_y(pos_y),
 		_width(800),
 		_hieght(600)
 	{
+		registerHendler(WM_DESTROY, std::bind(&Window::closeWindow, this, (HWND)1, (WPARAM)2, (LPARAM)3));
 		m_create();
 	}
-	Window::Window(int pos_x, int pos_y, int width, int hieght, bool show = true) :
+	Window::Window(int pos_x, int pos_y, int width, int hieght, bool show) :
 		_windowName(L"Window"),
+		_pos_x(pos_x),
+		_pos_y(pos_y),
 		_width(width),
 		_hieght(hieght)
 	{
+		registerHendler(WM_DESTROY, std::bind(&Window::closeWindow, this, (HWND)1, (WPARAM)2, (LPARAM)3));
 		m_create();
 	}
-	Window::Window(std::wstring name, int pos_x, int pos_y, int width, int hieght, bool show = true) :
+	Window::Window(std::wstring name, int pos_x, int pos_y, int width, int hieght, bool show) :
 		_windowName(name.c_str()),
+		_pos_x(pos_x),
+		_pos_y(pos_y),
 		_width(width),
 		_hieght(hieght)
 	{
+		registerHendler(WM_DESTROY, std::bind(&Window::closeWindow, this, (HWND)1, (WPARAM)2, (LPARAM)3));
 		m_create();
 	}
 
@@ -55,6 +64,7 @@ namespace Explorer {
 	HRESULT Window::closeWindow(HWND hWnd, WPARAM wParam, LPARAM lParam)
 	{
 		s_windowsMap.erase(hWnd);
+		return 0;
 	}
 
 	HRESULT CALLBACK Window::WndProc(HWND hWnd, int msg, WPARAM wParam, LPARAM lParam)
@@ -75,10 +85,13 @@ namespace Explorer {
 		}
 		catch (WindowClassException ex) {
 			ex.showMsg();
+			return false;
 		}
 		catch (WindowException ex) {
 			ex.showMsg();
+			return false;
 		}
+		return true;
 	}
 
 	bool Window::m_createWindow()
