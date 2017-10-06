@@ -1,35 +1,44 @@
 #include "ClassAbstractWindow.h"
 
 namespace Explorer {
+	std::map<HWND, Window*> Window::s_windowsMap;
+	std::wstring Window::_className = L"Explorer";
+
 	Window::Window(int pos_x, int pos_y) :
-		_windowName(L"Window"),
 		_pos_x(pos_x),
 		_pos_y(pos_y),
 		_width(800),
 		_hieght(600)
 	{
+		_windowName = L"Window";
 		registerHendler(WM_DESTROY, std::bind(&Window::closeWindow, this, (HWND)1, (WPARAM)2, (LPARAM)3));
 		m_create();
+		UpdateWindow(_hWnd);
+		ShowWindow(_hWnd, SW_SHOW);
 	}
 	Window::Window(int pos_x, int pos_y, int width, int hieght, bool show) :
-		_windowName(L"Window"),
 		_pos_x(pos_x),
 		_pos_y(pos_y),
 		_width(width),
 		_hieght(hieght)
 	{
+		_windowName = L"Window";
 		registerHendler(WM_DESTROY, std::bind(&Window::closeWindow, this, (HWND)1, (WPARAM)2, (LPARAM)3));
 		m_create();
+		UpdateWindow(_hWnd);
+		ShowWindow(_hWnd, (show ? SW_SHOW : SW_HIDE));
 	}
 	Window::Window(std::wstring name, int pos_x, int pos_y, int width, int hieght, bool show) :
-		_windowName(name.c_str()),
 		_pos_x(pos_x),
 		_pos_y(pos_y),
 		_width(width),
 		_hieght(hieght)
 	{
+		_windowName = name;
 		registerHendler(WM_DESTROY, std::bind(&Window::closeWindow, this, (HWND)1, (WPARAM)2, (LPARAM)3));
 		m_create();
+		UpdateWindow(_hWnd);
+		ShowWindow(_hWnd, (show ? SW_SHOW : SW_HIDE));
 	}
 
 	int Window::getWidth() const { return _width; }
@@ -61,18 +70,26 @@ namespace Explorer {
 	}
 
 
-	HRESULT Window::closeWindow(HWND hWnd, WPARAM wParam, LPARAM lParam)
+	LRESULT Window::closeWindow(HWND hWnd, WPARAM wParam, LPARAM lParam)
 	{
-		s_windowsMap.erase(hWnd);
+		s_windowsMap.erase(_hWnd);
+		if (s_windowsMap.size() == 0) {
+			PostQuitMessage(0);
+		}
 		return 0;
 	}
 
-	HRESULT CALLBACK Window::WndProc(HWND hWnd, int msg, WPARAM wParam, LPARAM lParam)
+	LRESULT CALLBACK Window::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	{
-		return s_windowsMap[hWnd]->_handlersMap[msg](hWnd, wParam, lParam);
+		if (s_windowsMap.find(hWnd) != s_windowsMap.end()) {
+			if (s_windowsMap[hWnd]->_handlersMap.find(msg) != s_windowsMap[hWnd]->_handlersMap.end()) {
+				return s_windowsMap[hWnd]->_handlersMap[msg](hWnd, wParam, lParam);
+			}
+		}
+		return DefWindowProc(hWnd, msg, wParam, lParam);
 	}
 
-	void Window::registerHendler(int message, std::function<HRESULT(HWND, WPARAM, LPARAM)> handler)
+	void Window::registerHendler(int message, std::function<LRESULT(HWND, WPARAM, LPARAM)> handler)
 	{
 		_handlersMap.insert(std::pair<int, std::function<HRESULT(HWND, WPARAM, LPARAM)>>(message, handler));
 	}
@@ -90,6 +107,9 @@ namespace Explorer {
 		catch (WindowException ex) {
 			ex.showMsg();
 			return false;
+		}
+		catch (...) {
+
 		}
 		return true;
 	}
@@ -113,5 +133,36 @@ namespace Explorer {
 		if (!_hWnd) {
 			throw WindowException(L"Create Window " + _windowName + L" error!");
 		}
+
+		s_windowsMap.insert(std::pair<HWND, Window*>(_hWnd, this));
+		return true;
+	}
+
+
+
+
+	ATOM Window::m_registerClass() {
+		WNDCLASS wndclass;
+		if (GetClassInfo(GetModuleHandle(0), _className.c_str(), &wndclass)) {
+			return 1;
+		}
+
+		_WndClass.cbSize = sizeof(_WndClass);
+		_WndClass.style = 0;
+		_WndClass.lpfnWndProc = WndProc;
+		_WndClass.cbClsExtra = 0;
+		_WndClass.cbWndExtra = 0;
+		_WndClass.hInstance = GetModuleHandle(NULL);
+		_WndClass.hIcon = LoadIcon(NULL, IDI_APPLICATION);
+		_WndClass.hCursor = LoadCursor(NULL, IDC_ARROW);
+		_WndClass.hbrBackground = (HBRUSH)GetStockObject(0);
+		_WndClass.lpszMenuName = NULL;
+		_WndClass.lpszClassName = _className.c_str();
+		_WndClass.hIconSm = LoadIcon(NULL, IDI_APPLICATION);
+
+		if (!RegisterClassEx(&_WndClass)) {
+			throw WindowClassException();
+		}
+		return 1;
 	}
 }

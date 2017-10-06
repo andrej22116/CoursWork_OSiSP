@@ -17,18 +17,19 @@ namespace Explorer {
 
 	class Window {
 	private:
-		static std::map<HWND, std::shared_ptr<Window>> s_windowsMap;
+		static std::map<HWND, Window*> s_windowsMap;
+		static std::wstring _className;
 
-		std::map<int, std::function<HRESULT(HWND, WPARAM, LPARAM)>> _handlersMap;
-
-		WNDCLASSEX _WndClass;
-		std::wstring _className;
-		std::wstring _windowName;
+		std::map<int, std::function<LRESULT(HWND, WPARAM, LPARAM)>> _handlersMap;
 
 		int _width, _hieght;
 		int _pos_x, _pos_y;
 		HWND _hWnd;
 		HDC _hDC;
+
+	protected:
+		WNDCLASSEX _WndClass;
+		std::wstring _windowName;
 
 	public:
 		Window(int pos_x, int pos_y);
@@ -53,33 +54,31 @@ namespace Explorer {
 		void showWindow(bool show);
 
 
-		HRESULT closeWindow(HWND hWnd, WPARAM wParam, LPARAM lParam);
+		LRESULT closeWindow(HWND hWnd, WPARAM wParam, LPARAM lParam);
 
 		/*
 		 *	Send message to all windows!
 		 */
-		static HRESULT CALLBACK WndProc(HWND hWnd, int msg, WPARAM wParam, LPARAM lParam);
+		static LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
-	protected:
+	public:
 		/*
 		 *	Send std::bind(&YourWindow::hendler, this, ...);
 		 *	"YourWindow "- child class Window;
 		 *	"this" - your object;
 		 *	"..." - params;
 		 */
-		void registerHendler(int message, std::function<HRESULT(HWND, WPARAM, LPARAM)>);
+		void registerHendler(int message, std::function<LRESULT(HWND, WPARAM, LPARAM)>);
 		/*
 		 *	You should release this method in your class!
 		 *	This method registering your window class.
 		 */
-		virtual ATOM m_registerClass() = 0;
+		virtual ATOM m_registerClass();
 
 	private:
 		bool m_create();
 		bool m_createWindow();
 	};
-
-	std::map<HWND, std::shared_ptr<Window>> Window::s_windowsMap;
 }
 
 #endif

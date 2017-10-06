@@ -8,14 +8,14 @@
 namespace Explorer {
 
 	class MainWindow : public Window {
-	private:
-		int _width, _hieght;
-
 	public:
-		MainWindow();
-		MainWindow(int width, int hieght);
+		MainWindow::MainWindow(int pos_x, int pos_y);
+		MainWindow::MainWindow(int pos_x, int pos_y, int width, int hieght, bool show);
+		MainWindow::MainWindow(std::wstring name, int pos_x, int pos_y, int width, int hieght, bool show);
 
-		static LRESULT WndProc(HWND hWnd, int msg, WPARAM wParam, LPARAM lParam);
+		void registerWindowHandlers();
+
+		LRESULT createHandler(HWND hWnd, WPARAM wParam, LPARAM lParam);
 	};
 }
 
