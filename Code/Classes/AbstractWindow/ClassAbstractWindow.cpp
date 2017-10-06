@@ -40,6 +40,14 @@ namespace Explorer {
 		UpdateWindow(_hWnd);
 		ShowWindow(_hWnd, (show ? SW_SHOW : SW_HIDE));
 	}
+	Window::~Window()
+	{
+		s_windowsMap.erase(_hWnd);
+		DestroyWindow(_hWnd);
+		if (s_windowsMap.size() == 0) {
+			PostQuitMessage(0);
+		}
+	}
 
 	int Window::getWidth() const { return _width; }
 	int Window::getHieght() const { return _hieght; }
@@ -94,11 +102,11 @@ namespace Explorer {
 		_handlersMap.insert(std::pair<int, std::function<HRESULT(HWND, WPARAM, LPARAM)>>(message, handler));
 	}
 
-	bool Window::m_create()
+	bool Window::m_create(Window* parent)
 	{
 		try {
 			m_registerClass();
-			m_createWindow();
+			m_createWindow(parent);
 		}
 		catch (WindowClassException ex) {
 			ex.showMsg();
@@ -114,7 +122,7 @@ namespace Explorer {
 		return true;
 	}
 
-	bool Window::m_createWindow()
+	bool Window::m_createWindow(Window* parent)
 	{
 		_hWnd = CreateWindow(
 			_className.c_str(),
@@ -124,7 +132,7 @@ namespace Explorer {
 			_pos_y,
 			_width,
 			_hieght,
-			nullptr,
+			((parent) ? (parent->getHWND()) : (nullptr)),
 			nullptr,
 			GetModuleHandle(0),
 			nullptr
@@ -137,9 +145,6 @@ namespace Explorer {
 		s_windowsMap.insert(std::pair<HWND, Window*>(_hWnd, this));
 		return true;
 	}
-
-
-
 
 	ATOM Window::m_registerClass() {
 		WNDCLASS wndclass;

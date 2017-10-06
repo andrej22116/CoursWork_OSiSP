@@ -2,7 +2,7 @@
 
 #include <Windows.h>
 #include <map>
-#include <set>
+#include <list>
 #include <string>
 #include <memory>
 #include <functional>
@@ -31,10 +31,18 @@ namespace Explorer {
 		WNDCLASSEX _WndClass;
 		std::wstring _windowName;
 
+		Window* _parent;
+		std::list<Window*> _childList;
+
 	public:
 		Window(int pos_x, int pos_y);
 		Window(int pos_x, int pos_y, int width, int hieght, bool show = true);
 		Window(std::wstring name, int pos_x, int pos_y, int width, int hieght, bool show = true);
+		~Window();
+
+		bool create(int pos_x, int pos_y, int width, int hieght, bool show = true);
+		bool create(std::wstring name, int pos_x, int pos_y, int width, int hieght, bool show = true);
+		bool create(std::wstring name, Window& parent, int pos_x, int pos_y, int width, int hieght, bool show = true);
 
 		int getWidth() const;
 		int getHieght() const;
@@ -61,7 +69,7 @@ namespace Explorer {
 		 */
 		static LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
-	public:
+	protected:
 		/*
 		 *	Send std::bind(&YourWindow::hendler, this, ...);
 		 *	"YourWindow "- child class Window;
@@ -69,15 +77,13 @@ namespace Explorer {
 		 *	"..." - params;
 		 */
 		void registerHendler(int message, std::function<LRESULT(HWND, WPARAM, LPARAM)>);
-		/*
-		 *	You should release this method in your class!
-		 *	This method registering your window class.
-		 */
-		virtual ATOM m_registerClass();
-
+		void addChildWindow(Window* child);
+		void removeChildWindow(Window* child);
+	
 	private:
-		bool m_create();
-		bool m_createWindow();
+		ATOM m_registerClass();
+		bool m_create(Window* parent = nullptr);
+		bool m_createWindow(Window* parent = nullptr);
 	};
 }
 

@@ -4,8 +4,7 @@
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR kek, int show)
 {
 	Explorer::MainWindow window(0,0);
-	Explorer::MainWindow window_2(L"Pizda", 100, 100, 100, 100, true);
-	MessageBoxW(0, L"=PisosPro=", L"KEK", MB_OK | MB_ICONASTERISK);
+	Explorer::MainWindow window_2(L"Pizda", 100, 100, 200, 200, true);
 
 
 	MSG msg;
