@@ -3,11 +3,11 @@
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR kek, int show)
 {
-	Explorer::MainWindow window;
+	explorer::MainWindow window;
 	window.create(L"Suka", 100, 100, 300, 300, true);
 
-	Explorer::MainWindow window_2;
+	explorer::MainWindow window_2;
 	window_2.create(L"Pizda", window, 0, 0, 200, 200, true);
 
-	return Explorer::Window::workWidthMessages();
+	return explorer::Window::workWidthMessages();
 }

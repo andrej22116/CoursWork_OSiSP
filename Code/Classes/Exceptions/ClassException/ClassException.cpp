@@ -1,6 +1,6 @@
 #include "ClassException.h"
 
-namespace Explorer {
+namespace explorer {
 	Exception::Exception()
 	{
 		_msg = L"Exception!";

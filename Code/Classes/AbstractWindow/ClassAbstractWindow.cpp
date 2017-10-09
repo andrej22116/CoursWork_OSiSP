@@ -1,6 +1,6 @@
 #include "ClassAbstractWindow.h"
 
-namespace Explorer {
+namespace explorer {
 	std::map<HWND, Window*> Window::s_windowsMap;
 	std::wstring Window::_className = L"Explorer";
 
@@ -204,6 +204,7 @@ namespace Explorer {
 		}
 
 		s_windowsMap.insert(std::pair<HWND, Window*>(_hWnd, this));
+		SendMessage(_hWnd, WM_CREATE, 0, 0);
 		return true;
 	}
 

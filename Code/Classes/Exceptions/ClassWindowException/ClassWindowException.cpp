@@ -1,6 +1,6 @@
 #include "ClassWindowException.h"
 
-namespace Explorer {
+namespace explorer {
 	WindowException::WindowException()
 	{
 		_msg = L"Window exception!";

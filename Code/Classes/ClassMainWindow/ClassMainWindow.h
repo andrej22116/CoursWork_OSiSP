@@ -5,7 +5,7 @@
 #ifndef _CLASS_MAIN_WINDOW_H_
 #define _CLASS_MAIN_WINDOW_H_
 
-namespace Explorer {
+namespace explorer {
 
 	class MainWindow : public Window {
 	public:

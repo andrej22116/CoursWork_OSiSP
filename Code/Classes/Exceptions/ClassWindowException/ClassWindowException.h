@@ -4,7 +4,7 @@
 #ifndef _CLASS_WINDOW_EXCEPTION_H_
 #define _CLASS_WINDOW_EXCEPTION_H_
 
-namespace Explorer {
+namespace explorer {
 	class WindowException : public Exception {
 	private:
 		std::wstring _msg;

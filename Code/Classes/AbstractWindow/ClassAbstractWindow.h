@@ -13,7 +13,7 @@
 #ifndef _CLASS_WINDOW_H_
 #define _CLASS_WINDOW_H_
 
-namespace Explorer {
+namespace explorer {
 
 	class Window {
 	private:
