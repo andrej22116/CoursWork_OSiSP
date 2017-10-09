@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "ClassException.h"
 
 namespace explorer {

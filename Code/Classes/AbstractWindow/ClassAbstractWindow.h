@@ -1,12 +1,5 @@
 #pragma once
 
-#include <Windows.h>
-#include <map>
-#include <list>
-#include <string>
-#include <memory>
-#include <functional>
-
 #include "..\Exceptions\ClassWindowException\ClassWindowException.h"
 #include "..\Exceptions\ClassWindowClassException\ClassWindowClassException.h"
 
@@ -77,7 +70,12 @@ namespace explorer {
 		 *	"this" - your object;
 		 *	"..." - params;
 		 */
-		void m_registerHendler(int message, std::function<LRESULT(HWND, WPARAM, LPARAM)>);
+		void m_registerHendler(UINT message, std::function<LRESULT(HWND, WPARAM, LPARAM)>);
+		void m_sendMessageForParent(UINT message, WPARAM wParam, LPARAM lParam);
+		void m_sendMessageForAllChildren(UINT message, WPARAM wParam, LPARAM lParam);
+		void m_sendMessageForChildren(std::wstring name, UINT message, WPARAM wParam, LPARAM lParam);
+		void m_sendMessageForChildren(Window* window, UINT message, WPARAM wParam, LPARAM lParam);
+		void m_sendMessageForChildren(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 	
 	private:
 		ATOM m_registerClass();

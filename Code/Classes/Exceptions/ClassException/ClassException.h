@@ -1,6 +1,4 @@
 #pragma once
-#include <Windows.h>
-#include <string>
 
 #ifndef _CLASS_EXCEPTION_H_
 #define _CLASS_EXCEPTION_H_

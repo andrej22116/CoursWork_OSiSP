@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "ClassAbstractWindow.h"
 
 namespace explorer {
@@ -147,13 +148,33 @@ namespace explorer {
 		return msg.wParam;
 	}
 
-	void Window::m_registerHendler(int message, std::function<LRESULT(HWND, WPARAM, LPARAM)> handler)
+	void Window::m_registerHendler(UINT message, std::function<LRESULT(HWND, WPARAM, LPARAM)> handler)
 	{
 		if (_handlersMap.find(message) == _handlersMap.end()) {
 			typedef std::function<HRESULT(HWND, WPARAM, LPARAM)> Hendler;
 			_handlersMap.insert(std::pair<int, std::list<Hendler>>(message, std::list<Hendler>()));
 		}
 		_handlersMap[message].push_back(handler);
+	}
+	void Window::m_sendMessageForParent(UINT message, WPARAM wParam, LPARAM lParam)
+	{
+		SendMessage(_parent->getHWND(), message, wParam, lParam);
+	}
+	void m_sendMessageForAllChildren(UINT message, WPARAM wParam, LPARAM lParam)
+	{
+
+	}
+	void m_sendMessageForChildren(std::wstring name, UINT message, WPARAM wParam, LPARAM lParam)
+	{
+
+	}
+	void m_sendMessageForChildren(Window* window, UINT message, WPARAM wParam, LPARAM lParam)
+	{
+
+	}
+	void m_sendMessageForChildren(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+	{
+
 	}
 
 	bool Window::m_create(Window* parent, bool show)
