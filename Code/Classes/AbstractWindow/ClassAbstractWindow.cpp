@@ -54,15 +54,15 @@ namespace Explorer {
 	}
 
 
-	bool Window::create(int pos_x, int pos_y, int width, int hieght, bool show = true)
+	bool Window::create(int pos_x, int pos_y, int width, int hieght, bool show)
 	{
 		return create(L"Window", pos_x, pos_y, width, hieght, show);
 	}
-	bool Window::create(Window& parent, int pos_x, int pos_y, int width, int hieght, bool show = true)
+	bool Window::create(Window& parent, int pos_x, int pos_y, int width, int hieght, bool show )
 	{
 		return create(L"Window", parent, pos_x, pos_y, width, hieght, show);
 	}
-	bool Window::create(std::wstring name, int pos_x, int pos_y, int width, int hieght, bool show = true)
+	bool Window::create(std::wstring name, int pos_x, int pos_y, int width, int hieght, bool show)
 	{
 		if (_thisWindowIsCreated) {
 			return false;
@@ -83,7 +83,7 @@ namespace Explorer {
 		_thisWindowIsCreated = true;
 		return true;
 	}
-	bool Window::create(std::wstring name, Window& parent, int pos_x, int pos_y, int width, int hieght, bool show = true)
+	bool Window::create(std::wstring name, Window& parent, int pos_x, int pos_y, int width, int hieght, bool show)
 	{
 		if (_thisWindowIsCreated) {
 			return false;
@@ -144,9 +144,7 @@ namespace Explorer {
 			typedef std::function<HRESULT(HWND, WPARAM, LPARAM)> Hendler;
 			_handlersMap.insert(std::pair<int, std::list<Hendler>>(message, std::list<Hendler>()));
 		}
-		else {
-			_handlersMap[message].push_back(handler);
-		}
+		_handlersMap[message].push_back(handler);
 	}
 
 	bool Window::m_create(Window* parent, bool show)
@@ -176,10 +174,12 @@ namespace Explorer {
 
 	bool Window::m_createWindow(Window* parent)
 	{
+		long int style = (parent) ? (WS_CHILD | WS_BORDER) : (WS_OVERLAPPEDWINDOW);
+
 		_hWnd = CreateWindow(
 			_className.c_str(),
 			_windowName.c_str(),
-			WS_OVERLAPPEDWINDOW,
+			style,
 			_pos_x,
 			_pos_y,
 			_width,
