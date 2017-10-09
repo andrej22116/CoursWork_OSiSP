@@ -137,6 +137,15 @@ namespace Explorer {
 		}
 		return DefWindowProc(hWnd, msg, wParam, lParam);
 	}
+	UINT Window::workWidthMessages()
+	{
+		MSG msg;
+		while (GetMessage(&msg, NULL, 0, 0)) {
+			TranslateMessage(&msg);
+			DispatchMessage(&msg);
+		}
+		return msg.wParam;
+	}
 
 	void Window::m_registerHendler(int message, std::function<LRESULT(HWND, WPARAM, LPARAM)> handler)
 	{

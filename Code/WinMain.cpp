@@ -9,11 +9,5 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR kek, int s
 	Explorer::MainWindow window_2;
 	window_2.create(L"Pizda", window, 0, 0, 200, 200, true);
 
-
-	MSG msg;
-	while (GetMessage(&msg, NULL, 0, 0)) {
-		TranslateMessage(&msg);
-		DispatchMessage(&msg);
-	}
-	return msg.wParam;
+	return Explorer::Window::workWidthMessages();
 }

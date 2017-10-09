@@ -68,6 +68,7 @@ namespace Explorer {
 		 *	Send message to all windows!
 		 */
 		static LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+		static UINT workWidthMessages();
 
 	protected:
 		/*
