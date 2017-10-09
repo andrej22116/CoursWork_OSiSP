@@ -20,27 +20,27 @@ namespace Explorer {
 		static std::map<HWND, Window*> s_windowsMap;
 		static std::wstring _className;
 
-		std::map<int, std::function<LRESULT(HWND, WPARAM, LPARAM)>> _handlersMap;
+		Window* _parent;
+		std::list<Window*> _childList;
+
+		std::map<int, std::list<std::function<LRESULT(HWND, WPARAM, LPARAM)>>> _handlersMap;
 
 		int _width, _hieght;
 		int _pos_x, _pos_y;
 		HWND _hWnd;
 		HDC _hDC;
 
-	protected:
 		WNDCLASSEX _WndClass;
 		std::wstring _windowName;
 
-		Window* _parent;
-		std::list<Window*> _childList;
+		bool _thisWindowIsCreated;
 
 	public:
-		Window(int pos_x, int pos_y);
-		Window(int pos_x, int pos_y, int width, int hieght, bool show = true);
-		Window(std::wstring name, int pos_x, int pos_y, int width, int hieght, bool show = true);
+		Window();
 		~Window();
 
 		bool create(int pos_x, int pos_y, int width, int hieght, bool show = true);
+		bool create(Window& parent, int pos_x, int pos_y, int width, int hieght, bool show = true);
 		bool create(std::wstring name, int pos_x, int pos_y, int width, int hieght, bool show = true);
 		bool create(std::wstring name, Window& parent, int pos_x, int pos_y, int width, int hieght, bool show = true);
 
@@ -76,14 +76,14 @@ namespace Explorer {
 		 *	"this" - your object;
 		 *	"..." - params;
 		 */
-		void registerHendler(int message, std::function<LRESULT(HWND, WPARAM, LPARAM)>);
-		void addChildWindow(Window* child);
-		void removeChildWindow(Window* child);
+		void m_registerHendler(int message, std::function<LRESULT(HWND, WPARAM, LPARAM)>);
 	
 	private:
 		ATOM m_registerClass();
-		bool m_create(Window* parent = nullptr);
+		bool m_create(Window* parent = nullptr, bool show = true);
 		bool m_createWindow(Window* parent = nullptr);
+		void m_addChildWindow(Window* child);
+		void m_removeChildWindow(Window* child);
 	};
 }
 

@@ -4,46 +4,22 @@ namespace Explorer {
 	std::map<HWND, Window*> Window::s_windowsMap;
 	std::wstring Window::_className = L"Explorer";
 
-	Window::Window(int pos_x, int pos_y) :
-		_pos_x(pos_x),
-		_pos_y(pos_y),
-		_width(800),
-		_hieght(600)
+	Window::Window() :
+		_width(0), _hieght(0),
+		_pos_x(0), _pos_y(0),
+		_parent(nullptr),
+		_thisWindowIsCreated(false)
 	{
-		_windowName = L"Window";
-		registerHendler(WM_DESTROY, std::bind(&Window::closeWindow, this, (HWND)1, (WPARAM)2, (LPARAM)3));
-		m_create();
-		UpdateWindow(_hWnd);
-		ShowWindow(_hWnd, SW_SHOW);
-	}
-	Window::Window(int pos_x, int pos_y, int width, int hieght, bool show) :
-		_pos_x(pos_x),
-		_pos_y(pos_y),
-		_width(width),
-		_hieght(hieght)
-	{
-		_windowName = L"Window";
-		registerHendler(WM_DESTROY, std::bind(&Window::closeWindow, this, (HWND)1, (WPARAM)2, (LPARAM)3));
-		m_create();
-		UpdateWindow(_hWnd);
-		ShowWindow(_hWnd, (show ? SW_SHOW : SW_HIDE));
-	}
-	Window::Window(std::wstring name, int pos_x, int pos_y, int width, int hieght, bool show) :
-		_pos_x(pos_x),
-		_pos_y(pos_y),
-		_width(width),
-		_hieght(hieght)
-	{
-		_windowName = name;
-		registerHendler(WM_DESTROY, std::bind(&Window::closeWindow, this, (HWND)1, (WPARAM)2, (LPARAM)3));
-		m_create();
-		UpdateWindow(_hWnd);
-		ShowWindow(_hWnd, (show ? SW_SHOW : SW_HIDE));
 	}
 	Window::~Window()
 	{
 		s_windowsMap.erase(_hWnd);
 		DestroyWindow(_hWnd);
+
+		if (_parent) {
+			_parent->m_removeChildWindow(this);
+		}
+
 		if (s_windowsMap.size() == 0) {
 			PostQuitMessage(0);
 		}
@@ -78,6 +54,68 @@ namespace Explorer {
 	}
 
 
+	bool Window::create(int pos_x, int pos_y, int width, int hieght, bool show = true)
+	{
+		return create(L"Window", pos_x, pos_y, width, hieght, show);
+	}
+	bool Window::create(Window& parent, int pos_x, int pos_y, int width, int hieght, bool show = true)
+	{
+		return create(L"Window", parent, pos_x, pos_y, width, hieght, show);
+	}
+	bool Window::create(std::wstring name, int pos_x, int pos_y, int width, int hieght, bool show = true)
+	{
+		if (_thisWindowIsCreated) {
+			return false;
+		}
+
+		_windowName = name;
+		_pos_x = pos_x;
+		_pos_y = pos_y;
+		_width = width;
+		_hieght = hieght;
+
+		if (!m_create(nullptr, true)) {
+			return false;
+		}
+
+		_parent = nullptr;
+
+		_thisWindowIsCreated = true;
+		return true;
+	}
+	bool Window::create(std::wstring name, Window& parent, int pos_x, int pos_y, int width, int hieght, bool show = true)
+	{
+		if (_thisWindowIsCreated) {
+			return false;
+		}
+
+		_windowName = name;
+		_pos_x = pos_x;
+		_pos_y = pos_y;
+		_width = width;
+		_hieght = hieght;
+
+		if (!m_create(&parent, show)) {
+			return false;
+		}
+
+		_parent = &parent;
+		parent.m_addChildWindow(this);
+
+		_thisWindowIsCreated = true;
+		return true;
+	}
+
+	void Window::m_addChildWindow(Window* child)
+	{
+		_childList.push_back(child);
+	}
+	void Window::m_removeChildWindow(Window* child)
+	{
+		_childList.remove(child);
+	}
+
+
 	LRESULT Window::closeWindow(HWND hWnd, WPARAM wParam, LPARAM lParam)
 	{
 		s_windowsMap.erase(_hWnd);
@@ -91,18 +129,27 @@ namespace Explorer {
 	{
 		if (s_windowsMap.find(hWnd) != s_windowsMap.end()) {
 			if (s_windowsMap[hWnd]->_handlersMap.find(msg) != s_windowsMap[hWnd]->_handlersMap.end()) {
-				return s_windowsMap[hWnd]->_handlersMap[msg](hWnd, wParam, lParam);
+				for (auto function : s_windowsMap[hWnd]->_handlersMap[msg]) {
+					function(hWnd, wParam, lParam);
+				}
+				return 0;
 			}
 		}
 		return DefWindowProc(hWnd, msg, wParam, lParam);
 	}
 
-	void Window::registerHendler(int message, std::function<LRESULT(HWND, WPARAM, LPARAM)> handler)
+	void Window::m_registerHendler(int message, std::function<LRESULT(HWND, WPARAM, LPARAM)> handler)
 	{
-		_handlersMap.insert(std::pair<int, std::function<HRESULT(HWND, WPARAM, LPARAM)>>(message, handler));
+		if (_handlersMap.find(message) == _handlersMap.end()) {
+			typedef std::function<HRESULT(HWND, WPARAM, LPARAM)> Hendler;
+			_handlersMap.insert(std::pair<int, std::list<Hendler>>(message, std::list<Hendler>()));
+		}
+		else {
+			_handlersMap[message].push_back(handler);
+		}
 	}
 
-	bool Window::m_create(Window* parent)
+	bool Window::m_create(Window* parent, bool show)
 	{
 		try {
 			m_registerClass();
@@ -117,8 +164,13 @@ namespace Explorer {
 			return false;
 		}
 		catch (...) {
-
+			return false;
 		}
+
+		m_registerHendler(WM_DESTROY, std::bind(&Window::closeWindow, this, (HWND)1, (WPARAM)2, (LPARAM)3));
+		UpdateWindow(_hWnd);
+		ShowWindow(_hWnd, (show ? SW_SHOW : SW_HIDE));
+
 		return true;
 	}
 

@@ -9,9 +9,7 @@ namespace Explorer {
 
 	class MainWindow : public Window {
 	public:
-		MainWindow::MainWindow(int pos_x, int pos_y);
-		MainWindow::MainWindow(int pos_x, int pos_y, int width, int hieght, bool show);
-		MainWindow::MainWindow(std::wstring name, int pos_x, int pos_y, int width, int hieght, bool show);
+		MainWindow();
 
 		void registerWindowHandlers();
 
