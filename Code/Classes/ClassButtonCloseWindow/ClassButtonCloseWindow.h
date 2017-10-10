@@ -12,6 +12,7 @@ namespace explorer {
 		ButtonClose::ButtonClose();
 
 		LRESULT ButtonClose::closeHandler(HWND hWnd, WPARAM wParam, LPARAM lParam);
+		LRESULT ButtonClose::paintHandler(HWND hWnd, WPARAM wParam, LPARAM lParam);
 	};
 
 }
