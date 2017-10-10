@@ -6,7 +6,11 @@
 #ifndef _CLASS_WINDOW_H_
 #define _CLASS_WINDOW_H_
 
+#define METHOD(method) (std::bind((method), this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3))
+
 namespace explorer {
+	class Window;
+
 	typedef std::function<void(HWND, WPARAM, LPARAM)> Hendler;
 
 	class Window {
@@ -14,6 +18,8 @@ namespace explorer {
 		static std::map<HWND, Window*> s_windowsMap;
 		static std::wstring _className;
 		static ULONG_PTR _gdiplusToken;
+		static const UINT TIMER_UPP_HOVER = 10000;
+		static bool _hoverStatus;
 
 		Window* _parent;
 		std::list<Window*> _childList;
@@ -22,6 +28,7 @@ namespace explorer {
 
 		int _width, _hieght;
 		int _pos_x, _pos_y;
+		int _g_pos_X, _g_pos_Y;
 		HWND _hWnd;
 		HDC _hDC;
 
@@ -49,6 +56,8 @@ namespace explorer {
 
 		int getPosX() const;
 		int getPosY() const;
+		int getGlobalPosX() const;
+		int getGlobalPosY() const;
 		
 		std::wstring getClassName() const;
 		std::wstring getWindowName() const;
@@ -56,12 +65,18 @@ namespace explorer {
 
 		void resizeWindow(int width, int hieght, bool show);
 		void resizeWindow(int pos_x, int pos_y, int width, int hieght, bool show);
+		void redrawWindow(bool erase);
 
 		void showWindow(bool show);
+		void setTimer(UINT timer_ID, UINT elapse);
+		void killTimer(UINT timer_ID);
+
+		void getHoverMessages(bool activate);
 
 		/* Handlers */
 		void closeWindow(HWND hWnd, WPARAM wParam, LPARAM lParam);
 		void paintWindow(HWND hWnd, WPARAM wParam, LPARAM lParam);
+		void hoverWindow(HWND hWnd, WPARAM wParam, LPARAM lParam);
 
 		/*
 		 *	Send message to all windows!
@@ -71,12 +86,9 @@ namespace explorer {
 
 	protected:
 		/*
-		 *	Send std::bind(&YourWindow::hendler, this, ...);
-		 *	"YourWindow "- child class Window;
-		 *	"this" - your object;
-		 *	"..." - params;
+		 *	message, METHOD( & your_method );
 		 */
-		void m_registerHendler(UINT message, Hendler);
+		void m_registerHendler(UINT message, Hendler method);
 		void m_sendMessageForParent(UINT message, WPARAM wParam, LPARAM lParam);
 		void m_sendMessageForAllChildren(UINT message, WPARAM wParam, LPARAM lParam);
 		void m_sendMessageForChildren(std::wstring name, UINT message, WPARAM wParam, LPARAM lParam);

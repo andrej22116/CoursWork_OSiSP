@@ -5,6 +5,7 @@ namespace explorer {
 	std::map<HWND, Window*> Window::s_windowsMap;
 	std::wstring Window::_className = L"Explorer";
 	ULONG_PTR Window::_gdiplusToken = 0;
+	bool Window::_hoverStatus = false;
 
 	Window::Window() :
 		_width(0), _hieght(0),
@@ -15,8 +16,9 @@ namespace explorer {
 			Gdiplus::GdiplusStartupInput gdiplusStartupInput;
 			Gdiplus::GdiplusStartup(&_gdiplusToken, &gdiplusStartupInput, NULL);
 
-			m_registerHendler(WM_DESTROY, std::bind(&Window::closeWindow, this, (HWND)1, (WPARAM)2, (LPARAM)3));
-			m_registerHendler(WM_PAINT, std::bind(&Window::paintWindow, this, (HWND)1, (WPARAM)2, (LPARAM)3));
+			m_registerHendler(WM_DESTROY, METHOD(&Window::closeWindow));
+			//m_registerHendler(WM_PAINT, METHOD(&Window::paintWindow));
+			m_registerHendler(WM_TIMER, METHOD(&Window::hoverWindow));
 	}
 	Window::~Window()
 	{
@@ -43,6 +45,26 @@ namespace explorer {
 
 	int Window::getPosX() const { return _pos_x; }
 	int Window::getPosY() const { return _pos_y; }
+	int Window::getGlobalPosX() const
+	{
+		RECT rect;
+		GetWindowRect(_hWnd, &rect);
+
+		if (_parent) {
+			return rect.left + _parent->getGlobalPosX();
+		}
+		return rect.left;
+	}
+	int Window::getGlobalPosY() const
+	{
+		RECT rect;
+		GetWindowRect(_hWnd, &rect);
+
+		if (_parent) {
+			return rect.top + _parent->getGlobalPosY();
+		}
+		return rect.top;
+	}
 
 	std::wstring Window::getClassName() const { return _className; }
 	std::wstring Window::getWindowName() const { return _windowName; }
@@ -65,9 +87,34 @@ namespace explorer {
 
 		m_sendMessageForAllChildren(WM_SIZE, 0, 0);
 	}
+	void Window::redrawWindow(bool erase)
+	{
+		InvalidateRect(_hWnd, nullptr, erase);
+		SendMessage(_hWnd, WM_PAINT, 0, 0);
+	}
+
 	void Window::showWindow(bool show)
 	{
 		ShowWindow(_hWnd, ((show) ? (SW_SHOW) : (SW_HIDE)));
+	}
+	void Window::setTimer(UINT timer_ID, UINT elapse)
+	{
+		SetTimer(_hWnd, timer_ID, elapse, nullptr);
+	}
+	void Window::killTimer(UINT timer_ID)
+	{
+		KillTimer(_hWnd, timer_ID);
+	}
+
+	void Window::getHoverMessages(bool activate)
+	{
+		if (activate) {
+			killTimer(TIMER_UPP_HOVER);
+			setTimer(TIMER_UPP_HOVER, 1);
+		}
+		else {
+			killTimer(TIMER_UPP_HOVER);
+		}
 	}
 
 
@@ -155,12 +202,12 @@ namespace explorer {
 		return msg.wParam;
 	}
 
-	void Window::m_registerHendler(UINT message, Hendler handler)
+	void Window::m_registerHendler(UINT message, Hendler method)
 	{
 		if (_handlersMap.find(message) == _handlersMap.end()) {
 			_handlersMap.insert(std::pair<int, std::list<Hendler>>(message, std::list<Hendler>()));
 		}
-		_handlersMap[message].push_back(handler);
+		_handlersMap[message].push_back(method);
 	}
 	void Window::m_sendMessageForParent(UINT message, WPARAM wParam, LPARAM lParam)
 	{
@@ -223,6 +270,8 @@ namespace explorer {
 		_hDC = GetDC(_hWnd);
 		_graphics = std::make_shared<Gdiplus::Graphics>(_hDC);
 
+		_g_pos_X = getGlobalPosX();
+		_g_pos_Y = getGlobalPosY();
 		return true;
 	}
 	bool Window::m_createWindow(Window* parent)
@@ -280,14 +329,37 @@ namespace explorer {
 	
 	void Window::paintWindow(HWND hWnd, WPARAM wParam, LPARAM lParam)
 	{
-		BeginPaint(_hWnd, nullptr);
-		EndPaint(_hWnd, nullptr);
+		//PAINTSTRUCT ps;
+		//BeginPaint(_hWnd, &ps);
+		//EndPaint(_hWnd, &ps);
+		ValidateRect(_hWnd, nullptr);
 	}
 	void Window::closeWindow(HWND hWnd, WPARAM wParam, LPARAM lParam)
 	{
 		s_windowsMap.erase(_hWnd);
 		if (s_windowsMap.size() == 0) {
 			PostQuitMessage(0);
+		}
+	}
+	void Window::hoverWindow(HWND hWnd, WPARAM wParam, LPARAM lParam)
+	{
+		if (wParam == TIMER_UPP_HOVER) {
+			//bool windowStatus = _hWnd == GetForegroundWindow();
+
+			POINT point;
+			GetCursorPos(&point);
+
+			if ((point.x >= _g_pos_X && point.x <= _g_pos_X + getWidth())
+				&& (point.y >= _g_pos_Y && point.y <= _g_pos_Y + getHieght())) {
+				if (!_hoverStatus) {
+					_hoverStatus = true;
+					SendMessage(_hWnd, WM_MOUSEHOVER, 1, 0);
+				}
+			}
+			else if (_hoverStatus) {
+				_hoverStatus = false;
+				SendMessage(_hWnd, WM_MOUSEHOVER, 0, 0);
+			}
 		}
 	}
 }

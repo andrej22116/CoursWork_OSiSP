@@ -10,6 +10,7 @@ namespace explorer {
 	class ButtonClose : public Window {
 	private:
 		Gdiplus::Region _region;
+		bool _hover;
 
 	public:
 		ButtonClose();
@@ -17,6 +18,8 @@ namespace explorer {
 		void createHandler(HWND hWnd, WPARAM wParam, LPARAM lParam);
 		void closeHandler(HWND hWnd, WPARAM wParam, LPARAM lParam);
 		void paintHandler(HWND hWnd, WPARAM wParam, LPARAM lParam);
+
+		void hoverHandler(HWND hWnd, WPARAM wParam, LPARAM lParam);
 	};
 
 }

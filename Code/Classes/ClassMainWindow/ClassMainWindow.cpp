@@ -10,9 +10,10 @@ namespace explorer {
 
 	void MainWindow::registerWindowHandlers()
 	{
-		m_registerHendler(WM_CREATE, std::bind(&MainWindow::createHandler, this, (HWND)1, (WPARAM)2, (LPARAM)3));
-		m_registerHendler(WM_PAINT, std::bind(&MainWindow::paintHandler_2, this, (HWND)1, (WPARAM)2, (LPARAM)3));
-		m_registerHendler(WM_PAINT, std::bind(&MainWindow::paintHandler, this, (HWND)1, (WPARAM)2, (LPARAM)3));
+		m_registerHendler(WM_CREATE, METHOD(&MainWindow::createHandler));
+		m_registerHendler(WM_PAINT, METHOD(&Window::paintWindow));
+		m_registerHendler(WM_PAINT, METHOD(&MainWindow::paintHandler_2));
+		m_registerHendler(WM_PAINT, METHOD(&MainWindow::paintHandler));
 	}
 
 	void MainWindow::paintHandler(HWND hWnd, WPARAM wParam, LPARAM lParam)
