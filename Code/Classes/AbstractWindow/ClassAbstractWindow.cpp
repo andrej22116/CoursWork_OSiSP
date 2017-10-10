@@ -20,6 +20,7 @@ namespace explorer {
 	Window::~Window()
 	{
 		s_windowsMap.erase(_hWnd);
+		_graphics.~shared_ptr();
 		ReleaseDC(_hWnd, _hDC);
 		DestroyWindow(_hWnd);
 
