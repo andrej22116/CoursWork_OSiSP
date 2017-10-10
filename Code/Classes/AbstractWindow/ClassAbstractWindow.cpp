@@ -4,6 +4,7 @@
 namespace explorer {
 	std::map<HWND, Window*> Window::s_windowsMap;
 	std::wstring Window::_className = L"Explorer";
+	bool Window::_gdiPlusIsInit = false;
 
 	Window::Window() :
 		_width(0), _hieght(0),
@@ -11,10 +12,15 @@ namespace explorer {
 		_parent(nullptr),
 		_thisWindowIsCreated(false)
 	{
+		if (!_gdiPlusIsInit) {
+			Gdiplus::GdiplusStartupInput gdiplusStartupInput;
+			Gdiplus::GdiplusStartup(&_gdiplusToken, &gdiplusStartupInput, NULL);
+		}
 	}
 	Window::~Window()
 	{
 		s_windowsMap.erase(_hWnd);
+		ReleaseDC(_hWnd, _hDC);
 		DestroyWindow(_hWnd);
 
 		if (_parent) {
@@ -22,6 +28,7 @@ namespace explorer {
 		}
 
 		if (s_windowsMap.size() == 0) {
+			Gdiplus::GdiplusShutdown(_gdiplusToken);
 			PostQuitMessage(0);
 		}
 	}
@@ -43,11 +50,17 @@ namespace explorer {
 
 	void Window::resizeWindow(int width, int hieght, bool show)
 	{
-		MoveWindow(_hWnd, _pos_x, _pos_y, width, hieght, show);
+		resizeWindow(_pos_x, _pos_y, width, hieght, show);
 	}
 	void Window::resizeWindow(int pos_x, int pos_y, int width, int hieght, bool show)
 	{
 		MoveWindow(_hWnd, pos_x, pos_y, width, hieght, show);
+		_pos_x = pos_x;
+		_pos_y = pos_y;
+		_width = width;
+		_hieght = hieght;
+
+		m_sendMessageForAllChildren(WM_SIZE, 0, 0);
 	}
 	void Window::showWindow(bool show)
 	{
@@ -160,21 +173,37 @@ namespace explorer {
 	{
 		SendMessage(_parent->getHWND(), message, wParam, lParam);
 	}
-	void m_sendMessageForAllChildren(UINT message, WPARAM wParam, LPARAM lParam)
+	void Window::m_sendMessageForAllChildren(UINT message, WPARAM wParam, LPARAM lParam)
 	{
-
+		for (Window* child : _childList) {
+			SendMessage(child->getHWND(), message, wParam, lParam);
+		}
 	}
-	void m_sendMessageForChildren(std::wstring name, UINT message, WPARAM wParam, LPARAM lParam)
+	void Window::m_sendMessageForChildren(std::wstring name, UINT message, WPARAM wParam, LPARAM lParam)
 	{
-
+		for (Window* child : _childList) {
+			if (child->getWindowName() == name) {
+				SendMessage(child->getHWND(), message, wParam, lParam);
+			}
+		}
 	}
-	void m_sendMessageForChildren(Window* window, UINT message, WPARAM wParam, LPARAM lParam)
+	void Window::m_sendMessageForChildren(Window* window, UINT message, WPARAM wParam, LPARAM lParam)
 	{
-
+		for (Window* child : _childList) {
+			if (child == window) {
+				SendMessage(child->getHWND(), message, wParam, lParam);
+				break;
+			}
+		}
 	}
-	void m_sendMessageForChildren(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+	void Window::m_sendMessageForChildren(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	{
-
+		for (Window* child : _childList) {
+			if (child->getHWND() == hWnd) {
+				SendMessage(child->getHWND(), message, wParam, lParam);
+				break;
+			}
+		}
 	}
 
 	bool Window::m_create(Window* parent, bool show)
@@ -198,6 +227,9 @@ namespace explorer {
 		m_registerHendler(WM_DESTROY, std::bind(&Window::closeWindow, this, (HWND)1, (WPARAM)2, (LPARAM)3));
 		UpdateWindow(_hWnd);
 		ShowWindow(_hWnd, (show ? SW_SHOW : SW_HIDE));
+
+		_hDC = GetDC(_hWnd);
+		_graphics = std::make_shared<Gdiplus::Graphics>(_hDC);
 
 		return true;
 	}

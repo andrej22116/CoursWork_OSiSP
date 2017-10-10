@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "Classes\ClassMainWindow\ClassMainWindow.h"
-#include "Classes\ClassButtonCloseWindow\ClassButtonCloseWindow.h"
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR kek, int show)
 {

@@ -9,3 +9,4 @@
 #include <memory>
 #include <functional>
 
+#include <gdiplus.h>

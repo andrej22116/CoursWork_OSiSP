@@ -12,6 +12,7 @@ namespace explorer {
 	private:
 		static std::map<HWND, Window*> s_windowsMap;
 		static std::wstring _className;
+		static bool _gdiPlusIsInit;
 
 		Window* _parent;
 		std::list<Window*> _childList;
@@ -22,11 +23,15 @@ namespace explorer {
 		int _pos_x, _pos_y;
 		HWND _hWnd;
 		HDC _hDC;
+		ULONG_PTR _gdiplusToken;
 
 		WNDCLASSEX _WndClass;
 		std::wstring _windowName;
 
 		bool _thisWindowIsCreated;
+
+	protected:
+		std::shared_ptr<Gdiplus::Graphics> _graphics;
 
 	public:
 		Window();
