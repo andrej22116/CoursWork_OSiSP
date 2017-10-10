@@ -1,10 +1,12 @@
 #pragma once
 
 #include <Windows.h>
+#include <cmath>
 
 #include <map>
 #include <list>
 #include <string>
+#include <vector>
 
 #include <memory>
 #include <functional>

@@ -7,23 +7,23 @@
 #define _CLASS_WINDOW_H_
 
 namespace explorer {
+	typedef std::function<void(HWND, WPARAM, LPARAM)> Hendler;
 
 	class Window {
 	private:
 		static std::map<HWND, Window*> s_windowsMap;
 		static std::wstring _className;
-		static bool _gdiPlusIsInit;
+		static ULONG_PTR _gdiplusToken;
 
 		Window* _parent;
 		std::list<Window*> _childList;
 
-		std::map<int, std::list<std::function<LRESULT(HWND, WPARAM, LPARAM)>>> _handlersMap;
+		std::map<int, std::list<Hendler>> _handlersMap;
 
 		int _width, _hieght;
 		int _pos_x, _pos_y;
 		HWND _hWnd;
 		HDC _hDC;
-		ULONG_PTR _gdiplusToken;
 
 		WNDCLASSEX _WndClass;
 		std::wstring _windowName;
@@ -59,8 +59,9 @@ namespace explorer {
 
 		void showWindow(bool show);
 
-
-		LRESULT closeWindow(HWND hWnd, WPARAM wParam, LPARAM lParam);
+		/* Handlers */
+		void closeWindow(HWND hWnd, WPARAM wParam, LPARAM lParam);
+		void paintWindow(HWND hWnd, WPARAM wParam, LPARAM lParam);
 
 		/*
 		 *	Send message to all windows!
@@ -75,7 +76,7 @@ namespace explorer {
 		 *	"this" - your object;
 		 *	"..." - params;
 		 */
-		void m_registerHendler(UINT message, std::function<LRESULT(HWND, WPARAM, LPARAM)>);
+		void m_registerHendler(UINT message, Hendler);
 		void m_sendMessageForParent(UINT message, WPARAM wParam, LPARAM lParam);
 		void m_sendMessageForAllChildren(UINT message, WPARAM wParam, LPARAM lParam);
 		void m_sendMessageForChildren(std::wstring name, UINT message, WPARAM wParam, LPARAM lParam);

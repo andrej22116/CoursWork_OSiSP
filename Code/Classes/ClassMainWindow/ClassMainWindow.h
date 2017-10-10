@@ -16,7 +16,9 @@ namespace explorer {
 
 		void registerWindowHandlers();
 
-		LRESULT createHandler(HWND hWnd, WPARAM wParam, LPARAM lParam);
+		void createHandler(HWND hWnd, WPARAM wParam, LPARAM lParam);
+		void paintHandler(HWND hWnd, WPARAM wParam, LPARAM lParam);
+		void paintHandler_2(HWND hWnd, WPARAM wParam, LPARAM lParam);
 	};
 }
 

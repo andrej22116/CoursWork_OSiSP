@@ -8,11 +8,15 @@
 namespace explorer {
 
 	class ButtonClose : public Window {
-	public:
-		ButtonClose::ButtonClose();
+	private:
+		Gdiplus::Region _region;
 
-		LRESULT ButtonClose::closeHandler(HWND hWnd, WPARAM wParam, LPARAM lParam);
-		LRESULT ButtonClose::paintHandler(HWND hWnd, WPARAM wParam, LPARAM lParam);
+	public:
+		ButtonClose();
+
+		void createHandler(HWND hWnd, WPARAM wParam, LPARAM lParam);
+		void closeHandler(HWND hWnd, WPARAM wParam, LPARAM lParam);
+		void paintHandler(HWND hWnd, WPARAM wParam, LPARAM lParam);
 	};
 
 }

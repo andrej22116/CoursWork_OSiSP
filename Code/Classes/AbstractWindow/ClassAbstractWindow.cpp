@@ -4,7 +4,7 @@
 namespace explorer {
 	std::map<HWND, Window*> Window::s_windowsMap;
 	std::wstring Window::_className = L"Explorer";
-	bool Window::_gdiPlusIsInit = false;
+	ULONG_PTR Window::_gdiplusToken = 0;
 
 	Window::Window() :
 		_width(0), _hieght(0),
@@ -12,15 +12,17 @@ namespace explorer {
 		_parent(nullptr),
 		_thisWindowIsCreated(false)
 	{
-		if (!_gdiPlusIsInit) {
 			Gdiplus::GdiplusStartupInput gdiplusStartupInput;
 			Gdiplus::GdiplusStartup(&_gdiplusToken, &gdiplusStartupInput, NULL);
-		}
+
+			m_registerHendler(WM_DESTROY, std::bind(&Window::closeWindow, this, (HWND)1, (WPARAM)2, (LPARAM)3));
+			m_registerHendler(WM_PAINT, std::bind(&Window::paintWindow, this, (HWND)1, (WPARAM)2, (LPARAM)3));
 	}
 	Window::~Window()
 	{
-		s_windowsMap.erase(_hWnd);
 		_graphics.~shared_ptr();
+
+		s_windowsMap.erase(_hWnd);
 		ReleaseDC(_hWnd, _hDC);
 		DestroyWindow(_hWnd);
 
@@ -131,15 +133,6 @@ namespace explorer {
 	}
 
 
-	LRESULT Window::closeWindow(HWND hWnd, WPARAM wParam, LPARAM lParam)
-	{
-		s_windowsMap.erase(_hWnd);
-		if (s_windowsMap.size() == 0) {
-			PostQuitMessage(0);
-		}
-		return 0;
-	}
-
 	LRESULT CALLBACK Window::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	{
 		if (s_windowsMap.find(hWnd) != s_windowsMap.end()) {
@@ -162,10 +155,9 @@ namespace explorer {
 		return msg.wParam;
 	}
 
-	void Window::m_registerHendler(UINT message, std::function<LRESULT(HWND, WPARAM, LPARAM)> handler)
+	void Window::m_registerHendler(UINT message, Hendler handler)
 	{
 		if (_handlersMap.find(message) == _handlersMap.end()) {
-			typedef std::function<HRESULT(HWND, WPARAM, LPARAM)> Hendler;
 			_handlersMap.insert(std::pair<int, std::list<Hendler>>(message, std::list<Hendler>()));
 		}
 		_handlersMap[message].push_back(handler);
@@ -225,7 +217,6 @@ namespace explorer {
 			return false;
 		}
 
-		m_registerHendler(WM_DESTROY, std::bind(&Window::closeWindow, this, (HWND)1, (WPARAM)2, (LPARAM)3));
 		UpdateWindow(_hWnd);
 		ShowWindow(_hWnd, (show ? SW_SHOW : SW_HIDE));
 
@@ -234,10 +225,9 @@ namespace explorer {
 
 		return true;
 	}
-
 	bool Window::m_createWindow(Window* parent)
 	{
-		long int style = (parent) ? (WS_CHILD | WS_BORDER) : (WS_OVERLAPPEDWINDOW);
+		long int style = (parent) ? (WS_CHILD) : (WS_POPUP);
 
 		_hWnd = CreateWindow(
 			_className.c_str(),
@@ -261,7 +251,6 @@ namespace explorer {
 		SendMessage(_hWnd, WM_CREATE, 0, 0);
 		return true;
 	}
-
 	ATOM Window::m_registerClass() {
 		WNDCLASS wndclass;
 		if (GetClassInfo(GetModuleHandle(0), _className.c_str(), &wndclass)) {
@@ -285,5 +274,20 @@ namespace explorer {
 			throw WindowClassException();
 		}
 		return 1;
+	}
+
+
+	
+	void Window::paintWindow(HWND hWnd, WPARAM wParam, LPARAM lParam)
+	{
+		BeginPaint(_hWnd, nullptr);
+		EndPaint(_hWnd, nullptr);
+	}
+	void Window::closeWindow(HWND hWnd, WPARAM wParam, LPARAM lParam)
+	{
+		s_windowsMap.erase(_hWnd);
+		if (s_windowsMap.size() == 0) {
+			PostQuitMessage(0);
+		}
 	}
 }
