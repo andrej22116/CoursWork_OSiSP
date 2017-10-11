@@ -85,6 +85,10 @@ namespace explorer {
 		
 		m_sendMessageForAllChildren(WM_SIZE, 0, 0);
 	}
+	void Window::minimizeWindow(bool hide)
+	{
+		ShowWindow(_hWnd, (hide) ? (SW_MINIMIZE) : (SW_SHOW));
+	}
 	void Window::redrawWindow(bool erase)
 	{
 		InvalidateRect(_hWnd, nullptr, erase);

@@ -8,6 +8,7 @@ namespace explorer {
 		m_registerHendler(WM_CREATE, METHOD(&ButtonMinimize::createHandler));
 		m_registerHendler(WM_PAINT, METHOD(&ButtonMinimize::paintHandler));
 		m_registerHendler(WM_MOUSEHOVER, METHOD(&ButtonMinimize::hoverHandler));
+		m_registerHendler(WM_LBUTTONDOWN, METHOD(&ButtonMinimize::minimizeHandler));
 		m_registerHendler(WM_SIZE, METHOD(&ButtonMinimize::resizeParentHandler));
 
 		_hover = false;
@@ -39,7 +40,7 @@ namespace explorer {
 
 	void ButtonMinimize::minimizeHandler(HWND hWnd, WPARAM wParam, LPARAM lParam)
 	{
-		//m_sendMessageForParent(WM_)
+		getParent()->minimizeWindow(true);
 	}
 
 	void ButtonMinimize::resizeParentHandler(HWND hWnd, WPARAM wParam, LPARAM lParam)

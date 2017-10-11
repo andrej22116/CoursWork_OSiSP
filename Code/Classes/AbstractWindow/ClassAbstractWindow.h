@@ -62,6 +62,7 @@ namespace explorer {
 		
 		std::wstring getClassName() const;
 		std::wstring getWindowName() const;
+		void minimizeWindow(bool hide);
 		void setWindowName(std::wstring name);
 
 		void resizeWindow(int width, int hieght, bool show);
