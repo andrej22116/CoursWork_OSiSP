@@ -19,7 +19,6 @@ namespace explorer {
 		static std::wstring _className;
 		static ULONG_PTR _gdiplusToken;
 		static const UINT TIMER_UPP_HOVER = 10000;
-		static bool _hoverStatus;
 
 		Window* _parent;
 		std::list<Window*> _childList;
@@ -36,6 +35,7 @@ namespace explorer {
 		std::wstring _windowName;
 
 		bool _thisWindowIsCreated;
+		bool _hoverStatus;
 
 	protected:
 		std::shared_ptr<Gdiplus::Graphics> _graphics;
@@ -53,6 +53,7 @@ namespace explorer {
 		int getHieght() const;
 		HWND getHWND() const;
 		HDC getHDC() const;
+		Window* getParent() const;
 
 		int getPosX() const;
 		int getPosY() const;
@@ -75,7 +76,6 @@ namespace explorer {
 
 		/* Handlers */
 		void closeWindow(HWND hWnd, WPARAM wParam, LPARAM lParam);
-		void paintWindow(HWND hWnd, WPARAM wParam, LPARAM lParam);
 		void hoverWindow(HWND hWnd, WPARAM wParam, LPARAM lParam);
 
 		/*

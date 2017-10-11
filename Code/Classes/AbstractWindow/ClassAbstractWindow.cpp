@@ -5,7 +5,6 @@ namespace explorer {
 	std::map<HWND, Window*> Window::s_windowsMap;
 	std::wstring Window::_className = L"Explorer";
 	ULONG_PTR Window::_gdiplusToken = 0;
-	bool Window::_hoverStatus = false;
 
 	Window::Window() :
 		_width(0), _hieght(0),
@@ -42,6 +41,7 @@ namespace explorer {
 	int Window::getHieght() const { return _hieght; }
 	HWND Window::getHWND() const { return _hWnd; }
 	HDC Window::getHDC() const { return _hDC; }
+	Window* Window::getParent() const { return _parent;  }
 
 	int Window::getPosX() const { return _pos_x; }
 	int Window::getPosY() const { return _pos_y; }
@@ -85,6 +85,9 @@ namespace explorer {
 		_width = width;
 		_hieght = hieght;
 
+		_g_pos_X = getGlobalPosX();
+		_g_pos_Y = getGlobalPosY();
+		
 		m_sendMessageForAllChildren(WM_SIZE, 0, 0);
 	}
 	void Window::redrawWindow(bool erase)
@@ -327,13 +330,6 @@ namespace explorer {
 
 
 	
-	void Window::paintWindow(HWND hWnd, WPARAM wParam, LPARAM lParam)
-	{
-		//PAINTSTRUCT ps;
-		//BeginPaint(_hWnd, &ps);
-		//EndPaint(_hWnd, &ps);
-		ValidateRect(_hWnd, nullptr);
-	}
 	void Window::closeWindow(HWND hWnd, WPARAM wParam, LPARAM lParam)
 	{
 		s_windowsMap.erase(_hWnd);

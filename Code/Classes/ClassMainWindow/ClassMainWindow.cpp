@@ -4,38 +4,42 @@
 namespace explorer {
 	MainWindow::MainWindow()
 	{
-		registerWindowHandlers();
-	}
-
-
-	void MainWindow::registerWindowHandlers()
-	{
 		m_registerHendler(WM_CREATE, METHOD(&MainWindow::createHandler));
-		m_registerHendler(WM_PAINT, METHOD(&Window::paintWindow));
-		m_registerHendler(WM_PAINT, METHOD(&MainWindow::paintHandler_2));
 		m_registerHendler(WM_PAINT, METHOD(&MainWindow::paintHandler));
 	}
 
 	void MainWindow::paintHandler(HWND hWnd, WPARAM wParam, LPARAM lParam)
 	{
+		PAINTSTRUCT ps;
+		HDC hDC = BeginPaint(hWnd, &ps);
+		std::shared_ptr<Gdiplus::Graphics> graphics = std::make_shared<Gdiplus::Graphics>(hDC);
+
+		Gdiplus::SolidBrush brush_2(Gdiplus::Color(32, 32, 32));
+		Gdiplus::Rect region_2(0, 0, this->getWidth(), this->getHieght());
+		graphics->FillRectangle(&brush_2, region_2);
+
 		Gdiplus::SolidBrush brush(Gdiplus::Color(64, 64, 64));
 		Gdiplus::Rect region(0, 0, this->getWidth(), 17);
-		_graphics->FillRectangle(&brush, region);
-	}
+		graphics->FillRectangle(&brush, region);
 
-	void MainWindow::paintHandler_2(HWND hWnd, WPARAM wParam, LPARAM lParam)
-	{
-		Gdiplus::SolidBrush brush(Gdiplus::Color(32, 32, 32));
-		Gdiplus::Rect region(0, 0, this->getWidth(), this->getHieght());
-		_graphics->FillRectangle(&brush, region);
+		EndPaint(hWnd, &ps);
 	}
 
 	void MainWindow::createHandler(HWND hWnd, WPARAM wParam, LPARAM lParam)
 	{
 		buttonClose.create(
-			L"Pizda",
+			L"exit",
 			*this,
 			this->getWidth() - 16,
+			1,
+			15,
+			15,
+			true);
+
+		buttonMaximize.create(
+			L"maximize",
+			*this,
+			this->getWidth() - 32,
 			1,
 			15,
 			15,
