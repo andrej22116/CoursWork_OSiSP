@@ -24,7 +24,9 @@ namespace explorer {
 		void maximizeHandler(HWND hWnd, WPARAM wParam, LPARAM lParam);
 		void resizeParentHandler(HWND hWnd, WPARAM wParam, LPARAM lParam);
 
+#ifdef _DEBUG
 		void testHandler(HWND hWnd, WPARAM wParam, LPARAM lParam);
+#endif
 	};
 
 }

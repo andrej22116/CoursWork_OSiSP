@@ -11,7 +11,9 @@ namespace explorer {
 		m_registerHendler(WM_LBUTTONDOWN, METHOD(&ButtonMaximizeWindow::maximizeHandler));
 		m_registerHendler(WM_SIZE, METHOD(&ButtonMaximizeWindow::resizeParentHandler));
 
+#ifdef _DEBUG
 		m_registerHendler(WM_RBUTTONDOWN, METHOD(&ButtonMaximizeWindow::testHandler));
+#endif
 
 		_maximized = false;
 	}
@@ -28,7 +30,7 @@ namespace explorer {
 		HDC hDC = BeginPaint(hWnd, &ps);
 		std::shared_ptr<Gdiplus::Graphics> graphics = std::make_shared<Gdiplus::Graphics>(hDC);
 
-		graphics->SetSmoothingMode(Gdiplus::SmoothingMode::SmoothingModeAntiAlias);
+		//graphics->SetSmoothingMode(Gdiplus::SmoothingMode::SmoothingModeAntiAlias);
 
 		Gdiplus::Pen pen(Gdiplus::Color::White, 1.6);
 		Gdiplus::SolidBrush brush((_hover) ? (Gdiplus::Color(96, 96, 96)) : (Gdiplus::Color(64, 64, 64)));
@@ -41,11 +43,15 @@ namespace explorer {
 
 		if (_maximized) {
 			graphics->DrawRectangle(&pen, rect_1);
+			graphics->DrawLine(&pen, 6, 3, 13, 3);
+
 			graphics->FillRectangle(&brush, rect_2);
 			graphics->DrawRectangle(&pen, rect_2);
+			graphics->DrawLine(&pen, 2, 7, 9, 7);
 		}
 		else {
 			graphics->DrawRectangle(&pen, rect_0);
+			graphics->DrawLine(&pen, 1, 2, 13, 2);
 		}
 
 		EndPaint(hWnd, &ps);
@@ -82,7 +88,7 @@ namespace explorer {
 	{
 		resizeWindow(getParent()->getWidth() - 32, 1, 15, 15, true);
 	}
-
+#ifdef _DEBUG
 	void ButtonMaximizeWindow::testHandler(HWND hWnd, WPARAM wParam, LPARAM lParam)
 	{
 		POINT point;
@@ -94,4 +100,5 @@ namespace explorer {
 			+ L"MousePosY: " + std::to_wstring(point.y);
 		MessageBox(hWnd, str.c_str(), L"TEST", MB_OK);
 	}
+#endif
 }
