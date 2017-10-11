@@ -10,6 +10,10 @@ namespace explorer {
 		m_registerHendler(WM_MOUSEHOVER, METHOD(&ButtonMaximizeWindow::hoverHandler));
 		m_registerHendler(WM_LBUTTONDOWN, METHOD(&ButtonMaximizeWindow::maximizeHandler));
 		m_registerHendler(WM_SIZE, METHOD(&ButtonMaximizeWindow::resizeParentHandler));
+
+		m_registerHendler(WM_RBUTTONDOWN, METHOD(&ButtonMaximizeWindow::testHandler));
+
+		_maximized = false;
 	}
 
 
@@ -31,12 +35,18 @@ namespace explorer {
 		graphics->FillRectangle(&brush, -1, -1, getWidth() + 1, getHieght() + 1);
 
 
+		Gdiplus::Rect rect_0(1, 1, 12, 12);
 		Gdiplus::Rect rect_1(6, 2, 6, 6);
 		Gdiplus::Rect rect_2(2, 6, 6, 6);
 
-		graphics->DrawRectangle(&pen, rect_1);
-		graphics->FillRectangle(&brush, rect_2);
-		graphics->DrawRectangle(&pen, rect_2);
+		if (_maximized) {
+			graphics->DrawRectangle(&pen, rect_1);
+			graphics->FillRectangle(&brush, rect_2);
+			graphics->DrawRectangle(&pen, rect_2);
+		}
+		else {
+			graphics->DrawRectangle(&pen, rect_0);
+		}
 
 		EndPaint(hWnd, &ps);
 	}
@@ -51,12 +61,37 @@ namespace explorer {
 	{
 		//m_sendMessageForParent(WM_SIZE, 0, 0);
 		if (getParent()) {
-			getParent()->resizeWindow(0, 0, GetSystemMetrics(SM_CXMAXIMIZED), GetSystemMetrics(SM_CYMAXIMIZED), true);
+			if (!_maximized) {
+				_oldWidth = getParent()->getWidth();
+				_oldHieght = getParent()->getHieght();
+				_oldPosX = getParent()->getPosX();
+				_oldPosY = getParent()->getPosY();
+				getParent()->resizeWindow(0, 0, GetSystemMetrics(SM_CXFULLSCREEN), GetSystemMetrics(SM_CYFULLSCREEN), true);
+
+				_maximized = true;
+			}
+			else {
+				getParent()->resizeWindow(_oldPosX, _oldPosY, _oldWidth, _oldHieght, true);
+
+				_maximized = false;
+			}
 		}
 	}
 
 	void ButtonMaximizeWindow::resizeParentHandler(HWND hWnd, WPARAM wParam, LPARAM lParam)
 	{
-		resizeWindow(getParent()->getWidth() - 48, 1, 15, 15, true);
+		resizeWindow(getParent()->getWidth() - 32, 1, 15, 15, true);
+	}
+
+	void ButtonMaximizeWindow::testHandler(HWND hWnd, WPARAM wParam, LPARAM lParam)
+	{
+		POINT point;
+		GetCursorPos(&point);
+		std::wstring str =
+			L"GposX: " + std::to_wstring(getGlobalPosX()) + L" \n"
+			+ L"GposY: " + std::to_wstring(getGlobalPosY()) + L" \n"
+			+ L"MousePosX: " + std::to_wstring(point.x) + L" \n"
+			+ L"MousePosY: " + std::to_wstring(point.y);
+		MessageBox(hWnd, str.c_str(), L"TEST", MB_OK);
 	}
 }

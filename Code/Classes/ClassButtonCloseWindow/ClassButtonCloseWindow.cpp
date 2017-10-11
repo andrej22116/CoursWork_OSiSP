@@ -40,7 +40,7 @@ namespace explorer {
 
 		graphics->SetSmoothingMode(Gdiplus::SmoothingMode::SmoothingModeAntiAlias);
 
-		Gdiplus::Pen pen(Gdiplus::Color::White, 1.6);
+		Gdiplus::Pen pen(Gdiplus::Color::White, 1.55);
 		Gdiplus::SolidBrush brush((_hover) ? (Gdiplus::Color::Red) : (Gdiplus::Color(64,64,64)));
 		graphics->FillRectangle(&brush, -1, -1, getWidth()+1, getHieght()+1);
 
@@ -63,6 +63,6 @@ namespace explorer {
 
 	void ButtonClose::resizeParentHandler(HWND hWnd, WPARAM wParam, LPARAM lParam)
 	{
-		resizeWindow(getParent()->getWidth() - 32, 1, 15, 15, true);
+		resizeWindow(getParent()->getWidth() - 16, 1, 15, 15, true);
 	}
 }

@@ -50,9 +50,6 @@ namespace explorer {
 		RECT rect;
 		GetWindowRect(_hWnd, &rect);
 
-		if (_parent) {
-			return rect.left + _parent->getGlobalPosX();
-		}
 		return rect.left;
 	}
 	int Window::getGlobalPosY() const
@@ -60,9 +57,6 @@ namespace explorer {
 		RECT rect;
 		GetWindowRect(_hWnd, &rect);
 
-		if (_parent) {
-			return rect.top + _parent->getGlobalPosY();
-		}
 		return rect.top;
 	}
 
@@ -79,6 +73,7 @@ namespace explorer {
 	}
 	void Window::resizeWindow(int pos_x, int pos_y, int width, int hieght, bool show)
 	{
+		//MessageBox(nullptr, std::wstring(L"Width: " + std::to_wstring(width) + L", Hieght: " + std::to_wstring(hieght)).c_str(), L"test", MB_OK);
 		MoveWindow(_hWnd, pos_x, pos_y, width, hieght, show);
 		_pos_x = pos_x;
 		_pos_y = pos_y;

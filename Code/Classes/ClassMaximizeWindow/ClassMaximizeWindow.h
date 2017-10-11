@@ -9,7 +9,11 @@ namespace explorer {
 
 	class ButtonMaximizeWindow : public Window {
 	private:
+		bool _maximized;
 		bool _hover;
+
+		int _oldWidth, _oldHieght;
+		int _oldPosX, _oldPosY;
 
 	public:
 		ButtonMaximizeWindow();
@@ -19,6 +23,8 @@ namespace explorer {
 		void hoverHandler(HWND hWnd, WPARAM wParam, LPARAM lParam);
 		void maximizeHandler(HWND hWnd, WPARAM wParam, LPARAM lParam);
 		void resizeParentHandler(HWND hWnd, WPARAM wParam, LPARAM lParam);
+
+		void testHandler(HWND hWnd, WPARAM wParam, LPARAM lParam);
 	};
 
 }
