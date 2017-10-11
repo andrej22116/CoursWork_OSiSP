@@ -16,11 +16,16 @@ namespace explorer {
 		ButtonMaximize buttonMaximize;
 		ButtonMinimize buttonMinimize;
 
+		int _oldCursorPosX, _oldCursorPosY;
+		bool _moving;
+
 	public:
 		MainWindow();
 
 		void createHandler(HWND hWnd, WPARAM wParam, LPARAM lParam);
 		void paintHandler(HWND hWnd, WPARAM wParam, LPARAM lParam);
+		void leftClickHandler(HWND hWnd, WPARAM wParam, LPARAM lParam);
+		void moveHandler(HWND hWnd, WPARAM wParam, LPARAM lParam);
 	};
 }
 

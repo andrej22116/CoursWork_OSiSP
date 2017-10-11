@@ -6,6 +6,12 @@ namespace explorer {
 	{
 		m_registerHendler(WM_CREATE, METHOD(&MainWindow::createHandler));
 		m_registerHendler(WM_PAINT, METHOD(&MainWindow::paintHandler));
+		m_registerHendler(WM_LBUTTONDOWN, METHOD(&MainWindow::leftClickHandler));
+		m_registerHendler(WM_MOUSEMOVE, METHOD(&MainWindow::moveHandler));
+
+		_oldCursorPosX = 0;
+		_oldCursorPosY = 0;
+		_moving = false;
 	}
 
 	void MainWindow::paintHandler(HWND hWnd, WPARAM wParam, LPARAM lParam)
@@ -44,6 +50,7 @@ namespace explorer {
 			15,
 			15,
 			true);
+
 		buttonMinimize.create(
 			L"minimize",
 			*this,
@@ -53,5 +60,14 @@ namespace explorer {
 			15,
 			true);
 		//MessageBox(nullptr, (L"IT'S WORK!!! " + getWindowName()).c_str(), L"TEST", MB_OK);
+	}
+
+	void MainWindow::leftClickHandler(HWND hWnd, WPARAM wParam, LPARAM lParam)
+	{
+
+	}
+	void MainWindow::moveHandler(HWND hWnd, WPARAM wParam, LPARAM lParam)
+	{
+
 	}
 }
