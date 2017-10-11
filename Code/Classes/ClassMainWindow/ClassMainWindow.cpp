@@ -44,6 +44,14 @@ namespace explorer {
 			15,
 			15,
 			true);
+		buttonMinimize.create(
+			L"minimize",
+			*this,
+			this->getWidth() - 48,
+			1,
+			15,
+			15,
+			true);
 		//MessageBox(nullptr, (L"IT'S WORK!!! " + getWindowName()).c_str(), L"TEST", MB_OK);
 	}
 }

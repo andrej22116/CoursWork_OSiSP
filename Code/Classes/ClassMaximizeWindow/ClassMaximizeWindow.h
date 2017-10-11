@@ -7,7 +7,7 @@
 
 namespace explorer {
 
-	class ButtonMaximizeWindow : public Window {
+	class ButtonMaximize : public Window {
 	private:
 		bool _maximized;
 		bool _hover;
@@ -16,7 +16,7 @@ namespace explorer {
 		int _oldPosX, _oldPosY;
 
 	public:
-		ButtonMaximizeWindow();
+		ButtonMaximize();
 
 		void createHandler(HWND hWnd, WPARAM wParam, LPARAM lParam);
 		void paintHandler(HWND hWnd, WPARAM wParam, LPARAM lParam);

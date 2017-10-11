@@ -3,28 +3,28 @@
 
 
 namespace explorer {
-	ButtonMaximizeWindow::ButtonMaximizeWindow()
+	ButtonMaximize::ButtonMaximize()
 	{
-		m_registerHendler(WM_CREATE, METHOD(&ButtonMaximizeWindow::createHandler));
-		m_registerHendler(WM_PAINT, METHOD(&ButtonMaximizeWindow::paintHandler));
-		m_registerHendler(WM_MOUSEHOVER, METHOD(&ButtonMaximizeWindow::hoverHandler));
-		m_registerHendler(WM_LBUTTONDOWN, METHOD(&ButtonMaximizeWindow::maximizeHandler));
-		m_registerHendler(WM_SIZE, METHOD(&ButtonMaximizeWindow::resizeParentHandler));
+		m_registerHendler(WM_CREATE, METHOD(&ButtonMaximize::createHandler));
+		m_registerHendler(WM_PAINT, METHOD(&ButtonMaximize::paintHandler));
+		m_registerHendler(WM_MOUSEHOVER, METHOD(&ButtonMaximize::hoverHandler));
+		m_registerHendler(WM_LBUTTONDOWN, METHOD(&ButtonMaximize::maximizeHandler));
+		m_registerHendler(WM_SIZE, METHOD(&ButtonMaximize::resizeParentHandler));
 
 #ifdef _DEBUG
-		m_registerHendler(WM_RBUTTONDOWN, METHOD(&ButtonMaximizeWindow::testHandler));
+		m_registerHendler(WM_RBUTTONDOWN, METHOD(&ButtonMaximize::testHandler));
 #endif
 
 		_maximized = false;
 	}
 
 
-	void ButtonMaximizeWindow::createHandler(HWND hWnd, WPARAM wParam, LPARAM lParam)
+	void ButtonMaximize::createHandler(HWND hWnd, WPARAM wParam, LPARAM lParam)
 	{
 		getHoverMessages(true);
 	}
 
-	void ButtonMaximizeWindow::paintHandler(HWND hWnd, WPARAM wParam, LPARAM lParam)
+	void ButtonMaximize::paintHandler(HWND hWnd, WPARAM wParam, LPARAM lParam)
 	{
 		PAINTSTRUCT ps;
 		HDC hDC = BeginPaint(hWnd, &ps);
@@ -57,13 +57,13 @@ namespace explorer {
 		EndPaint(hWnd, &ps);
 	}
 
-	void ButtonMaximizeWindow::hoverHandler(HWND hWnd, WPARAM wParam, LPARAM lParam)
+	void ButtonMaximize::hoverHandler(HWND hWnd, WPARAM wParam, LPARAM lParam)
 	{
 		_hover = wParam;
 		redrawWindow(false);
 	}
 
-	void ButtonMaximizeWindow::maximizeHandler(HWND hWnd, WPARAM wParam, LPARAM lParam)
+	void ButtonMaximize::maximizeHandler(HWND hWnd, WPARAM wParam, LPARAM lParam)
 	{
 		//m_sendMessageForParent(WM_SIZE, 0, 0);
 		if (getParent()) {
@@ -84,12 +84,12 @@ namespace explorer {
 		}
 	}
 
-	void ButtonMaximizeWindow::resizeParentHandler(HWND hWnd, WPARAM wParam, LPARAM lParam)
+	void ButtonMaximize::resizeParentHandler(HWND hWnd, WPARAM wParam, LPARAM lParam)
 	{
 		resizeWindow(getParent()->getWidth() - 32, 1, 15, 15, true);
 	}
 #ifdef _DEBUG
-	void ButtonMaximizeWindow::testHandler(HWND hWnd, WPARAM wParam, LPARAM lParam)
+	void ButtonMaximize::testHandler(HWND hWnd, WPARAM wParam, LPARAM lParam)
 	{
 		POINT point;
 		GetCursorPos(&point);
