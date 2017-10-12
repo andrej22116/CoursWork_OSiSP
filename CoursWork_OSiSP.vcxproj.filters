@@ -1,0 +1,113 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Файлы ресурсов">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Logick">
+      <UniqueIdentifier>{9529fc9e-69ed-47a8-8db8-71a66e31f2da}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Interface">
+      <UniqueIdentifier>{1ccb63ab-7866-43d1-b8e1-0d7a1d6d0bb5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Interface\Windows">
+      <UniqueIdentifier>{1426d180-a2dc-4dc1-9031-1e2105a40728}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core">
+      <UniqueIdentifier>{0ff41661-4685-4f86-8196-b3aab0b3e37a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Logs">
+      <UniqueIdentifier>{42aa8f17-8aab-48be-8f51-65eefc2088ac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Interface\Windows\ClassMainWindow">
+      <UniqueIdentifier>{982f827f-72ea-4c89-ac29-42576aed8a8d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Interface\Windows\AbstractWindow">
+      <UniqueIdentifier>{75f0dcd2-3537-44ee-8ae6-3aa763c38fee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Exceptions">
+      <UniqueIdentifier>{e214ae08-1b5c-4463-a4e7-6d0eea6dc875}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Exceptions\ClassWindowExceptions">
+      <UniqueIdentifier>{f9082a84-f214-4efe-bb27-e73e51bb59ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Exceptions\ClassWindowClassException">
+      <UniqueIdentifier>{1b62b140-ce0b-4d57-822f-14a34481a91b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Exceptions\ClassException">
+      <UniqueIdentifier>{992e484d-32f1-4c82-8342-357a0ceea6c9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Precompile">
+      <UniqueIdentifier>{7319802f-ac6e-4bbd-8345-7630df78b7b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Interface\Windows\ClassButtonCloseWindow">
+      <UniqueIdentifier>{3e030632-b642-41b4-b1a0-6ecb00bfe688}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Interface\Windows\ClassMinimizeWindow">
+      <UniqueIdentifier>{b70e9f50-d67f-4d91-bc9b-d223274e35c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Interface\Windows\ClassMaximizeWindow">
+      <UniqueIdentifier>{b909d75d-b353-4d20-a7aa-f74c635292ae}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Code\WinMain.cpp" />
+    <ClCompile Include="Code\Classes\ClassMainWindow\ClassMainWindow.cpp">
+      <Filter>Interface\Windows\ClassMainWindow</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Classes\Exceptions\ClassWindowException\ClassWindowException.cpp">
+      <Filter>Core\Exceptions\ClassWindowExceptions</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Classes\AbstractWindow\ClassAbstractWindow.cpp">
+      <Filter>Interface\Windows\AbstractWindow</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Classes\Exceptions\ClassWindowClassException\ClassWindowClassException.cpp">
+      <Filter>Core\Exceptions\ClassWindowClassException</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Classes\Exceptions\ClassException\ClassException.cpp">
+      <Filter>Core\Exceptions\ClassException</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Core\Precompile</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Classes\ClassButtonCloseWindow\ClassButtonCloseWindow.cpp">
+      <Filter>Interface\Windows\ClassButtonCloseWindow</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Classes\ClassMaximizeWindow\ClassMaximizeWindow.cpp">
+      <Filter>Interface\Windows\ClassMaximizeWindow</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Classes\ClassMinimizeWindow\ClassMinimizeWindow.cpp">
+      <Filter>Interface\Windows\ClassMinimizeWindow</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Code\Classes\ClassMainWindow\ClassMainWindow.h">
+      <Filter>Interface\Windows\ClassMainWindow</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Classes\Exceptions\ClassWindowException\ClassWindowException.h">
+      <Filter>Core\Exceptions\ClassWindowExceptions</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Classes\AbstractWindow\ClassAbstractWindow.h">
+      <Filter>Interface\Windows\AbstractWindow</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Classes\Exceptions\ClassWindowClassException\ClassWindowClassException.h">
+      <Filter>Core\Exceptions\ClassWindowClassException</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Classes\Exceptions\ClassException\ClassException.h">
+      <Filter>Core\Exceptions\ClassException</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>Core\Precompile</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Classes\ClassButtonCloseWindow\ClassButtonCloseWindow.h">
+      <Filter>Interface\Windows\ClassButtonCloseWindow</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Classes\ClassMaximizeWindow\ClassMaximizeWindow.h">
+      <Filter>Interface\Windows\ClassMaximizeWindow</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Classes\ClassMinimizeWindow\ClassMinimizeWindow.h">
+      <Filter>Interface\Windows\ClassMinimizeWindow</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
