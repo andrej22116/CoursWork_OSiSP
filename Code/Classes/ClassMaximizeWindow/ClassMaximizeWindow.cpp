@@ -28,13 +28,13 @@ namespace explorer {
 	{
 		PAINTSTRUCT ps;
 		HDC hDC = BeginPaint(hWnd, &ps);
-		std::shared_ptr<Gdiplus::Graphics> graphics = std::make_shared<Gdiplus::Graphics>(hDC);
+		Gdiplus::Graphics graphics(hDC);
 
 		//graphics->SetSmoothingMode(Gdiplus::SmoothingMode::SmoothingModeAntiAlias);
 
 		Gdiplus::Pen pen(Gdiplus::Color::White, 1.6);
 		Gdiplus::SolidBrush brush((_hover) ? (Gdiplus::Color(96, 96, 96)) : (Gdiplus::Color(64, 64, 64)));
-		graphics->FillRectangle(&brush, -1, -1, getWidth() + 1, getHieght() + 1);
+		graphics.FillRectangle(&brush, -1, -1, getWidth() + 1, getHieght() + 1);
 
 
 		Gdiplus::Rect rect_0(1, 1, 12, 12);
@@ -42,16 +42,16 @@ namespace explorer {
 		Gdiplus::Rect rect_2(2, 6, 6, 6);
 
 		if (_maximized) {
-			graphics->DrawRectangle(&pen, rect_1);
-			graphics->DrawLine(&pen, 6, 3, 13, 3);
+			graphics.DrawRectangle(&pen, rect_1);
+			graphics.DrawLine(&pen, 6, 3, 13, 3);
 
-			graphics->FillRectangle(&brush, rect_2);
-			graphics->DrawRectangle(&pen, rect_2);
-			graphics->DrawLine(&pen, 2, 7, 9, 7);
+			graphics.FillRectangle(&brush, rect_2);
+			graphics.DrawRectangle(&pen, rect_2);
+			graphics.DrawLine(&pen, 2, 7, 9, 7);
 		}
 		else {
-			graphics->DrawRectangle(&pen, rect_0);
-			graphics->DrawLine(&pen, 1, 2, 13, 2);
+			graphics.DrawRectangle(&pen, rect_0);
+			graphics.DrawLine(&pen, 1, 2, 13, 2);
 		}
 
 		EndPaint(hWnd, &ps);
@@ -72,7 +72,7 @@ namespace explorer {
 				_oldHieght = getParent()->getHieght();
 				_oldPosX = getParent()->getPosX();
 				_oldPosY = getParent()->getPosY();
-				getParent()->resizeWindow(0, 0, GetSystemMetrics(SM_CXFULLSCREEN), GetSystemMetrics(SM_CYFULLSCREEN), true);
+				getParent()->resizeWindow(0, 0, GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN), true);
 
 				_maximized = true;
 			}

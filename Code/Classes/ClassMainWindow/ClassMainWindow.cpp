@@ -18,15 +18,15 @@ namespace explorer {
 	{
 		PAINTSTRUCT ps;
 		HDC hDC = BeginPaint(hWnd, &ps);
-		std::shared_ptr<Gdiplus::Graphics> graphics = std::make_shared<Gdiplus::Graphics>(hDC);
+		Gdiplus::Graphics graphics(hDC);
 
 		Gdiplus::SolidBrush brush_2(Gdiplus::Color(32, 32, 32));
 		Gdiplus::Rect region_2(0, 0, this->getWidth(), this->getHieght());
-		graphics->FillRectangle(&brush_2, region_2);
+		graphics.FillRectangle(&brush_2, region_2);
 
 		Gdiplus::SolidBrush brush(Gdiplus::Color(64, 64, 64));
 		Gdiplus::Rect region(0, 0, this->getWidth(), 17);
-		graphics->FillRectangle(&brush, region);
+		graphics.FillRectangle(&brush, region);
 
 		EndPaint(hWnd, &ps);
 	}

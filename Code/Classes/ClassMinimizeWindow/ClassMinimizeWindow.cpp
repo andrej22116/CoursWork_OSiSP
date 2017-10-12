@@ -22,13 +22,13 @@ namespace explorer {
 	{
 		PAINTSTRUCT ps;
 		HDC hDC = BeginPaint(hWnd, &ps);
-		std::shared_ptr<Gdiplus::Graphics> graphics = std::make_shared<Gdiplus::Graphics>(hDC);
+		Gdiplus::Graphics graphics(hDC);
 
 		Gdiplus::Pen pen(Gdiplus::Color::White, 1.6);
 		Gdiplus::SolidBrush brush((_hover) ? (Gdiplus::Color(96, 96, 96)) : (Gdiplus::Color(64, 64, 64)));
-		graphics->FillRectangle(&brush, -1, -1, getWidth() + 1, getHieght() + 1);
+		graphics.FillRectangle(&brush, -1, -1, getWidth() + 1, getHieght() + 1);
 
-		graphics->DrawRectangle(&pen, 2, getHieght()-3, getWidth()-5, 1);
+		graphics.DrawRectangle(&pen, 2, getHieght()-3, getWidth()-5, 1);
 
 		EndPaint(hWnd, &ps);
 	}
