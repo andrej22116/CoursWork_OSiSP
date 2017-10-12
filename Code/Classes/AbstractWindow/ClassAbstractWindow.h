@@ -65,6 +65,7 @@ namespace explorer {
 		void minimizeWindow(bool hide);
 		void setWindowName(std::wstring name);
 
+		void moveWindowPos(int x, int y, bool repaint = false);
 		void resizeWindow(int width, int hieght, bool show);
 		void resizeWindow(int pos_x, int pos_y, int width, int hieght, bool show);
 		void redrawWindow(bool erase);

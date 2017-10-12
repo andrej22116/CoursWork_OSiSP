@@ -67,6 +67,10 @@ namespace explorer {
 		_windowName = name;
 	}
 
+	void Window::moveWindowPos(int x, int y, bool repaint)
+	{
+		MoveWindow(_hWnd, x, y, _width, _hieght, repaint);
+	}
 	void Window::resizeWindow(int width, int hieght, bool show)
 	{
 		resizeWindow(_pos_x, _pos_y, width, hieght, show);
