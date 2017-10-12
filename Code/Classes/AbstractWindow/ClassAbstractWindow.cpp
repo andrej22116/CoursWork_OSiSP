@@ -70,6 +70,9 @@ namespace explorer {
 	void Window::moveWindowPos(int x, int y, bool repaint)
 	{
 		MoveWindow(_hWnd, x, y, _width, _hieght, repaint);
+		_pos_x = x;
+		_pos_y = y;
+		m_sendMessageForAllChildren(WM_SIZE, 0, 0);
 	}
 	void Window::resizeWindow(int width, int hieght, bool show)
 	{

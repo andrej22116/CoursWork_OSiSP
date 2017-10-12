@@ -6,7 +6,8 @@ namespace explorer {
 	{
 		m_registerHendler(WM_CREATE, METHOD(&MainWindow::createHandler));
 		m_registerHendler(WM_PAINT, METHOD(&MainWindow::paintHandler));
-		m_registerHendler(WM_LBUTTONDOWN, METHOD(&MainWindow::leftClickHandler));
+		m_registerHendler(WM_LBUTTONDOWN, METHOD(&MainWindow::leftButtonDownHandler));
+		m_registerHendler(WM_LBUTTONUP, METHOD(&MainWindow::leftButtonUpHandler));
 		m_registerHendler(WM_MOUSEMOVE, METHOD(&MainWindow::moveHandler));
 
 		_oldCursorPosX = 0;
@@ -62,12 +63,37 @@ namespace explorer {
 		//MessageBox(nullptr, (L"IT'S WORK!!! " + getWindowName()).c_str(), L"TEST", MB_OK);
 	}
 
-	void MainWindow::leftClickHandler(HWND hWnd, WPARAM wParam, LPARAM lParam)
+	void MainWindow::leftButtonDownHandler(HWND hWnd, WPARAM wParam, LPARAM lParam)
 	{
+		POINT point;
+		GetCursorPos(&point);
+		if ((point.x >= getPosX() && point.x <= getPosX() + getWidth())
+			&& (point.y >= getPosY() && point.y <= getPosY() + 16)) {
+			_oldCursorPosX = point.x;
+			_oldCursorPosY = point.y;
 
+			SetCapture(getHWND());
+			_moving = true;
+		}
+	}
+	void MainWindow::leftButtonUpHandler(HWND hWnd, WPARAM wParam, LPARAM lParam)
+	{
+		if (_moving) {
+			ReleaseCapture();
+			_moving = false;
+		}
 	}
 	void MainWindow::moveHandler(HWND hWnd, WPARAM wParam, LPARAM lParam)
 	{
+		if (_moving) {
+			POINT point;
+			GetCursorPos(&point);
 
+			int newPosX = point.x - _oldCursorPosX + getPosX();
+			int newPosY = point.y - _oldCursorPosY + getPosY();
+			_oldCursorPosX = point.x;
+			_oldCursorPosY = point.y;
+			moveWindowPos(newPosX, newPosY);
+		}
 	}
 }

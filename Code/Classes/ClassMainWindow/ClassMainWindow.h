@@ -24,7 +24,10 @@ namespace explorer {
 
 		void createHandler(HWND hWnd, WPARAM wParam, LPARAM lParam);
 		void paintHandler(HWND hWnd, WPARAM wParam, LPARAM lParam);
-		void leftClickHandler(HWND hWnd, WPARAM wParam, LPARAM lParam);
+		
+		void leftButtonDownHandler(HWND hWnd, WPARAM wParam, LPARAM lParam);
+		void leftButtonUpHandler(HWND hWnd, WPARAM wParam, LPARAM lParam);
+		
 		void moveHandler(HWND hWnd, WPARAM wParam, LPARAM lParam);
 	};
 }
