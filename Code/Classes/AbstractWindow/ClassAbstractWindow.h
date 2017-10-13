@@ -3,6 +3,8 @@
 #include "..\Exceptions\ClassWindowException\ClassWindowException.h"
 #include "..\Exceptions\ClassWindowClassException\ClassWindowClassException.h"
 
+#include "..\..\Includes\Ivents\Ivents.h"
+
 #ifndef _CLASS_WINDOW_H_
 #define _CLASS_WINDOW_H_
 
@@ -12,6 +14,14 @@ namespace explorer {
 	class Window;
 
 	typedef std::function<void(HWND, WPARAM, LPARAM)> Hendler;
+
+	typedef std::function<void(Gdiplus::Graphics&)> PaintHandler;
+	typedef std::function<void(const MouseEventClick&)> MouseClickHandler;
+	typedef std::function<void(const MouseEventWheel&)> MouseWheelHandler;
+	typedef std::function<void(const MouseEvent&)> MouseMoveHandler;
+	typedef std::function<void(const ParentEvent&)> ParentHandler;
+	typedef std::function<void(const KeyEvent&)> KeyboardHandler;
+
 
 	class Window {
 	private:
@@ -24,6 +34,12 @@ namespace explorer {
 		std::list<Window*> _childList;
 
 		std::map<int, std::list<Hendler>> _handlersMap;
+		std::map<int, std::list<MouseClickHandler>> _mouseClickHandlers;
+		std::map<int, std::list<MouseWheelHandler>> _mouseWheelHandlers;
+		std::map<int, std::list<MouseMoveHandler>> _mouseMoveHandlers;
+		std::map<int, std::list<KeyboardHandler>> _keyboardHandlers;
+		std::map<int, std::list<ParentHandler>> _parentHandler;
+		std::map<int, std::list<PaintHandler>> _paintHandler;
 
 		int _width, _hieght;
 		int _pos_x, _pos_y;
@@ -90,7 +106,12 @@ namespace explorer {
 		/*
 		 *	message, METHOD( & your_method );
 		 */
-		void m_registerHendler(UINT message, Hendler method);
+		void m_registerHendler(PaintHandler method);
+		void m_registerHendler(MouseClickHandler method);
+		void m_registerHendler(MouseWheelHandler method);
+		void m_registerHendler(MouseMoveHandler method);
+		void m_registerHendler(KeyboardHandler method);
+
 		void m_sendMessageForParent(UINT message, WPARAM wParam, LPARAM lParam);
 		void m_sendMessageForAllChildren(UINT message, WPARAM wParam, LPARAM lParam);
 		void m_sendMessageForChildren(std::wstring name, UINT message, WPARAM wParam, LPARAM lParam);
