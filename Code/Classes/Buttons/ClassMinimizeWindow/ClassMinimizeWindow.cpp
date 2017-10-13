@@ -26,7 +26,7 @@ namespace explorer {
 
 		graphics.DrawRectangle(&pen, 2, getHieght()-3, getWidth()-5, 1);
 	}
-	void ButtonMinimize::hoverHandler(HoverStatus status)
+	void ButtonMinimize::hoverHandler(bool status)
 	{
 		_hover = status;
 		redrawWindow(false);

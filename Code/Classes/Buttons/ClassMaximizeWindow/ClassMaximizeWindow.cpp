@@ -50,7 +50,7 @@ namespace explorer {
 		}
 	}
 
-	void ButtonMaximize::hoverHandler(HoverStatus status)
+	void ButtonMaximize::hoverHandler(bool status)
 	{
 		_hover = status;
 		redrawWindow(false);

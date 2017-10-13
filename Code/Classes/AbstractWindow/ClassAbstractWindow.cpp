@@ -17,7 +17,7 @@ namespace explorer {
 
 			//m_registerHendler(METHOD(&Window::closeWindow));
 			//m_registerHendler(WM_PAINT, METHOD(&Window::paintWindow));
-			m_registerHendler(METHOD(&Window::timerCheckHoverWindow));
+			m_registerTimerHendler(METHOD(&Window::timerCheckHoverWindow));
 	}
 	Window::~Window()
 	{
@@ -275,6 +275,9 @@ namespace explorer {
 
 			} break;
 			case WM_MOUSEHOVER: {
+				for (auto handler : window->_hoverHandlers) {
+					handler(wParam);
+				}
 			} break;
 			case WM_MOUSEWHEEL: {
 				short value = GET_WHEEL_DELTA_WPARAM(wParam) / WHEEL_DELTA;
@@ -315,35 +318,35 @@ namespace explorer {
 
 	void Window::m_registerHendler(PaintHandler method)
 	{
-		_paintHandlers.insert(method);
+		_paintHandlers.push_back(method);
 	}
 	void Window::m_registerHendler(MouseClickHandler method)
 	{
-		_mouseClickHandlers.insert(method);
+		_mouseClickHandlers.push_back(method);
 	}
 	void Window::m_registerHendler(MouseWheelHandler method)
 	{
-		_mouseWheelHandlers.insert(method);
+		_mouseWheelHandlers.push_back(method);
 	}
 	void Window::m_registerHendler(MouseMoveHandler method)
 	{
-		_mouseMoveHandlers.insert(method);
+		_mouseMoveHandlers.push_back(method);
 	}
 	void Window::m_registerHendler(KeyboardHandler method)
 	{
-		_keyboardHandlers.insert(method);
+		_keyboardHandlers.push_back(method);
 	}
 	void Window::m_registerHendler(ParentHandler method)
 	{
-		_parentHandlers.insert(method);
-	}
-	void Window::m_registerHendler(TimerHandler method)
-	{
-		_timerHandlers.insert(method);
+		_parentHandlers.push_back(method);
 	}
 	void Window::m_registerHendler(HoverHandler method)
 	{
-		_hoverHandlers.insert(method);
+		_hoverHandlers.push_back(method);
+	}
+	void Window::m_registerTimerHendler(TimerHandler method)
+	{
+		_timerHandlers.push_back(method);
 	}
 
 	void Window::m_sendMessageForParent(UINT message, WPARAM wParam, LPARAM lParam)

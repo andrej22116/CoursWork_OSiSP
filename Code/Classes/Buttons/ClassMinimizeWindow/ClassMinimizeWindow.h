@@ -16,7 +16,7 @@ namespace explorer {
 		virtual void createWindow() override;
 
 		void paintHandler(Gdiplus::Graphics& graphics);
-		void hoverHandler(HoverStatus status);
+		void hoverHandler(bool status);
 		void resizeParentHandler(const ParentEvent& parentEvent);
 
 		void minimizeHandler(const MouseEventClick& mouseEventClick);

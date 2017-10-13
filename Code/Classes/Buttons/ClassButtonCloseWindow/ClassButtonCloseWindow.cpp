@@ -25,7 +25,7 @@ namespace explorer {
 		getHoverMessages(true);
 	}
 
-	void ButtonClose::hoverHandler(HoverStatus status)
+	void ButtonClose::hoverHandler(bool status)
 	{
 		_hover = status;
 		redrawWindow(false);

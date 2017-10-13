@@ -30,7 +30,7 @@ namespace explorer {
 	typedef std::function<void(const ParentEvent& parentEvent)> ParentHandler;
 	typedef std::function<void(const KeyEvent& keyEvent)> KeyboardHandler;
 	typedef std::function<void(const int& timer_ID)> TimerHandler;
-	typedef std::function<void(HoverStatus status)> HoverHandler;
+	typedef std::function<void(bool status)> HoverHandler;
 
 
 	class Window {
@@ -43,14 +43,14 @@ namespace explorer {
 		Window* _parent;
 		std::list<Window*> _childList;
 
-		std::set<MouseClickHandler> _mouseClickHandlers;
-		std::set<MouseWheelHandler> _mouseWheelHandlers;
-		std::set<MouseMoveHandler> _mouseMoveHandlers;
-		std::set<KeyboardHandler> _keyboardHandlers;
-		std::set<ParentHandler> _parentHandlers;
-		std::set<PaintHandler> _paintHandlers;
-		std::set<TimerHandler> _timerHandlers;
-		std::set<HoverHandler> _hoverHandlers;
+		std::list<MouseClickHandler> _mouseClickHandlers;
+		std::list<MouseWheelHandler> _mouseWheelHandlers;
+		std::list<MouseMoveHandler> _mouseMoveHandlers;
+		std::list<KeyboardHandler> _keyboardHandlers;
+		std::list<ParentHandler> _parentHandlers;
+		std::list<PaintHandler> _paintHandlers;
+		std::list<TimerHandler> _timerHandlers;
+		std::list<HoverHandler> _hoverHandlers;
 
 
 		int _width, _hieght;
@@ -122,8 +122,8 @@ namespace explorer {
 		void m_registerHendler(MouseMoveHandler method);
 		void m_registerHendler(KeyboardHandler method);
 		void m_registerHendler(ParentHandler method);
-		void m_registerHendler(TimerHandler method);
 		void m_registerHendler(HoverHandler method);
+		void m_registerTimerHendler(TimerHandler method);
 
 		void m_sendMessageForParent(UINT message, WPARAM wParam, LPARAM lParam);
 		void m_sendMessageForAllChildren(UINT message, WPARAM wParam, LPARAM lParam);
