@@ -56,6 +56,12 @@
     <Filter Include="Interface\Windows\Buttons\ClassMaximizeWindow">
       <UniqueIdentifier>{b909d75d-b353-4d20-a7aa-f74c635292ae}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Interface\DefaultParametrs">
+      <UniqueIdentifier>{57fa1ef0-7969-47ca-8017-b4654ff5807f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Interface\Windows\IventsHeaders">
+      <UniqueIdentifier>{10c15249-d080-4c0a-8f0e-e2f292d86a11}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Code\WinMain.cpp" />
@@ -120,6 +126,9 @@
     </ClInclude>
     <ClInclude Include="Code\Classes\Buttons\ClassMinimizeWindow\ClassMinimizeWindow.h">
       <Filter>Interface\Windows\Buttons\ClassMinimizeWindow</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Includes\Ivents\Ivents.h">
+      <Filter>Interface\Windows\IventsHeaders</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -15,14 +15,12 @@ namespace explorer {
 			Gdiplus::GdiplusStartupInput gdiplusStartupInput;
 			Gdiplus::GdiplusStartup(&_gdiplusToken, &gdiplusStartupInput, NULL);
 
-			m_registerHendler(WM_DESTROY, METHOD(&Window::closeWindow));
+			//m_registerHendler(METHOD(&Window::closeWindow));
 			//m_registerHendler(WM_PAINT, METHOD(&Window::paintWindow));
-			m_registerHendler(WM_TIMER, METHOD(&Window::hoverWindow));
+			m_registerHendler(METHOD(&Window::hoverWindow));
 	}
 	Window::~Window()
 	{
-		_graphics.~shared_ptr();
-
 		s_windowsMap.erase(_hWnd);
 		ReleaseDC(_hWnd, _hDC);
 		DestroyWindow(_hWnd);
@@ -192,12 +190,114 @@ namespace explorer {
 	LRESULT CALLBACK Window::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	{
 		if (s_windowsMap.find(hWnd) != s_windowsMap.end()) {
-			if (s_windowsMap[hWnd]->_handlersMap.find(msg) != s_windowsMap[hWnd]->_handlersMap.end()) {
-				for (auto function : s_windowsMap[hWnd]->_handlersMap[msg]) {
-					function(hWnd, wParam, lParam);
+			Window* window = s_windowsMap[hWnd];
+			switch (msg) {
+			case WM_CREATE: { window->createWindow(); } break;
+			case WM_PAINT: {
+				PAINTSTRUCT ps;
+				HDC hDC = BeginPaint(window->_hWnd, &ps);
+				Gdiplus::Graphics graphics(hDC);
+				for (auto handler : window->_paintHandlers) {
+					handler(graphics);
 				}
-				return 0;
+				EndPaint(window->_hWnd, &ps);
+			} break;
+			case WM_MOVE: {
+				ParentEvent parentEvent;
+				parentEvent.Code = PARENT_MOVE;
+				parentEvent.Pos_X = window->_pos_x;
+				parentEvent.Pos_Y = window->_pos_y;
+				parentEvent.Width = window->_width;
+				parentEvent.Height = window->_hieght;
+
+				for (auto child : window->_childList) {
+					for (auto handler : child->_parentHandlers) {
+						handler(parentEvent);
+					}
+				}
+			} break;
+			case WM_SIZE: {} break;
+			case WM_MOUSEMOVE: {
+				POINT cursorPoint;
+				GetCursorPos(&cursorPoint);
+
+				MouseEvent mouseEvent(LOWORD(lParam), HIWORD(lParam), cursorPoint.x, cursorPoint.y);
+
+				for (auto handler : window->_mouseMoveHandlers) {
+					handler(mouseEvent);
+				}
+			} break;
+			case WM_LBUTTONDOWN: case WM_LBUTTONUP: case WM_LBUTTONDBLCLK:
+			case WM_RBUTTONDOWN: case WM_RBUTTONUP: case WM_RBUTTONDBLCLK:
+			case WM_MBUTTONDOWN: case WM_MBUTTONUP: case WM_MBUTTONDBLCLK: {
+				POINT cursorPoint;
+				GetCursorPos(&cursorPoint);
+
+				MouseKeyCodes keyCode;
+				MouseKeyClick keyClick;
+				KeyStatus keyStatus;
+
+				switch (msg) {
+				case WM_LBUTTONUP: case WM_RBUTTONUP: case WM_MBUTTONUP: { keyStatus = KEY_RELEASED; } break;
+				default: { keyStatus = KEY_PRESSED; } break;
+				}
+
+				switch (msg) {
+				case WM_LBUTTONDOWN: case WM_LBUTTONUP: case WM_LBUTTONDBLCLK: {
+					keyCode = MOUSE_LEFT;
+				} break;
+				case WM_RBUTTONDOWN: case WM_RBUTTONUP: case WM_RBUTTONDBLCLK: {
+					keyCode = MOUSE_RIGHT;
+				} break;
+				case WM_MBUTTONDOWN: case WM_MBUTTONUP: case WM_MBUTTONDBLCLK: {
+					keyCode = MOUSE_MIDDLE;
+				} break;
+				}
+
+				switch (msg) {
+				case WM_LBUTTONDBLCLK: case WM_RBUTTONDBLCLK: case WM_MBUTTONDBLCLK: {
+					keyClick = MOUSE_CLICK_DOUBLE;
+				} break;
+				default: {
+					keyClick = MOUSE_CLICK_ONE;
+				} break;
+				}
+
+				MouseEventClick mouseEventClick(
+					keyCode, keyClick, keyStatus,
+					LOWORD(lParam), HIWORD(lParam),
+					cursorPoint.x, cursorPoint.y
+				);
+
+				for (auto handler : window->_mouseClickHandlers) {
+					handler(mouseEventClick);
+				}
+
+			} break;
+			case WM_MOUSEWHEEL: {
+				short value = GET_WHEEL_DELTA_WPARAM(wParam) / WHEEL_DELTA;
+				MouseWheelCodes mouseWheelCodes;
+				if (value > 0) {
+					mouseWheelCodes = MOUSE_WHEEL_TOP;
+				}
+				else if (value < 0) {
+					mouseWheelCodes = MOUSE_WHEEL_BOT;
+				}
+
+				MouseEventWheel mouseEventWheel(mouseWheelCodes, LOWORD(lParam), HIWORD(lParam), LOWORD(lParam), HIWORD(lParam));
+				for (auto handler : window->_mouseWheelHandlers) {
+					handler(mouseEventWheel);
+				}
+			} break;
+			case WM_TIMER: {
+				for (auto handler : window->_timerHandlers) {
+					handler(wParam);
+				}
+			} break;
+			case WM_DESTROY: { window->closeWindow(); } break;
+			default: return DefWindowProc(hWnd, msg, wParam, lParam);
 			}
+			return 0;
 		}
 		return DefWindowProc(hWnd, msg, wParam, lParam);
 	}
@@ -211,13 +311,31 @@ namespace explorer {
 		return msg.wParam;
 	}
 
-	void Window::m_registerHendler(UINT message, Hendler method)
+	void Window::m_registerHendler(PaintHandler method)
 	{
-		if (_handlersMap.find(message) == _handlersMap.end()) {
-			_handlersMap.insert(std::pair<int, std::list<Hendler>>(message, std::list<Hendler>()));
-		}
-		_handlersMap[message].push_back(method);
+		_paintHandlers.insert(method);
 	}
+	void Window::m_registerHendler(MouseClickHandler method)
+	{
+		_mouseClickHandlers.insert(method);
+	}
+	void Window::m_registerHendler(MouseWheelHandler method)
+	{
+		_mouseWheelHandlers.insert(method);
+	}
+	void Window::m_registerHendler(MouseMoveHandler method)
+	{
+		_mouseMoveHandlers.insert(method);
+	}
+	void Window::m_registerHendler(KeyboardHandler method)
+	{
+		_keyboardHandlers.insert(method);
+	}
+	void Window::m_registerHendler(TimerHandler method)
+	{
+		_timerHandlers.insert(method);
+	}
+
 	void Window::m_sendMessageForParent(UINT message, WPARAM wParam, LPARAM lParam)
 	{
 		SendMessage(_parent->getHWND(), message, wParam, lParam);
@@ -277,7 +395,6 @@ namespace explorer {
 		ShowWindow(_hWnd, (show ? SW_SHOW : SW_HIDE));
 
 		_hDC = GetDC(_hWnd);
-		_graphics = std::make_shared<Gdiplus::Graphics>(_hDC);
 
 		_g_pos_X = getGlobalPosX();
 		_g_pos_Y = getGlobalPosY();
@@ -335,17 +452,19 @@ namespace explorer {
 	}
 
 
-	
-	void Window::closeWindow(HWND hWnd, WPARAM wParam, LPARAM lParam)
+	void Window::createWindow()
+	{
+	}
+	void Window::closeWindow()
 	{
 		s_windowsMap.erase(_hWnd);
 		if (s_windowsMap.size() == 0) {
 			PostQuitMessage(0);
 		}
 	}
-	void Window::hoverWindow(HWND hWnd, WPARAM wParam, LPARAM lParam)
+	void Window::hoverWindow(const int ID)
 	{
-		if (wParam == TIMER_UPP_HOVER) {
+		if (ID == TIMER_UPP_HOVER) {
 			//bool windowStatus = _hWnd == GetForegroundWindow();
 
 			POINT point;

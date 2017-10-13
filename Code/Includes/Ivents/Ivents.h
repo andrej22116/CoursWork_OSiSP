@@ -12,6 +12,14 @@ namespace explorer {
 
 		MOUSE_MAX
 	};
+	enum MouseKeyClick {
+		MOUSE_CLICK_ONE,
+		MOUSE_CLICK_DOUBLE
+	};
+	enum MouseWheelCodes {
+		MOUSE_WHEEL_TOP,
+		MOUSE_WHEEL_BOT
+	};
 
 	enum KeyCodes {
 		KEY_LBUTTON = 0x01,		// Left mouse button
@@ -174,16 +182,26 @@ namespace explorer {
 	};
 
 	struct MouseEvent {
-		int x, y;
-		MouseEvent(int nx, int ny) : x(nx), y(ny) {}
+		int x, y, global_x, global_y;
+		MouseEvent(int nx, int ny, int ngx, int ngy) : x(nx), y(ny), global_x(ngx), global_y(ngy){}
 	};
 	struct MouseEventClick : public MouseEvent {
-		MouseEventClick(MouseKeyCodes button, int nx, int ny) : MouseEvent(nx, ny), Button(button) {}
+		MouseEventClick(MouseKeyCodes button, MouseKeyClick click, KeyStatus status, int nx, int ny, int ngx, int ngy) :
+			MouseEvent(nx, ny, ngx, ngy),
+			Button(button),
+			Click(click),
+			Status(status)
+		{}
 		const MouseKeyCodes Button;
+		const MouseKeyClick Click;
+		const KeyStatus Status;
 	};
 	struct MouseEventWheel : public MouseEvent {
-		MouseEventWheel(int nWheel, int nx, int ny) : MouseEvent(nx, ny), Wheel(nWheel) {}
-		int Wheel;
+		MouseEventWheel(MouseWheelCodes nWheel, int nx, int ny, int ngx, int ngy) :
+			MouseEvent(nx, ny, ngx, ngy),
+			Wheel(nWheel) 
+		{}
+		MouseWheelCodes Wheel;
 	};
 
 	struct KeyEvent {
@@ -192,7 +210,7 @@ namespace explorer {
 		const wchar_t Sumbol;
 		const KeyCodes Code;
 
-		KeyStatus Status
+		KeyStatus Status;
 	};
 
 	enum ParentEventCodes {

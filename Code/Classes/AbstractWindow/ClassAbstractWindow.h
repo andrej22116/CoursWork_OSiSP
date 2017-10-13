@@ -7,20 +7,29 @@
 
 #ifndef _CLASS_WINDOW_H_
 #define _CLASS_WINDOW_H_
-
-#define METHOD(method) (std::bind((method), this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3))
+/*
+#define PAINT_METHOD(method)			(std::bind((method), this, std::placeholders::_1))
+#define MOUSE_CLICK_METHOD(method)		(std::bind((method), this, std::placeholders::_1))
+#define MOUSE_WHEEL_METHOD(method)		(std::bind((method), this, std::placeholders::_1))
+#define MOUSE_MOVE_METHOD(method)		(std::bind((method), this, std::placeholders::_1))
+#define PARENT_HANDLER_METHOD(method)	(std::bind((method), this, std::placeholders::_1))
+#define KEYBOARD_METHOD(method)			(std::bind((method), this, std::placeholders::_1))
+#define TIMER_METHOD(method)			(std::bind((method), this, std::placeholders::_1))
+*/
+#define METHOD(method) (std::bind((method), this, std::placeholders::_1))
 
 namespace explorer {
 	class Window;
 
 	typedef std::function<void(HWND, WPARAM, LPARAM)> Hendler;
 
-	typedef std::function<void(Gdiplus::Graphics&)> PaintHandler;
-	typedef std::function<void(const MouseEventClick&)> MouseClickHandler;
-	typedef std::function<void(const MouseEventWheel&)> MouseWheelHandler;
-	typedef std::function<void(const MouseEvent&)> MouseMoveHandler;
-	typedef std::function<void(const ParentEvent&)> ParentHandler;
-	typedef std::function<void(const KeyEvent&)> KeyboardHandler;
+	typedef std::function<void(Gdiplus::Graphics& graphics)> PaintHandler;
+	typedef std::function<void(const MouseEventClick& mouseEventClick)> MouseClickHandler;
+	typedef std::function<void(const MouseEventWheel& mouseEventWheel)> MouseWheelHandler;
+	typedef std::function<void(MouseEvent& mouseEvent)> MouseMoveHandler;
+	typedef std::function<void(const ParentEvent& parentEvent)> ParentHandler;
+	typedef std::function<void(const KeyEvent& keyEvent)> KeyboardHandler;
+	typedef std::function<void(const int timer_ID)> TimerHandler;
 
 
 	class Window {
@@ -33,13 +42,13 @@ namespace explorer {
 		Window* _parent;
 		std::list<Window*> _childList;
 
-		std::map<int, std::list<Hendler>> _handlersMap;
-		std::map<int, std::list<MouseClickHandler>> _mouseClickHandlers;
-		std::map<int, std::list<MouseWheelHandler>> _mouseWheelHandlers;
-		std::map<int, std::list<MouseMoveHandler>> _mouseMoveHandlers;
-		std::map<int, std::list<KeyboardHandler>> _keyboardHandlers;
-		std::map<int, std::list<ParentHandler>> _parentHandler;
-		std::map<int, std::list<PaintHandler>> _paintHandler;
+		std::set<MouseClickHandler> _mouseClickHandlers;
+		std::set<MouseWheelHandler> _mouseWheelHandlers;
+		std::set<MouseMoveHandler> _mouseMoveHandlers;
+		std::set<KeyboardHandler> _keyboardHandlers;
+		std::set<ParentHandler> _parentHandlers;
+		std::set<PaintHandler> _paintHandlers;
+		std::set<TimerHandler> _timerHandlers;
 
 		int _width, _hieght;
 		int _pos_x, _pos_y;
@@ -52,9 +61,6 @@ namespace explorer {
 
 		bool _thisWindowIsCreated;
 		bool _hoverStatus;
-
-	protected:
-		std::shared_ptr<Gdiplus::Graphics> _graphics;
 
 	public:
 		Window();
@@ -93,8 +99,9 @@ namespace explorer {
 		void getHoverMessages(bool activate);
 
 		/* Handlers */
-		void closeWindow(HWND hWnd, WPARAM wParam, LPARAM lParam);
-		void hoverWindow(HWND hWnd, WPARAM wParam, LPARAM lParam);
+		virtual void createWindow();
+		void closeWindow();
+		void hoverWindow(const int ID);
 
 		/*
 		 *	Send message to all windows!
@@ -111,6 +118,7 @@ namespace explorer {
 		void m_registerHendler(MouseWheelHandler method);
 		void m_registerHendler(MouseMoveHandler method);
 		void m_registerHendler(KeyboardHandler method);
+		void m_registerHendler(TimerHandler method);
 
 		void m_sendMessageForParent(UINT message, WPARAM wParam, LPARAM lParam);
 		void m_sendMessageForAllChildren(UINT message, WPARAM wParam, LPARAM lParam);

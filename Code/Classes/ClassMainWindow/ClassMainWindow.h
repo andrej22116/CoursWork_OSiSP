@@ -22,13 +22,12 @@ namespace explorer {
 	public:
 		MainWindow();
 
-		void createHandler(HWND hWnd, WPARAM wParam, LPARAM lParam);
-		void paintHandler(HWND hWnd, WPARAM wParam, LPARAM lParam);
+		virtual void createWindow() override;
+		void paintHandler(Gdiplus::Graphics& graphics);
 		
-		void leftButtonDownHandler(HWND hWnd, WPARAM wParam, LPARAM lParam);
-		void leftButtonUpHandler(HWND hWnd, WPARAM wParam, LPARAM lParam);
+		void mouseClickHandler(const MouseEventClick& mouseEventClick);
 		
-		void moveHandler(HWND hWnd, WPARAM wParam, LPARAM lParam);
+		void mouseMoveHandler(MouseEvent& mouseEvent);
 	};
 }
 

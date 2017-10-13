@@ -4,23 +4,17 @@
 namespace explorer {
 	MainWindow::MainWindow()
 	{
-		m_registerHendler(WM_CREATE, METHOD(&MainWindow::createHandler));
-		m_registerHendler(WM_PAINT, METHOD(&MainWindow::paintHandler));
-		m_registerHendler(WM_LBUTTONDOWN, METHOD(&MainWindow::leftButtonDownHandler));
-		m_registerHendler(WM_LBUTTONUP, METHOD(&MainWindow::leftButtonUpHandler));
-		m_registerHendler(WM_MOUSEMOVE, METHOD(&MainWindow::moveHandler));
+		m_registerHendler(METHOD(&MainWindow::paintHandler));
+		m_registerHendler(METHOD(&MainWindow::mouseClickHandler));
+		m_registerHendler(METHOD(&MainWindow::mouseMoveHandler));
 
 		_oldCursorPosX = 0;
 		_oldCursorPosY = 0;
 		_moving = false;
 	}
 
-	void MainWindow::paintHandler(HWND hWnd, WPARAM wParam, LPARAM lParam)
+	void MainWindow::paintHandler(Gdiplus::Graphics& graphics)
 	{
-		PAINTSTRUCT ps;
-		HDC hDC = BeginPaint(hWnd, &ps);
-		Gdiplus::Graphics graphics(hDC);
-
 		Gdiplus::SolidBrush brush_2(Gdiplus::Color(32, 32, 32));
 		Gdiplus::Rect region_2(0, 0, this->getWidth(), this->getHieght());
 		graphics.FillRectangle(&brush_2, region_2);
@@ -28,11 +22,9 @@ namespace explorer {
 		Gdiplus::SolidBrush brush(Gdiplus::Color(64, 64, 64));
 		Gdiplus::Rect region(0, 0, this->getWidth(), 17);
 		graphics.FillRectangle(&brush, region);
-
-		EndPaint(hWnd, &ps);
 	}
 
-	void MainWindow::createHandler(HWND hWnd, WPARAM wParam, LPARAM lParam)
+	void MainWindow::createWindow()
 	{
 		buttonClose.create(
 			L"exit",
@@ -63,36 +55,35 @@ namespace explorer {
 		//MessageBox(nullptr, (L"IT'S WORK!!! " + getWindowName()).c_str(), L"TEST", MB_OK);
 	}
 
-	void MainWindow::leftButtonDownHandler(HWND hWnd, WPARAM wParam, LPARAM lParam)
+	void MainWindow::mouseClickHandler(const MouseEventClick& mouseEventClick)
 	{
-		POINT point;
-		GetCursorPos(&point);
-		if ((point.x >= getPosX() && point.x <= getPosX() + getWidth())
-			&& (point.y >= getPosY() && point.y <= getPosY() + 16)) {
-			_oldCursorPosX = point.x;
-			_oldCursorPosY = point.y;
+		// вычлинить двойной клик!
 
-			SetCapture(getHWND());
-			_moving = true;
+		if (mouseEventClick.Button == MOUSE_LEFT && mouseEventClick.Status == KEY_PRESSED) {
+			if ((mouseEventClick.global_x >= getPosX() && mouseEventClick.global_x <= getPosX() + getWidth())
+				&& (mouseEventClick.global_y >= getPosY() && mouseEventClick.global_y <= getPosY() + 16)) {
+				_oldCursorPosX = mouseEventClick.global_x;
+				_oldCursorPosY = mouseEventClick.global_y;
+
+				SetCapture(getHWND());
+				_moving = true;
+			}
+		}
+		else if (mouseEventClick.Button == MOUSE_LEFT && mouseEventClick.Status == KEY_RELEASED) {
+			if (_moving) {
+				ReleaseCapture();
+				_moving = false;
+			}
 		}
 	}
-	void MainWindow::leftButtonUpHandler(HWND hWnd, WPARAM wParam, LPARAM lParam)
-	{
-		if (_moving) {
-			ReleaseCapture();
-			_moving = false;
-		}
-	}
-	void MainWindow::moveHandler(HWND hWnd, WPARAM wParam, LPARAM lParam)
-	{
-		if (_moving) {
-			POINT point;
-			GetCursorPos(&point);
 
-			int newPosX = point.x - _oldCursorPosX + getPosX();
-			int newPosY = point.y - _oldCursorPosY + getPosY();
-			_oldCursorPosX = point.x;
-			_oldCursorPosY = point.y;
+	void MainWindow::mouseMoveHandler(MouseEvent& mouseEvent)
+	{
+		if (_moving) {
+			int newPosX = mouseEvent.x - _oldCursorPosX + getPosX();
+			int newPosY = mouseEvent.y - _oldCursorPosY + getPosY();
+			_oldCursorPosX = mouseEvent.x;
+			_oldCursorPosY = mouseEvent.y;
 			moveWindowPos(newPosX, newPosY);
 		}
 	}
