@@ -41,13 +41,19 @@
     <Filter Include="Core\Precompile">
       <UniqueIdentifier>{7319802f-ac6e-4bbd-8345-7630df78b7b4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Interface\Windows\ClassButtonCloseWindow">
+    <Filter Include="Interface\Windows\Buttons">
+      <UniqueIdentifier>{11e45a93-2704-4723-bdcf-c95d7e181a95}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Interface\Windows\Buttons\ClassAbstractButton">
+      <UniqueIdentifier>{ffa6ec70-9eab-4f40-9396-229d7f044ec8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Interface\Windows\Buttons\ClassButtonCloseWindow">
       <UniqueIdentifier>{3e030632-b642-41b4-b1a0-6ecb00bfe688}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Interface\Windows\ClassMinimizeWindow">
+    <Filter Include="Interface\Windows\Buttons\ClassMinimizeWindow">
       <UniqueIdentifier>{b70e9f50-d67f-4d91-bc9b-d223274e35c1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Interface\Windows\ClassMaximizeWindow">
+    <Filter Include="Interface\Windows\Buttons\ClassMaximizeWindow">
       <UniqueIdentifier>{b909d75d-b353-4d20-a7aa-f74c635292ae}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -71,14 +77,17 @@
     <ClCompile Include="stdafx.cpp">
       <Filter>Core\Precompile</Filter>
     </ClCompile>
-    <ClCompile Include="Code\Classes\ClassButtonCloseWindow\ClassButtonCloseWindow.cpp">
-      <Filter>Interface\Windows\ClassButtonCloseWindow</Filter>
+    <ClCompile Include="Code\Classes\Buttons\ClassAbstractButton\ClassAbstractButton.cpp">
+      <Filter>Interface\Windows\Buttons\ClassAbstractButton</Filter>
     </ClCompile>
-    <ClCompile Include="Code\Classes\ClassMaximizeWindow\ClassMaximizeWindow.cpp">
-      <Filter>Interface\Windows\ClassMaximizeWindow</Filter>
+    <ClCompile Include="Code\Classes\Buttons\ClassButtonCloseWindow\ClassButtonCloseWindow.cpp">
+      <Filter>Interface\Windows\Buttons\ClassButtonCloseWindow</Filter>
     </ClCompile>
-    <ClCompile Include="Code\Classes\ClassMinimizeWindow\ClassMinimizeWindow.cpp">
-      <Filter>Interface\Windows\ClassMinimizeWindow</Filter>
+    <ClCompile Include="Code\Classes\Buttons\ClassMaximizeWindow\ClassMaximizeWindow.cpp">
+      <Filter>Interface\Windows\Buttons\ClassMaximizeWindow</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Classes\Buttons\ClassMinimizeWindow\ClassMinimizeWindow.cpp">
+      <Filter>Interface\Windows\Buttons\ClassMinimizeWindow</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -100,14 +109,17 @@
     <ClInclude Include="stdafx.h">
       <Filter>Core\Precompile</Filter>
     </ClInclude>
-    <ClInclude Include="Code\Classes\ClassButtonCloseWindow\ClassButtonCloseWindow.h">
-      <Filter>Interface\Windows\ClassButtonCloseWindow</Filter>
+    <ClInclude Include="Code\Classes\Buttons\ClassAbstractButton\ClassAbstractButton.h">
+      <Filter>Interface\Windows\Buttons\ClassAbstractButton</Filter>
     </ClInclude>
-    <ClInclude Include="Code\Classes\ClassMaximizeWindow\ClassMaximizeWindow.h">
-      <Filter>Interface\Windows\ClassMaximizeWindow</Filter>
+    <ClInclude Include="Code\Classes\Buttons\ClassButtonCloseWindow\ClassButtonCloseWindow.h">
+      <Filter>Interface\Windows\Buttons\ClassButtonCloseWindow</Filter>
     </ClInclude>
-    <ClInclude Include="Code\Classes\ClassMinimizeWindow\ClassMinimizeWindow.h">
-      <Filter>Interface\Windows\ClassMinimizeWindow</Filter>
+    <ClInclude Include="Code\Classes\Buttons\ClassMaximizeWindow\ClassMaximizeWindow.h">
+      <Filter>Interface\Windows\Buttons\ClassMaximizeWindow</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Classes\Buttons\ClassMinimizeWindow\ClassMinimizeWindow.h">
+      <Filter>Interface\Windows\Buttons\ClassMinimizeWindow</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
