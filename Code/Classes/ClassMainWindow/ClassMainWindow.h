@@ -1,9 +1,9 @@
 #pragma once
 
 #include "..\AbstractWindow\ClassAbstractWindow.h"
-#include "..\ClassButtonCloseWindow\ClassButtonCloseWindow.h"
-#include "..\ClassMaximizeWindow\ClassMaximizeWindow.h"
-#include "..\ClassMinimizeWindow\ClassMinimizeWindow.h"
+#include "..\Buttons\ClassButtonCloseWindow\ClassButtonCloseWindow.h"
+#include "..\Buttons\ClassMaximizeWindow\ClassMaximizeWindow.h"
+#include "..\Buttons\ClassMinimizeWindow\ClassMinimizeWindow.h"
 
 #ifndef _CLASS_MAIN_WINDOW_H_
 #define _CLASS_MAIN_WINDOW_H_

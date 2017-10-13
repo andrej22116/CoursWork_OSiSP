@@ -1,6 +1,6 @@
 #pragma once
 
-#include "..\AbstractWindow\ClassAbstractWindow.h"
+#include "..\..\AbstractWindow\ClassAbstractWindow.h"
 
 #ifndef _CLASS_MAXIMIZE_WINDOW_H_
 #define _CLASS_MAXIMIZE_WINDOW_H_
