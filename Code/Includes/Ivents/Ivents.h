@@ -5,6 +5,11 @@
 
 namespace explorer {
 
+	enum HoverStatus {
+		HOVER_FALSE,
+		HOVER_TRUE
+	};
+
 	enum MouseKeyCodes {
 		MOUSE_LEFT,
 		MOUSE_MIDDLE,

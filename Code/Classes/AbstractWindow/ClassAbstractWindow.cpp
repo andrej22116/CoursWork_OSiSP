@@ -17,7 +17,7 @@ namespace explorer {
 
 			//m_registerHendler(METHOD(&Window::closeWindow));
 			//m_registerHendler(WM_PAINT, METHOD(&Window::paintWindow));
-			m_registerHendler(METHOD(&Window::hoverWindow));
+			m_registerHendler(METHOD(&Window::timerCheckHoverWindow));
 	}
 	Window::~Window()
 	{
@@ -274,6 +274,8 @@ namespace explorer {
 				}
 
 			} break;
+			case WM_MOUSEHOVER: {
+			} break;
 			case WM_MOUSEWHEEL: {
 				short value = GET_WHEEL_DELTA_WPARAM(wParam) / WHEEL_DELTA;
 				MouseWheelCodes mouseWheelCodes;
@@ -331,9 +333,17 @@ namespace explorer {
 	{
 		_keyboardHandlers.insert(method);
 	}
+	void Window::m_registerHendler(ParentHandler method)
+	{
+		_parentHandlers.insert(method);
+	}
 	void Window::m_registerHendler(TimerHandler method)
 	{
 		_timerHandlers.insert(method);
+	}
+	void Window::m_registerHendler(HoverHandler method)
+	{
+		_hoverHandlers.insert(method);
 	}
 
 	void Window::m_sendMessageForParent(UINT message, WPARAM wParam, LPARAM lParam)
@@ -462,7 +472,7 @@ namespace explorer {
 			PostQuitMessage(0);
 		}
 	}
-	void Window::hoverWindow(const int ID)
+	void Window::timerCheckHoverWindow(const int& ID)
 	{
 		if (ID == TIMER_UPP_HOVER) {
 			//bool windowStatus = _hWnd == GetForegroundWindow();

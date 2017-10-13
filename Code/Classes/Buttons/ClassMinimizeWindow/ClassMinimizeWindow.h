@@ -13,11 +13,13 @@ namespace explorer {
 	public:
 		ButtonMinimize();
 
-		void createHandler(HWND hWnd, WPARAM wParam, LPARAM lParam);
-		void paintHandler(HWND hWnd, WPARAM wParam, LPARAM lParam);
-		void hoverHandler(HWND hWnd, WPARAM wParam, LPARAM lParam);
-		void minimizeHandler(HWND hWnd, WPARAM wParam, LPARAM lParam);
-		void resizeParentHandler(HWND hWnd, WPARAM wParam, LPARAM lParam);
+		virtual void createWindow() override;
+
+		void paintHandler(Gdiplus::Graphics& graphics);
+		void hoverHandler(HoverStatus status);
+		void resizeParentHandler(const ParentEvent& parentEvent);
+
+		void minimizeHandler(const MouseEventClick& mouseEventClick);
 	};
 }
 

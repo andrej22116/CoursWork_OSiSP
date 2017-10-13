@@ -29,7 +29,8 @@ namespace explorer {
 	typedef std::function<void(MouseEvent& mouseEvent)> MouseMoveHandler;
 	typedef std::function<void(const ParentEvent& parentEvent)> ParentHandler;
 	typedef std::function<void(const KeyEvent& keyEvent)> KeyboardHandler;
-	typedef std::function<void(const int timer_ID)> TimerHandler;
+	typedef std::function<void(const int& timer_ID)> TimerHandler;
+	typedef std::function<void(HoverStatus status)> HoverHandler;
 
 
 	class Window {
@@ -49,6 +50,8 @@ namespace explorer {
 		std::set<ParentHandler> _parentHandlers;
 		std::set<PaintHandler> _paintHandlers;
 		std::set<TimerHandler> _timerHandlers;
+		std::set<HoverHandler> _hoverHandlers;
+
 
 		int _width, _hieght;
 		int _pos_x, _pos_y;
@@ -101,7 +104,7 @@ namespace explorer {
 		/* Handlers */
 		virtual void createWindow();
 		void closeWindow();
-		void hoverWindow(const int ID);
+		void timerCheckHoverWindow(const int& ID);
 
 		/*
 		 *	Send message to all windows!
@@ -118,7 +121,9 @@ namespace explorer {
 		void m_registerHendler(MouseWheelHandler method);
 		void m_registerHendler(MouseMoveHandler method);
 		void m_registerHendler(KeyboardHandler method);
+		void m_registerHendler(ParentHandler method);
 		void m_registerHendler(TimerHandler method);
+		void m_registerHendler(HoverHandler method);
 
 		void m_sendMessageForParent(UINT message, WPARAM wParam, LPARAM lParam);
 		void m_sendMessageForAllChildren(UINT message, WPARAM wParam, LPARAM lParam);

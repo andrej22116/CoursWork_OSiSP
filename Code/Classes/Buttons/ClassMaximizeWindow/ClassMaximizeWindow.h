@@ -18,11 +18,13 @@ namespace explorer {
 	public:
 		ButtonMaximize();
 
-		void createHandler(HWND hWnd, WPARAM wParam, LPARAM lParam);
-		void paintHandler(HWND hWnd, WPARAM wParam, LPARAM lParam);
-		void hoverHandler(HWND hWnd, WPARAM wParam, LPARAM lParam);
-		void maximizeHandler(HWND hWnd, WPARAM wParam, LPARAM lParam);
-		void resizeParentHandler(HWND hWnd, WPARAM wParam, LPARAM lParam);
+		virtual void createWindow() override;
+
+		void paintHandler(Gdiplus::Graphics& graphics);
+		void hoverHandler(HoverStatus status);
+		void resizeParentHandler(const ParentEvent& parentEvent);
+
+		void maximizeHandler(const MouseEventClick& mouseEventClick);
 
 #ifdef _DEBUG
 		void testHandler(HWND hWnd, WPARAM wParam, LPARAM lParam);

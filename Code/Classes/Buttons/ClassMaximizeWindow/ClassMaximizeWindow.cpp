@@ -5,13 +5,14 @@
 namespace explorer {
 	ButtonMaximize::ButtonMaximize()
 	{
-		m_registerHendler(WM_CREATE, METHOD(&ButtonMaximize::createHandler));
-		m_registerHendler(WM_PAINT, METHOD(&ButtonMaximize::paintHandler));
-		m_registerHendler(WM_MOUSEHOVER, METHOD(&ButtonMaximize::hoverHandler));
-		m_registerHendler(WM_LBUTTONDOWN, METHOD(&ButtonMaximize::maximizeHandler));
-		m_registerHendler(WM_SIZE, METHOD(&ButtonMaximize::resizeParentHandler));
+		m_registerHendler(METHOD(&ButtonMaximize::paintHandler));
 
-#ifdef _DEBUG
+		m_registerHendler(METHOD(&ButtonMaximize::hoverHandler));
+		m_registerHendler(METHOD(&ButtonMaximize::resizeParentHandler));
+
+		m_registerHendler(METHOD(&ButtonMaximize::maximizeHandler));
+
+#ifdef _DEBUGU
 		m_registerHendler(WM_RBUTTONDOWN, METHOD(&ButtonMaximize::testHandler));
 #endif
 
@@ -19,19 +20,13 @@ namespace explorer {
 	}
 
 
-	void ButtonMaximize::createHandler(HWND hWnd, WPARAM wParam, LPARAM lParam)
+	void ButtonMaximize::createWindow()
 	{
 		getHoverMessages(true);
 	}
 
-	void ButtonMaximize::paintHandler(HWND hWnd, WPARAM wParam, LPARAM lParam)
+	void ButtonMaximize::paintHandler(Gdiplus::Graphics& graphics)
 	{
-		PAINTSTRUCT ps;
-		HDC hDC = BeginPaint(hWnd, &ps);
-		Gdiplus::Graphics graphics(hDC);
-
-		//graphics->SetSmoothingMode(Gdiplus::SmoothingMode::SmoothingModeAntiAlias);
-
 		Gdiplus::Pen pen(Gdiplus::Color::White, 1.6);
 		Gdiplus::SolidBrush brush((_hover) ? (Gdiplus::Color(96, 96, 96)) : (Gdiplus::Color(64, 64, 64)));
 		graphics.FillRectangle(&brush, -1, -1, getWidth() + 1, getHieght() + 1);
@@ -53,17 +48,15 @@ namespace explorer {
 			graphics.DrawRectangle(&pen, rect_0);
 			graphics.DrawLine(&pen, 1, 2, 13, 2);
 		}
-
-		EndPaint(hWnd, &ps);
 	}
 
-	void ButtonMaximize::hoverHandler(HWND hWnd, WPARAM wParam, LPARAM lParam)
+	void ButtonMaximize::hoverHandler(HoverStatus status)
 	{
-		_hover = wParam;
+		_hover = status;
 		redrawWindow(false);
 	}
 
-	void ButtonMaximize::maximizeHandler(HWND hWnd, WPARAM wParam, LPARAM lParam)
+	void ButtonMaximize::maximizeHandler(const MouseEventClick& mouseEventClick)
 	{
 		//m_sendMessageForParent(WM_SIZE, 0, 0);
 		if (getParent()) {
@@ -84,9 +77,11 @@ namespace explorer {
 		}
 	}
 
-	void ButtonMaximize::resizeParentHandler(HWND hWnd, WPARAM wParam, LPARAM lParam)
+	void ButtonMaximize::resizeParentHandler(const ParentEvent& parentEvent)
 	{
-		resizeWindow(getParent()->getWidth() - 32, 1, 15, 15, true);
+		if (parentEvent.Code == PARENT_RESIZE) {
+			resizeWindow(getParent()->getWidth() - 32, 1, 15, 15, true);
+		}
 	}
 #ifdef _DEBUG
 	void ButtonMaximize::testHandler(HWND hWnd, WPARAM wParam, LPARAM lParam)

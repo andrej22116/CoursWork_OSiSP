@@ -5,17 +5,16 @@ namespace explorer {
 
 	ButtonClose::ButtonClose()
 	{
-		m_registerHendler(WM_LBUTTONDOWN, METHOD(&ButtonClose::closeHandler));
-		m_registerHendler(WM_PAINT, METHOD(&ButtonClose::paintHandler));
-		m_registerHendler(WM_CREATE, METHOD(&ButtonClose::createHandler));
+		m_registerHendler(METHOD(&ButtonClose::mouseClickCloseHandler));
+		m_registerHendler(METHOD(&ButtonClose::paintHandler));
 
-		m_registerHendler(WM_MOUSEHOVER, METHOD(&ButtonClose::hoverHandler));
-		m_registerHendler(WM_SIZE, METHOD(&ButtonClose::resizeParentHandler));
+		m_registerHendler(METHOD(&ButtonClose::hoverHandler));
+		m_registerHendler(METHOD(&ButtonClose::resizeParentHandler));
 
 		_hover = false;
 	}
 
-	void ButtonClose::createHandler(HWND hWnd, WPARAM wParam, LPARAM lParam)
+	void ButtonClose::createWindow()
 	{
 		Gdiplus::Rect rect(-1, -1, 16, 16);
 		Gdiplus::GraphicsPath path;
@@ -26,18 +25,14 @@ namespace explorer {
 		getHoverMessages(true);
 	}
 
-	void ButtonClose::hoverHandler(HWND hWnd, WPARAM wParam, LPARAM lParam)
+	void ButtonClose::hoverHandler(HoverStatus status)
 	{
-		_hover = wParam;
+		_hover = status;
 		redrawWindow(false);
 	}
 
-	void ButtonClose::paintHandler(HWND hWnd, WPARAM wParam, LPARAM lParam)
+	void ButtonClose::paintHandler(Gdiplus::Graphics& graphics)
 	{		
-		PAINTSTRUCT ps;
-		HDC hDC = BeginPaint(hWnd, &ps);
-		Gdiplus::Graphics graphics(hDC);
-
 		graphics.SetSmoothingMode(Gdiplus::SmoothingMode::SmoothingModeAntiAlias);
 
 		Gdiplus::Pen pen(Gdiplus::Color::White, 1.55);
@@ -52,17 +47,17 @@ namespace explorer {
 		graphics.DrawLine(&pen, pos_3, pos_4);
 
 		graphics.ExcludeClip(&_region);
-
-		EndPaint(hWnd, &ps);
 	}
 
-	void ButtonClose::closeHandler(HWND hWnd, WPARAM wParam, LPARAM lParam)
+	void ButtonClose::mouseClickCloseHandler(const MouseEventClick& mouseEventClick)
 	{
 		m_sendMessageForParent(WM_CLOSE, 0, 0);
 	}
 
-	void ButtonClose::resizeParentHandler(HWND hWnd, WPARAM wParam, LPARAM lParam)
+	void ButtonClose::resizeParentHandler(const ParentEvent& parentEvent)
 	{
-		resizeWindow(getParent()->getWidth() - 16, 1, 15, 15, true);
+		if (parentEvent.Code == PARENT_RESIZE) {
+			resizeWindow(parentEvent.Width - 16, 1, 15, 15, true);
+		}
 	}
 }
