@@ -60,7 +60,7 @@ namespace explorer {
 	{
 		// вычлинить двойной клик!
 
-		if (mouseEventClick.Button == MOUSE_LEFT && mouseEventClick.Status == KEY_PRESSED) {
+		if (mouseEventClick.Button == MOUSE_LEFT && mouseEventClick.Status == KEY_PRESSED && !buttonMaximize.isMaximized()) {
 			if ((mouseEventClick.global_x >= getPosX() && mouseEventClick.global_x <= getPosX() + getWidth())
 				&& (mouseEventClick.global_y >= getPosY() && mouseEventClick.global_y <= getPosY() + 16)) {
 				_oldCursorPosX = mouseEventClick.global_x;
@@ -80,9 +80,13 @@ namespace explorer {
 
 	void MainWindow::keyboardHandler(const KeyEvent& keyEvent)
 	{
-		std::wstring str = L"This symbol: ";
-		str += keyEvent.Sumbol;
-		MessageBox(getHWND(), str.c_str(), L"Test", MB_OK);
+		/*
+		if (keyEvent.Status == KEY_RELEASED) {
+			std::wstring str = L"This symbol: ";
+			str += keyEvent.Sumbol;
+			MessageBox(getHWND(), str.c_str(), L"Test", MB_OK);
+		}
+		*/
 	}
 
 	void MainWindow::mouseMoveHandler(MouseEvent& mouseEvent)

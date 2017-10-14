@@ -20,6 +20,11 @@ namespace explorer {
 	}
 
 
+	bool ButtonMaximize::isMaximized()
+	{
+		return _maximized;
+	}
+
 	void ButtonMaximize::createWindow()
 	{
 		getHoverMessages(true);

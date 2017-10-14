@@ -294,8 +294,14 @@ namespace explorer {
 					if (msg == WM_KEYDOWN) { keyStatus = KEY_PRESSED; }
 					else if (msg == WM_KEYUP) { keyStatus = KEY_RELEASED; }
 				}
-				else {
-					KeyEvent keyEvent(wParam, (KeyCodes)wParam, keyStatus);
+				if (msg == WM_KEYUP || msg == WM_CHAR) {
+					static wchar_t symbol;
+
+					if (msg == WM_CHAR) {
+						symbol = wParam;
+					}
+
+					KeyEvent keyEvent(symbol, (KeyCodes)wParam, keyStatus);
 					for (auto handler : window->_keyboardHandlers) {
 						handler(keyEvent);
 					}

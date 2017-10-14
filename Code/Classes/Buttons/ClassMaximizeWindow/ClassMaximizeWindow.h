@@ -20,6 +20,8 @@ namespace explorer {
 
 		virtual void createWindow() override;
 
+		bool isMaximized();
+
 		void paintHandler(Gdiplus::Graphics& graphics);
 		void hoverHandler(bool status);
 		void resizeParentHandler(const ParentEvent& parentEvent);
