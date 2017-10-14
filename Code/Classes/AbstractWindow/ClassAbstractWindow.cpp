@@ -67,10 +67,11 @@ namespace explorer {
 
 	void Window::moveWindowPos(int x, int y, bool repaint)
 	{
-		MoveWindow(_hWnd, x, y, _width, _hieght, repaint);
 		_pos_x = x;
 		_pos_y = y;
-		m_sendMessageForAllChildren(WM_SIZE, 0, 0);
+
+		MoveWindow(_hWnd, x, y, _width, _hieght, repaint);
+		//m_sendMessageForAllChildren(WM_SIZE, 0, 0);
 	}
 	void Window::resizeWindow(int width, int hieght, bool show)
 	{
@@ -79,7 +80,6 @@ namespace explorer {
 	void Window::resizeWindow(int pos_x, int pos_y, int width, int hieght, bool show)
 	{
 		//MessageBox(nullptr, std::wstring(L"Width: " + std::to_wstring(width) + L", Hieght: " + std::to_wstring(hieght)).c_str(), L"test", MB_OK);
-		MoveWindow(_hWnd, pos_x, pos_y, width, hieght, show);
 		_pos_x = pos_x;
 		_pos_y = pos_y;
 		_width = width;
@@ -88,7 +88,8 @@ namespace explorer {
 		_g_pos_X = getGlobalPosX();
 		_g_pos_Y = getGlobalPosY();
 		
-		m_sendMessageForAllChildren(WM_SIZE, 0, 0);
+		MoveWindow(_hWnd, pos_x, pos_y, width, hieght, show);
+		//m_sendMessageForAllChildren(WM_SIZE, 0, 0);
 	}
 	void Window::minimizeWindow(bool hide)
 	{
@@ -216,7 +217,20 @@ namespace explorer {
 					}
 				}
 			} break;
-			case WM_SIZE: {} break;
+			case WM_SIZE: {
+				ParentEvent parentEvent;
+				parentEvent.Code = PARENT_RESIZE;
+				parentEvent.Pos_X = window->_pos_x;
+				parentEvent.Pos_Y = window->_pos_y;
+				parentEvent.Width = window->_width;
+				parentEvent.Height = window->_hieght;
+
+				for (auto child : window->_childList) {
+					for (auto handler : child->_parentHandlers) {
+						handler(parentEvent);
+					}
+				}
+			} break;
 			case WM_MOUSEMOVE: {
 				POINT cursorPoint;
 				GetCursorPos(&cursorPoint);
@@ -273,6 +287,19 @@ namespace explorer {
 					handler(mouseEventClick);
 				}
 
+			} break;
+			case WM_KEYDOWN: case WM_KEYUP: case WM_CHAR: {
+				static KeyStatus keyStatus;
+				if (msg == WM_KEYDOWN || msg == WM_KEYUP) {
+					if (msg == WM_KEYDOWN) { keyStatus = KEY_PRESSED; }
+					else if (msg == WM_KEYUP) { keyStatus = KEY_RELEASED; }
+				}
+				else {
+					KeyEvent keyEvent(wParam, (KeyCodes)wParam, keyStatus);
+					for (auto handler : window->_keyboardHandlers) {
+						handler(keyEvent);
+					}
+				}
 			} break;
 			case WM_MOUSEHOVER: {
 				for (auto handler : window->_hoverHandlers) {
@@ -482,6 +509,8 @@ namespace explorer {
 
 			POINT point;
 			GetCursorPos(&point);
+			_g_pos_X = getGlobalPosX();
+			_g_pos_Y = getGlobalPosY();
 
 			if ((point.x >= _g_pos_X && point.x <= _g_pos_X + getWidth())
 				&& (point.y >= _g_pos_Y && point.y <= _g_pos_Y + getHieght())) {

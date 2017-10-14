@@ -26,6 +26,7 @@ namespace explorer {
 		void paintHandler(Gdiplus::Graphics& graphics);
 		
 		void mouseClickHandler(const MouseEventClick& mouseEventClick);
+		void keyboardHandler(const KeyEvent& keyEvent);
 		
 		void mouseMoveHandler(MouseEvent& mouseEvent);
 	};

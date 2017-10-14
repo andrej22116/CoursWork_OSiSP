@@ -7,6 +7,7 @@ namespace explorer {
 		m_registerHendler(METHOD(&MainWindow::paintHandler));
 		m_registerHendler(METHOD(&MainWindow::mouseClickHandler));
 		m_registerHendler(METHOD(&MainWindow::mouseMoveHandler));
+		m_registerHendler(METHOD(&MainWindow::keyboardHandler));
 
 		_oldCursorPosX = 0;
 		_oldCursorPosY = 0;
@@ -77,13 +78,20 @@ namespace explorer {
 		}
 	}
 
+	void MainWindow::keyboardHandler(const KeyEvent& keyEvent)
+	{
+		std::wstring str = L"This symbol: ";
+		str += keyEvent.Sumbol;
+		MessageBox(getHWND(), str.c_str(), L"Test", MB_OK);
+	}
+
 	void MainWindow::mouseMoveHandler(MouseEvent& mouseEvent)
 	{
 		if (_moving) {
-			int newPosX = mouseEvent.x - _oldCursorPosX + getPosX();
-			int newPosY = mouseEvent.y - _oldCursorPosY + getPosY();
-			_oldCursorPosX = mouseEvent.x;
-			_oldCursorPosY = mouseEvent.y;
+			int newPosX = mouseEvent.global_x - _oldCursorPosX + getPosX();
+			int newPosY = mouseEvent.global_y - _oldCursorPosY + getPosY();
+			_oldCursorPosX = mouseEvent.global_x;
+			_oldCursorPosY = mouseEvent.global_y;
 			moveWindowPos(newPosX, newPosY);
 		}
 	}

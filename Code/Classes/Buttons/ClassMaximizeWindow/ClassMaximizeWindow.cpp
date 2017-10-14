@@ -59,21 +59,33 @@ namespace explorer {
 	void ButtonMaximize::maximizeHandler(const MouseEventClick& mouseEventClick)
 	{
 		//m_sendMessageForParent(WM_SIZE, 0, 0);
-		if (getParent()) {
-			if (!_maximized) {
-				_oldWidth = getParent()->getWidth();
-				_oldHieght = getParent()->getHieght();
-				_oldPosX = getParent()->getPosX();
-				_oldPosY = getParent()->getPosY();
-				getParent()->resizeWindow(0, 0, GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN), true);
+		if (mouseEventClick.Button == MOUSE_LEFT) {
+			if (getParent()) {
+				if (!_maximized) {
+					_oldWidth = getParent()->getWidth();
+					_oldHieght = getParent()->getHieght();
+					_oldPosX = getParent()->getPosX();
+					_oldPosY = getParent()->getPosY();
+					getParent()->resizeWindow(0, 0, GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN), true);
 
-				_maximized = true;
-			}
-			else {
-				getParent()->resizeWindow(_oldPosX, _oldPosY, _oldWidth, _oldHieght, true);
+					_maximized = true;
+				}
+				else {
+					getParent()->resizeWindow(_oldPosX, _oldPosY, _oldWidth, _oldHieght, true);
 
-				_maximized = false;
+					_maximized = false;
+				}
 			}
+		}
+		else if (mouseEventClick.Button == MOUSE_RIGHT) {
+			POINT point;
+			GetCursorPos(&point);
+			std::wstring str =
+				L"GposX: " + std::to_wstring(getGlobalPosX()) + L" \n"
+				+ L"GposY: " + std::to_wstring(getGlobalPosY()) + L" \n"
+				+ L"MousePosX: " + std::to_wstring(point.x) + L" \n"
+				+ L"MousePosY: " + std::to_wstring(point.y);
+			MessageBox(getHWND(), str.c_str(), L"TEST", MB_OK);
 		}
 	}
 
