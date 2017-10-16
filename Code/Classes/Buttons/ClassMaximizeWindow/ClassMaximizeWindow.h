@@ -1,16 +1,15 @@
 #pragma once
 
-#include "..\..\AbstractWindow\ClassAbstractWindow.h"
+#include "..\..\Buttons\ClassAbstractButton\ClassAbstractButton.h"
 
 #ifndef _CLASS_MAXIMIZE_WINDOW_H_
 #define _CLASS_MAXIMIZE_WINDOW_H_
 
 namespace explorer {
 
-	class ButtonMaximize : public Window {
+	class ButtonMaximize : public Button {
 	private:
 		bool _maximized;
-		bool _hover;
 
 		int _oldWidth, _oldHieght;
 		int _oldPosX, _oldPosY;
@@ -18,12 +17,9 @@ namespace explorer {
 	public:
 		ButtonMaximize();
 
-		virtual void createWindow() override;
-
 		bool isMaximized();
 
 		void paintHandler(Gdiplus::Graphics& graphics);
-		void hoverHandler(bool status);
 		void resizeParentHandler(const ParentEvent& parentEvent);
 
 		void maximizeHandler(const MouseEventClick& mouseEventClick);

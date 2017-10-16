@@ -7,36 +7,16 @@ namespace explorer {
 	{
 		m_registerHendler(METHOD(&ButtonClose::mouseClickCloseHandler));
 		m_registerHendler(METHOD(&ButtonClose::paintHandler));
-
-		m_registerHendler(METHOD(&ButtonClose::hoverHandler));
 		m_registerHendler(METHOD(&ButtonClose::resizeParentHandler));
-
-		_hover = false;
 	}
 
-	void ButtonClose::createWindow()
-	{
-		Gdiplus::Rect rect(-1, -1, 16, 16);
-		Gdiplus::GraphicsPath path;
-		path.AddEllipse(rect);
-
-		_region.Intersect(&path);
-
-		getHoverMessages(true);
-	}
-
-	void ButtonClose::hoverHandler(bool status)
-	{
-		_hover = status;
-		redrawWindow(false);
-	}
 
 	void ButtonClose::paintHandler(Gdiplus::Graphics& graphics)
 	{		
 		graphics.SetSmoothingMode(Gdiplus::SmoothingMode::SmoothingModeAntiAlias);
 
 		Gdiplus::Pen pen(Gdiplus::Color::White, 1.55);
-		Gdiplus::SolidBrush brush((_hover) ? (Gdiplus::Color::Red) : (Gdiplus::Color(64,64,64)));
+		Gdiplus::SolidBrush brush((isHover()) ? (Gdiplus::Color::Red) : (Gdiplus::Color(64,64,64)));
 		graphics.FillRectangle(&brush, -1, -1, getWidth()+1, getHieght()+1);
 
 		graphics.SetClip(&_region);

@@ -8,11 +8,15 @@
 namespace explorer {
 
 	class Button : public Window {
+	private:
+		bool _hover;
 	public:
 		Button();
 
-		void hoverHandler(HWND hWnd, WPARAM wParam, LPARAM lParam);
-		void resizeParentHandler(HWND hWnd, WPARAM wParam, LPARAM lParam);
+		virtual void createWindow() override final;
+		void hoverHandler(bool status);
+
+		bool isHover();
 	};
 
 }

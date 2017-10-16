@@ -25,15 +25,10 @@ namespace explorer {
 		return _maximized;
 	}
 
-	void ButtonMaximize::createWindow()
-	{
-		getHoverMessages(true);
-	}
-
 	void ButtonMaximize::paintHandler(Gdiplus::Graphics& graphics)
 	{
 		Gdiplus::Pen pen(Gdiplus::Color::White, 1.6);
-		Gdiplus::SolidBrush brush((_hover) ? (Gdiplus::Color(96, 96, 96)) : (Gdiplus::Color(64, 64, 64)));
+		Gdiplus::SolidBrush brush((isHover()) ? (Gdiplus::Color(96, 96, 96)) : (Gdiplus::Color(64, 64, 64)));
 		graphics.FillRectangle(&brush, -1, -1, getWidth() + 1, getHieght() + 1);
 
 
@@ -53,12 +48,6 @@ namespace explorer {
 			graphics.DrawRectangle(&pen, rect_0);
 			graphics.DrawLine(&pen, 1, 2, 13, 2);
 		}
-	}
-
-	void ButtonMaximize::hoverHandler(bool status)
-	{
-		_hover = status;
-		redrawWindow(false);
 	}
 
 	void ButtonMaximize::maximizeHandler(const MouseEventClick& mouseEventClick)
