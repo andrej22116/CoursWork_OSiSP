@@ -29,6 +29,7 @@ namespace explorer {
 	{
 		if (parentEvent.Code == PARENT_RESIZE) {
 			resizeWindow(parentEvent.Width - 48, 1, 15, 15, true);
+			redrawWindow(false);
 		}
 	}
 
