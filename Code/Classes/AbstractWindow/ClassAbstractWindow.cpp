@@ -531,4 +531,12 @@ namespace explorer {
 			}
 		}
 	}
+
+
+	void Window::m_invalidateChilds()
+	{
+		for (Window* child : _childList) {
+			InvalidateRect(child->getHWND(), nullptr, false);
+		}
+	}
 }

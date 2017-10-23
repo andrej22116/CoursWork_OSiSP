@@ -130,6 +130,8 @@ namespace explorer {
 		void m_sendMessageForChildren(std::wstring name, UINT message, WPARAM wParam, LPARAM lParam);
 		void m_sendMessageForChildren(Window* window, UINT message, WPARAM wParam, LPARAM lParam);
 		void m_sendMessageForChildren(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+
+		void m_invalidateChilds();
 	
 	private:
 		ATOM m_registerClass();

@@ -95,6 +95,7 @@ namespace explorer {
 				ReleaseCapture();
 				_resize_x = false;
 				_resize_y = false;
+				m_invalidateChilds();
 			}
 		}
 	}
