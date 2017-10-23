@@ -95,6 +95,7 @@
     <ClCompile Include="Code\Classes\Buttons\ClassMinimizeWindow\ClassMinimizeWindow.cpp">
       <Filter>Interface\Windows\Buttons\ClassMinimizeWindow</Filter>
     </ClCompile>
+    <ClCompile Include="Code\Classes\Another\RenderBuffer\RenderBuffer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Code\Classes\ClassMainWindow\ClassMainWindow.h">
@@ -130,5 +131,6 @@
     <ClInclude Include="Code\Includes\Ivents\Ivents.h">
       <Filter>Interface\Windows\IventsHeaders</Filter>
     </ClInclude>
+    <ClInclude Include="Code\Classes\Another\RenderBuffer\RenderBuffer.h" />
   </ItemGroup>
 </Project>

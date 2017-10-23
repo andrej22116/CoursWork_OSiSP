@@ -196,22 +196,31 @@ namespace explorer {
 	{
 		if (_resize_x) {
 			if (_inBorder_x_left) {
-				int width = getWidth() + getPosX() - mouseEvent.global_x;
-				resizeWindow(mouseEvent.global_x, getPosY(), width, getHieght(), true);
+				int width = getPosX() + getWidth() - mouseEvent.global_x;
+				if (width >= 50) {
+					//resizeWindow(getPosX(), getPosY(), width, getHieght(), true);
+					resizeWindow(mouseEvent.global_x, getPosY(), width, getHieght(), true);
+				}
 			}
 			else {
 				int width = mouseEvent.global_x - getPosX();
-				resizeWindow(width, getHieght(), true);
+				if (width >= 50) {
+					resizeWindow(width, getHieght(), true);
+				}
 			}
 		}
 		else {
 			if (_inBorder_y_top) {
-				int hight = getHieght() + getPosY() - mouseEvent.global_y;
-				resizeWindow(getPosX(), mouseEvent.global_y, getWidth(), hight, true);
+				int hieght = getPosY() + getHieght() - mouseEvent.global_y;
+				if (hieght >= 13) {
+					resizeWindow(getPosX(), mouseEvent.global_y, getWidth(), hieght, true);
+				}
 			}
 			else {
-				int hight = mouseEvent.global_y - getPosY();
-				resizeWindow(getWidth(), hight, true);
+				int hieght = mouseEvent.global_y - getPosY();
+				if (hieght >= 13) {
+					resizeWindow(getWidth(), hieght, true);
+				}
 			}
 		}
 	}

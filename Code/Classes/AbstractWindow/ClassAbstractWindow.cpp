@@ -89,6 +89,8 @@ namespace explorer {
 		_g_pos_Y = getGlobalPosY();
 		
 		MoveWindow(_hWnd, pos_x, pos_y, width, hieght, show);
+		//SetWindowPos(_hWnd, (HWND)1, pos_x, pos_y, width, hieght, SWP_SHOWWINDOW);
+		//InvalidateRect(_hWnd, nullptr, false)
 		//m_sendMessageForAllChildren(WM_SIZE, 0, 0);
 	}
 	void Window::minimizeWindow(bool hide)
@@ -194,6 +196,10 @@ namespace explorer {
 			Window* window = s_windowsMap[hWnd];
 			switch (msg) {
 			case WM_CREATE: { window->createWindow(); } break;
+			case WM_SIZING: {
+				RedrawWindow(hWnd, NULL, NULL, RDW_INVALIDATE | RDW_NOERASE | RDW_INTERNALPAINT);
+				return DefWindowProc(hWnd, msg, wParam, lParam);
+			}
 			case WM_PAINT: {
 				PAINTSTRUCT ps;
 				HDC hDC = BeginPaint(window->_hWnd, &ps);
@@ -333,6 +339,21 @@ namespace explorer {
 				}
 			} break;
 			case WM_DESTROY: { window->closeWindow(); } break;
+			case WM_NCCALCSIZE: {
+				if (wParam) {
+					NCCALCSIZE_PARAMS* Params = reinterpret_cast<NCCALCSIZE_PARAMS *>(lParam);
+					Params->rgrc[0].bottom += 3; // 3 - размер границы
+					Params->rgrc[0].right += 3;
+					Params->rgrc[1].bottom += 3;
+					Params->rgrc[1].right += 3;
+					Params->rgrc[2].bottom += 3;
+					Params->rgrc[2].right += 3;
+					return 0;
+				}
+				return DefWindowProc(hWnd, msg, wParam, lParam);
+			}
+
+
 			default: return DefWindowProc(hWnd, msg, wParam, lParam);
 			}
 			return 0;
