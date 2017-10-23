@@ -14,7 +14,9 @@ namespace explorer {
 	void ButtonMinimize::paintHandler(Gdiplus::Graphics& graphics)
 	{
 		Gdiplus::Pen pen(Gdiplus::Color::White, 1.6);
-		Gdiplus::SolidBrush brush((isHover()) ? (Gdiplus::Color(96, 96, 96)) : (Gdiplus::Color(64, 64, 64)));
+		Gdiplus::SolidBrush brush((isHover()) ? 
+			(MAIN_WINDOW_COLOR_HEADER_BUTTON_SELECTED) :
+			(MAIN_WINDOW_COLOR_HEADER));
 		graphics.FillRectangle(&brush, -1, -1, getWidth() + 1, getHieght() + 1);
 
 		graphics.DrawRectangle(&pen, 2, getHieght()-3, getWidth()-5, 1);
@@ -28,7 +30,13 @@ namespace explorer {
 	void ButtonMinimize::resizeParentHandler(const ParentEvent& parentEvent)
 	{
 		if (parentEvent.Code == PARENT_RESIZE) {
-			resizeWindow(parentEvent.Width - 48, 1, 15, 15, true);
+			resizeWindow(
+				MAIN_WINDOW_BUTTON_MINIMIZE_POS_X(parentEvent.Width),
+				MAIN_WINDOW_BUTTON_MINIMIZE_POS_Y(1),
+				MAIN_WINDOW_BUTTON_MINIMIZE_WIDTH,
+				MAIN_WINDOW_BUTTON_MINIMIZE_HEIGHT,
+				true
+			);
 		}
 	}
 

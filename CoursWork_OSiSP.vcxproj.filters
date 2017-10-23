@@ -132,5 +132,6 @@
       <Filter>Interface\Windows\IventsHeaders</Filter>
     </ClInclude>
     <ClInclude Include="Code\Classes\Another\RenderBuffer\RenderBuffer.h" />
+    <ClInclude Include="Code\Includes\DefaultParams\ConstantParams.h" />
   </ItemGroup>
 </Project>

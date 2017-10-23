@@ -25,11 +25,11 @@ namespace explorer {
 
 	void MainWindow::paintHandler(Gdiplus::Graphics& graphics)
 	{
-		Gdiplus::SolidBrush brush_2(Gdiplus::Color(32, 32, 32));
+		Gdiplus::SolidBrush brush_2(MAIN_WINDOW_COLOR_BACKGROUND);
 		Gdiplus::Rect region_2(0, 0, this->getWidth(), this->getHieght());
 		graphics.FillRectangle(&brush_2, region_2);
 
-		Gdiplus::SolidBrush brush(Gdiplus::Color(64, 64, 64));
+		Gdiplus::SolidBrush brush(MAIN_WINDOW_COLOR_HEADER);
 		Gdiplus::Rect region(0, 0, this->getWidth(), 17);
 		graphics.FillRectangle(&brush, region);
 	}
@@ -39,28 +39,28 @@ namespace explorer {
 		buttonClose.create(
 			L"exit",
 			*this,
-			this->getWidth() - 16,
-			1,
-			15,
-			15,
+			MAIN_WINDOW_BUTTON_EXIT_POS_X(this->getWidth()),
+			MAIN_WINDOW_BUTTON_EXIT_POS_Y(1),
+			MAIN_WINDOW_BUTTON_EXIT_WIDTH,
+			MAIN_WINDOW_BUTTON_EXIT_HEIGHT,
 			true);
 
 		buttonMaximize.create(
 			L"maximize",
 			*this,
-			this->getWidth() - 32,
-			1,
-			15,
-			15,
+			MAIN_WINDOW_BUTTON_MAXIMIZE_POS_X(this->getWidth()),
+			MAIN_WINDOW_BUTTON_MAXIMIZE_POS_Y(1),
+			MAIN_WINDOW_BUTTON_MAXIMIZE_WIDTH,
+			MAIN_WINDOW_BUTTON_MAXIMIZE_HEIGHT,
 			true);
 
 		buttonMinimize.create(
 			L"minimize",
 			*this,
-			this->getWidth() - 48,
-			1,
-			15,
-			15,
+			MAIN_WINDOW_BUTTON_MINIMIZE_POS_X(this->getWidth()),
+			MAIN_WINDOW_BUTTON_MINIMIZE_POS_Y(1),
+			MAIN_WINDOW_BUTTON_MINIMIZE_WIDTH,
+			MAIN_WINDOW_BUTTON_MINIMIZE_HEIGHT,
 			true);
 		//MessageBox(nullptr, (L"IT'S WORK!!! " + getWindowName()).c_str(), L"TEST", MB_OK);
 	}
@@ -129,11 +129,11 @@ namespace explorer {
 
 	void MainWindow::checkCursorPosInBorder(MouseEvent& mouseEvent)
 	{
-		bool inHorizontalBorder_left = mouseEvent.x >= 0 && mouseEvent.x <= 2;
-		bool inHorizontalBorder_right = mouseEvent.x >= getWidth() - 2 && mouseEvent.x <= getWidth();
+		bool inHorizontalBorder_left = mouseEvent.x >= 0 && mouseEvent.x < MAIN_WINDOW_BORDER_SIZE;
+		bool inHorizontalBorder_right = mouseEvent.x > getWidth() - MAIN_WINDOW_BORDER_SIZE && mouseEvent.x <= getWidth();
 
-		bool inVerticalBorder_top = mouseEvent.y >= 0 && mouseEvent.y <= 2;
-		bool inVerticalBorder_bot = mouseEvent.y >= getHieght() - 2 && mouseEvent.y <= getHieght();
+		bool inVerticalBorder_top = mouseEvent.y >= 0 && mouseEvent.y < MAIN_WINDOW_BORDER_SIZE;
+		bool inVerticalBorder_bot = mouseEvent.y > getHieght() - MAIN_WINDOW_BORDER_SIZE && mouseEvent.y <= getHieght();
 
 		if ((inHorizontalBorder_left || inHorizontalBorder_right) && !buttonMaximize.isMaximized()) {
 			SetCursor(LoadCursor(0, IDC_SIZEWE));

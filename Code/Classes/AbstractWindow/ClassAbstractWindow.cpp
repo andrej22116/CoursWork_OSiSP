@@ -342,12 +342,12 @@ namespace explorer {
 			case WM_NCCALCSIZE: {
 				if (wParam) {
 					NCCALCSIZE_PARAMS* Params = reinterpret_cast<NCCALCSIZE_PARAMS *>(lParam);
-					Params->rgrc[0].bottom += 3; // 3 - размер границы
-					Params->rgrc[0].right += 3;
-					Params->rgrc[1].bottom += 3;
-					Params->rgrc[1].right += 3;
-					Params->rgrc[2].bottom += 3;
-					Params->rgrc[2].right += 3;
+					Params->rgrc[0].bottom += MAIN_WINDOW_BORDER_SIZE;
+					Params->rgrc[0].right += MAIN_WINDOW_BORDER_SIZE;
+					Params->rgrc[1].bottom += MAIN_WINDOW_BORDER_SIZE;
+					Params->rgrc[1].right += MAIN_WINDOW_BORDER_SIZE;
+					Params->rgrc[2].bottom += MAIN_WINDOW_BORDER_SIZE;
+					Params->rgrc[2].right += MAIN_WINDOW_BORDER_SIZE;
 					return 0;
 				}
 				return DefWindowProc(hWnd, msg, wParam, lParam);

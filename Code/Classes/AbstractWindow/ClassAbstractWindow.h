@@ -4,6 +4,7 @@
 #include "..\Exceptions\ClassWindowClassException\ClassWindowClassException.h"
 
 #include "..\..\Includes\Ivents\Ivents.h"
+#include "..\..\Includes\DefaultParams\ConstantParams.h"
 
 #ifndef _CLASS_WINDOW_H_
 #define _CLASS_WINDOW_H_

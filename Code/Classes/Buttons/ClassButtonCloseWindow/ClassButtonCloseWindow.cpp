@@ -16,7 +16,7 @@ namespace explorer {
 		graphics.SetSmoothingMode(Gdiplus::SmoothingMode::SmoothingModeAntiAlias);
 
 		Gdiplus::Pen pen(Gdiplus::Color::White, 1.55);
-		Gdiplus::SolidBrush brush((isHover()) ? (Gdiplus::Color::Red) : (Gdiplus::Color(64,64,64)));
+		Gdiplus::SolidBrush brush((isHover()) ? (Gdiplus::Color::Red) : (MAIN_WINDOW_COLOR_HEADER));
 		graphics.FillRectangle(&brush, -1, -1, getWidth()+1, getHieght()+1);
 
 		graphics.SetClip(&_region);
@@ -37,7 +37,13 @@ namespace explorer {
 	void ButtonClose::resizeParentHandler(const ParentEvent& parentEvent)
 	{
 		if (parentEvent.Code == PARENT_RESIZE) {
-			resizeWindow(parentEvent.Width - 16, 1, 15, 15, true);
+			resizeWindow(
+				MAIN_WINDOW_BUTTON_EXIT_POS_X(parentEvent.Width),
+				MAIN_WINDOW_BUTTON_EXIT_POS_Y(1),
+				MAIN_WINDOW_BUTTON_EXIT_WIDTH,
+				MAIN_WINDOW_BUTTON_EXIT_HEIGHT,
+				true
+			);
 		}
 	}
 }
