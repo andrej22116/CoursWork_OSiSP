@@ -87,7 +87,6 @@ namespace explorer {
 	{
 		if (parentEvent.Code == PARENT_RESIZE) {
 			resizeWindow(getParent()->getWidth() - 32, 1, 15, 15, true);
-			redrawWindow(false);
 		}
 	}
 #ifdef _DEBUG
