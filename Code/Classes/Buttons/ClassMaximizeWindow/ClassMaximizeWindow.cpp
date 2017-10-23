@@ -53,7 +53,7 @@ namespace explorer {
 	void ButtonMaximize::maximizeHandler(const MouseEventClick& mouseEventClick)
 	{
 		//m_sendMessageForParent(WM_SIZE, 0, 0);
-		if (mouseEventClick.Button == MOUSE_LEFT) {
+		if (mouseEventClick.Button == MOUSE_LEFT && mouseEventClick.Status == KEY_PRESSED) {
 			if (getParent()) {
 				if (!_maximized) {
 					_oldWidth = getParent()->getWidth();

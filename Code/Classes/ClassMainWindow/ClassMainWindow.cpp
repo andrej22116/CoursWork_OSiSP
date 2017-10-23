@@ -135,7 +135,7 @@ namespace explorer {
 		bool inVerticalBorder_top = mouseEvent.y >= 0 && mouseEvent.y <= 2;
 		bool inVerticalBorder_bot = mouseEvent.y >= getHieght() - 2 && mouseEvent.y <= getHieght();
 
-		if (inHorizontalBorder_left || inHorizontalBorder_right) {
+		if ((inHorizontalBorder_left || inHorizontalBorder_right) && !buttonMaximize.isMaximized()) {
 			SetCursor(LoadCursor(0, IDC_SIZEWE));
 
 			_inBorder_x_left = false;
@@ -148,7 +148,7 @@ namespace explorer {
 				_inBorder_x_right = true;
 			}
 		}
-		else if (inVerticalBorder_top || inVerticalBorder_bot) {
+		else if ((inVerticalBorder_top || inVerticalBorder_bot) && !buttonMaximize.isMaximized()) {
 			SetCursor(LoadCursor(0, IDC_SIZENS));
 
 			_inBorder_y_top = false;
