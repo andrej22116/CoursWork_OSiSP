@@ -32,6 +32,12 @@ namespace explorer {
 		Gdiplus::SolidBrush brush(MAIN_WINDOW_COLOR_HEADER);
 		Gdiplus::Rect region(0, 0, this->getWidth(), 17);
 		graphics.FillRectangle(&brush, region);
+
+
+		Gdiplus::Font font(&Gdiplus::FontFamily(L"Arial"), 12);
+		Gdiplus::SolidBrush textbrush(Gdiplus::Color(255, 255, 255));
+		Gdiplus::Point point(3, 20);
+		graphics.DrawString(L"Test", -1, &font, Gdiplus::PointF(3, 20), &textbrush);
 	}
 
 	void MainWindow::createWindow()
@@ -102,6 +108,7 @@ namespace explorer {
 
 	void MainWindow::keyboardHandler(const KeyEvent& keyEvent)
 	{
+		//SendMessage(getHWND(), WM_VSCROLL, )
 		/*
 		if (keyEvent.Status == KEY_RELEASED) {
 			std::wstring str = L"This symbol: ";
