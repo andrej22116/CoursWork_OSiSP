@@ -103,6 +103,7 @@ namespace explorer {
 		void getHoverMessages(bool activate);
 
 		/* Handlers */
+		// This method call when comes message WM_CREATE
 		virtual void createWindow();
 		void closeWindow();
 		void timerCheckHoverWindow(const int& ID);

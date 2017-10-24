@@ -201,9 +201,26 @@ namespace explorer {
 				return DefWindowProc(hWnd, msg, wParam, lParam);
 			}
 			case WM_PAINT: {
+				/*TEST CODE*/
+				int i;
+				SCROLLINFO hscroll = { 0 }, vscroll = { 0 };
+				hscroll.cbSize = sizeof(SCROLLINFO);
+				hscroll.fMask = SIF_POS;
+				GetScrollInfo(hWnd, SB_HORZ, &hscroll);
+
+				vscroll.cbSize = sizeof(SCROLLINFO);
+				vscroll.fMask = SIF_POS;
+				GetScrollInfo(hWnd, SB_VERT, &vscroll);
+
+				RECT scRect, Rect, Buff;
+
+				GetClientRect(hWnd, &Rect);
+				/*TEST CODE*/
 				PAINTSTRUCT ps;
 				HDC hDC = BeginPaint(window->_hWnd, &ps);
 				Gdiplus::Graphics graphics(hDC);
+
+				IntersectRect(&Buff, &ps.rcPaint, &scRect); // test!
 				for (auto handler : window->_paintHandlers) {
 					handler(graphics);
 				}
@@ -332,6 +349,13 @@ namespace explorer {
 				for (auto handler : window->_mouseWheelHandlers) {
 					handler(mouseEventWheel);
 				}
+
+				if (value > 0) {
+					PostMessage(hWnd, WM_VSCROLL, SB_LINEUP, NULL);
+				}
+				else {
+					PostMessage(hWnd, WM_VSCROLL, SB_LINEDOWN, NULL);
+				}
 			} break;
 			case WM_TIMER: {
 				for (auto handler : window->_timerHandlers) {
@@ -351,7 +375,56 @@ namespace explorer {
 					return 0;
 				}
 				return DefWindowProc(hWnd, msg, wParam, lParam);
-			}
+			} break;
+
+			case WM_VSCROLL: {
+				SCROLLINFO vscroll;
+				vscroll.cbSize = sizeof(SCROLLINFO);
+				vscroll.fMask = SIF_RANGE | SIF_POS | SIF_TRACKPOS;
+				GetScrollInfo(hWnd, SB_VERT, &vscroll);
+
+				RECT rc;
+				GetClientRect(hWnd, &rc);
+
+				int verticalScroll = 0;
+				switch (LOWORD(wParam))
+				{
+				case SB_LINEDOWN: case SB_PAGEDOWN: {
+					int k = (LOWORD(wParam) == SB_LINEDOWN) ? 10 : rc.bottom;
+					verticalScroll = vscroll.nMax - vscroll.nPos;
+					if (verticalScroll > k) {
+						verticalScroll = k;
+					}
+					vscroll.nPos = vscroll.nPos + verticalScroll;
+				} break;
+
+				case SB_LINEUP: case SB_PAGEUP: {
+					int k = (LOWORD(wParam) == SB_LINEUP) ? 10 : rc.bottom;
+					verticalScroll = vscroll.nPos - vscroll.nMin;
+					if (verticalScroll > k) {
+						verticalScroll = k;
+					}
+					verticalScroll = -verticalScroll;
+					vscroll.nPos = vscroll.nPos + verticalScroll;
+				} break;
+				case SB_THUMBTRACK: {
+					verticalScroll = vscroll.nTrackPos - vscroll.nPos;
+					vscroll.nPos = vscroll.nTrackPos;
+				} break;
+				}
+				vscroll.cbSize = sizeof(SCROLLINFO);
+				vscroll.fMask = SIF_POS;
+
+				ScrollWindowEx(hWnd, 0, -verticalScroll, NULL, NULL, NULL, NULL, SW_ERASE);
+				if (verticalScroll > 0) {
+					rc.top = rc.bottom - verticalScroll;
+				}
+				else {
+					rc.bottom = rc.top - verticalScroll;
+				}
+				SetScrollInfo(hWnd, SB_VERT, &vscroll, TRUE);
+				InvalidateRect(hWnd, &rc, FALSE);
+			} break;
 
 
 			default: return DefWindowProc(hWnd, msg, wParam, lParam);
