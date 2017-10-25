@@ -80,6 +80,9 @@
     <Filter Include="Core\Exceptions\ClassFileException">
       <UniqueIdentifier>{382ea4a9-d76d-4df7-b3a0-149854ffdd59}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Interface\Windows\ClassListOfFilesWindow">
+      <UniqueIdentifier>{906b8279-9385-4d70-a818-84a9f7f2046c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Code\WinMain.cpp" />
@@ -121,6 +124,9 @@
     </ClCompile>
     <ClCompile Include="Code\Classes\Exceptions\ClassFileException\ClassFileException.cpp">
       <Filter>Core\Exceptions\ClassFileException</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Classes\ClassListOfFilesWindow\ClassListOfFilesWindow.cpp">
+      <Filter>Interface\Windows\ClassListOfFilesWindow</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -168,6 +174,9 @@
     </ClInclude>
     <ClInclude Include="Code\Includes\DefaultParams\ConstantParams.h">
       <Filter>Interface\DefaultParametrs</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Classes\ClassListOfFilesWindow\ClassListOfFilesWindow.h">
+      <Filter>Interface\Windows\ClassListOfFilesWindow</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
