@@ -35,7 +35,7 @@ namespace explorer {
 		graphics.FillRectangle(&brush, -1, -1, getWidth() + 1, getHieght() + 1);
 
 
-		Gdiplus::Rect rect_0(1, 1, 12, 12);
+		Gdiplus::Rect rect_0(2, 2, 11, 11);
 		Gdiplus::Rect rect_1(6, 2, 6, 6);
 		Gdiplus::Rect rect_2(2, 6, 6, 6);
 
@@ -49,7 +49,7 @@ namespace explorer {
 		}
 		else {
 			graphics.DrawRectangle(&pen, rect_0);
-			graphics.DrawLine(&pen, 1, 2, 13, 2);
+			graphics.DrawLine(&pen, 2, 3, 13, 3);
 		}
 	}
 

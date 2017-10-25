@@ -62,6 +62,21 @@
     <Filter Include="Interface\Windows\IventsHeaders">
       <UniqueIdentifier>{10c15249-d080-4c0a-8f0e-e2f292d86a11}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Core\FileSystem">
+      <UniqueIdentifier>{bff0d1da-9c08-480f-b1e6-10791eeb8a5f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\FileSystem\ClassFile">
+      <UniqueIdentifier>{cefcb75c-f320-48d8-99b1-4872a02a0d04}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Interface\Another">
+      <UniqueIdentifier>{ad09ac6d-3d4e-4e57-9e8c-d55765062d18}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Interface\Another\ClassRenderBuffer">
+      <UniqueIdentifier>{046c7c77-e87e-4676-993a-8c22cc23e4a4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Includes">
+      <UniqueIdentifier>{3286fee1-131d-496c-ae4a-4d36896259c1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Code\WinMain.cpp" />
@@ -95,7 +110,12 @@
     <ClCompile Include="Code\Classes\Buttons\ClassMinimizeWindow\ClassMinimizeWindow.cpp">
       <Filter>Interface\Windows\Buttons\ClassMinimizeWindow</Filter>
     </ClCompile>
-    <ClCompile Include="Code\Classes\Another\RenderBuffer\RenderBuffer.cpp" />
+    <ClCompile Include="Code\Classes\FileSystem\ClassFile\ClassFile.cpp">
+      <Filter>Core\FileSystem\ClassFile</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Classes\Another\RenderBuffer\RenderBuffer.cpp">
+      <Filter>Interface\Another\ClassRenderBuffer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Code\Classes\ClassMainWindow\ClassMainWindow.h">
@@ -131,7 +151,14 @@
     <ClInclude Include="Code\Includes\Ivents\Ivents.h">
       <Filter>Interface\Windows\IventsHeaders</Filter>
     </ClInclude>
-    <ClInclude Include="Code\Classes\Another\RenderBuffer\RenderBuffer.h" />
-    <ClInclude Include="Code\Includes\DefaultParams\ConstantParams.h" />
+    <ClInclude Include="Code\Classes\FileSystem\ClassFile\ClassFile.h">
+      <Filter>Core\FileSystem\ClassFile</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Classes\Another\RenderBuffer\RenderBuffer.h">
+      <Filter>Interface\Another\ClassRenderBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Includes\DefaultParams\ConstantParams.h">
+      <Filter>Core\Includes</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

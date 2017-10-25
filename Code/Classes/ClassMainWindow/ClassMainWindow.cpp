@@ -26,6 +26,7 @@ namespace explorer {
 	void MainWindow::paintHandler(Gdiplus::Graphics& graphics)
 	{
 		Gdiplus::SolidBrush brush_2(MAIN_WINDOW_COLOR_BACKGROUND);
+		Gdiplus::LinearGradientBrush lbrush(Gdiplus::Point(0, 0), Gdiplus::Point(50, 0), Gdiplus::Color(255, 190, 70), Gdiplus::Color(255, 250, 140));
 		Gdiplus::Rect region_2(0, 0, this->getWidth(), this->getHieght());
 		graphics.FillRectangle(&brush_2, region_2);
 
@@ -37,7 +38,7 @@ namespace explorer {
 		Gdiplus::Font font(&Gdiplus::FontFamily(L"Arial"), 12);
 		Gdiplus::SolidBrush textbrush(Gdiplus::Color(255, 255, 255));
 		Gdiplus::Point point(3, 20);
-		graphics.DrawString(L"Test", -1, &font, Gdiplus::PointF(3, 20), &textbrush);
+		graphics.DrawString(L"Test я ем говно", -1, &font, Gdiplus::PointF(3, 20), &lbrush);
 
 		setDoubleBuffered(true);
 	}

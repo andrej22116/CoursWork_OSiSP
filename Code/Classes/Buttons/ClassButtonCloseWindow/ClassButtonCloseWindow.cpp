@@ -22,8 +22,8 @@ namespace explorer {
 		graphics.FillRectangle(&brush, -1, -1, getWidth()+1, getHieght()+1);
 
 		graphics.SetClip(&_region);
-		Gdiplus::Point pos_1(0, 0), pos_2(getWidth(), getHieght());
-		Gdiplus::Point pos_3(getWidth()-1, 0), pos_4(-1, getHieght());
+		Gdiplus::Point pos_1(2, 2), pos_2(getWidth()-3, getHieght()-3);
+		Gdiplus::Point pos_3(getWidth() - 3, 2), pos_4(2, getHieght()-3);
 
 		graphics.DrawLine(&pen, pos_2, pos_1);
 		graphics.DrawLine(&pen, pos_3, pos_4);

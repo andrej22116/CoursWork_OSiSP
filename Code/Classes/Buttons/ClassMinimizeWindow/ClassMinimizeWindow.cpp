@@ -21,7 +21,7 @@ namespace explorer {
 			(MAIN_WINDOW_COLOR_HEADER));
 		graphics.FillRectangle(&brush, -1, -1, getWidth() + 1, getHieght() + 1);
 
-		graphics.DrawRectangle(&pen, 2, getHieght()-3, getWidth()-5, 1);
+		graphics.DrawRectangle(&pen, 2, getHieght()-4, getWidth()-5, 1);
 	}
 
 	void ButtonMinimize::minimizeHandler(const MouseEventClick& mouseEventClick)
