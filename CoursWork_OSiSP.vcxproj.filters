@@ -77,6 +77,9 @@
     <Filter Include="Core\Includes">
       <UniqueIdentifier>{3286fee1-131d-496c-ae4a-4d36896259c1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Core\Exceptions\ClassFileException">
+      <UniqueIdentifier>{382ea4a9-d76d-4df7-b3a0-149854ffdd59}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Code\WinMain.cpp" />
@@ -115,6 +118,9 @@
     </ClCompile>
     <ClCompile Include="Code\Classes\FileSystem\ClassFile\ClassFile.cpp">
       <Filter>Core\FileSystem\ClassFile</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Classes\Exceptions\ClassFileException\ClassFileException.cpp">
+      <Filter>Core\Exceptions\ClassFileException</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -156,6 +162,9 @@
     </ClInclude>
     <ClInclude Include="Code\Classes\FileSystem\ClassFile\ClassFile.h">
       <Filter>Core\FileSystem\ClassFile</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Classes\Exceptions\ClassFileException\ClassFileException.h">
+      <Filter>Core\Exceptions\ClassFileException</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
