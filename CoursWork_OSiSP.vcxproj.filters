@@ -166,5 +166,8 @@
     <ClInclude Include="Code\Classes\Exceptions\ClassFileException\ClassFileException.h">
       <Filter>Core\Exceptions\ClassFileException</Filter>
     </ClInclude>
+    <ClInclude Include="Code\Includes\DefaultParams\ConstantParams.h">
+      <Filter>Interface\DefaultParametrs</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
