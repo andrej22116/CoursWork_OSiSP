@@ -88,6 +88,8 @@ namespace explorer {
 			result.push_back(findData.cFileName);
 		} while (FindNextFile(hFind, &findData));
 
+		FindClose(hFind);
+
 		return result;
 	}
 
