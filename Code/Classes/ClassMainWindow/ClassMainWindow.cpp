@@ -71,6 +71,15 @@ namespace explorer {
 			MAIN_WINDOW_BUTTON_MINIMIZE_WIDTH,
 			MAIN_WINDOW_BUTTON_MINIMIZE_HEIGHT,
 			true);
+		listOfFiles.create(
+			L"ListOfFiles",
+			*this,
+			LISTBOX_POS_X,
+			LISTBOX_POS_Y,
+			getWidth() - MAIN_WINDOW_BORDER_SIZE - LISTBOX_POS_X - 1,
+			getHieght() - MAIN_WINDOW_BORDER_SIZE - LISTBOX_POS_Y - 1,
+			true
+		);
 		//MessageBox(nullptr, (L"IT'S WORK!!! " + getWindowName()).c_str(), L"TEST", MB_OK);
 	}
 

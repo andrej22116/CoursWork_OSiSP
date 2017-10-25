@@ -4,6 +4,7 @@
 #include "..\Buttons\ClassButtonCloseWindow\ClassButtonCloseWindow.h"
 #include "..\Buttons\ClassMaximizeWindow\ClassMaximizeWindow.h"
 #include "..\Buttons\ClassMinimizeWindow\ClassMinimizeWindow.h"
+#include "..\ClassListOfFilesWindow\ClassListOfFilesWindow.h"
 
 #ifndef _CLASS_MAIN_WINDOW_H_
 #define _CLASS_MAIN_WINDOW_H_
@@ -15,6 +16,7 @@ namespace explorer {
 		ButtonClose buttonClose;
 		ButtonMaximize buttonMaximize;
 		ButtonMinimize buttonMinimize;
+		ListOfFiles listOfFiles;
 
 		int _oldCursorPosX, _oldCursorPosY;
 
