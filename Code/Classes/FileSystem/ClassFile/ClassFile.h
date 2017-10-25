@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Windows.h>
+#include "..\..\Exceptions\ClassFileException\ClassFileException.h"
 
 #ifndef _CLASS_FILE_H_
 #define _CLASS_FILE_H_
@@ -25,6 +26,8 @@ namespace explorer {
 
 		std::vector<std::wstring> list();
 		std::vector<std::wstring> list(std::wstring filter);
+
+		static std::vector<std::pair<std::wstring, int>> getAllLogicalDrives();
 	};
 
 }
