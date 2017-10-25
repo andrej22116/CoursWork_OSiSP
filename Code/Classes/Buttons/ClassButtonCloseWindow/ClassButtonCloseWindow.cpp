@@ -8,6 +8,8 @@ namespace explorer {
 		m_registerHendler(METHOD(&ButtonClose::mouseClickCloseHandler));
 		m_registerHendler(METHOD(&ButtonClose::paintHandler));
 		m_registerHendler(METHOD(&ButtonClose::resizeParentHandler));
+
+		setDoubleBuffered(true);
 	}
 
 

@@ -9,6 +9,8 @@ namespace explorer {
 		m_registerHendler(METHOD(&ButtonMinimize::resizeParentHandler));
 
 		m_registerHendler(METHOD(&ButtonMinimize::minimizeHandler));
+
+		setDoubleBuffered(true);
 	}
 
 	void ButtonMinimize::paintHandler(Gdiplus::Graphics& graphics)

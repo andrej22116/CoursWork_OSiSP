@@ -22,7 +22,6 @@ namespace explorer {
 	Window::~Window()
 	{
 		s_windowsMap.erase(_hWnd);
-		ReleaseDC(_hWnd, _hDC);
 		DestroyWindow(_hWnd);
 
 		if (_parent) {
@@ -38,7 +37,6 @@ namespace explorer {
 	int Window::getWidth() const { return _width; }
 	int Window::getHieght() const { return _hieght; }
 	HWND Window::getHWND() const { return _hWnd; }
-	HDC Window::getHDC() const { return _hDC; }
 	Window* Window::getParent() const { return _parent;  }
 
 	int Window::getPosX() const { return _pos_x; }
@@ -63,6 +61,10 @@ namespace explorer {
 	void Window::setWindowName(std::wstring name)
 	{
 		_windowName = name;
+	}
+	void Window::setDoubleBuffered(bool set)
+	{
+		_doubleBuffer = set;
 	}
 
 	void Window::moveWindowPos(int x, int y, bool repaint)
@@ -201,29 +203,23 @@ namespace explorer {
 				return DefWindowProc(hWnd, msg, wParam, lParam);
 			}
 			case WM_PAINT: {
-				/*TEST CODE*/
-				int i;
-				SCROLLINFO hscroll = { 0 }, vscroll = { 0 };
-				hscroll.cbSize = sizeof(SCROLLINFO);
-				hscroll.fMask = SIF_POS;
-				GetScrollInfo(hWnd, SB_HORZ, &hscroll);
-
-				vscroll.cbSize = sizeof(SCROLLINFO);
-				vscroll.fMask = SIF_POS;
-				GetScrollInfo(hWnd, SB_VERT, &vscroll);
-
-				RECT scRect, Rect, Buff;
-
-				GetClientRect(hWnd, &Rect);
-				/*TEST CODE*/
 				PAINTSTRUCT ps;
 				HDC hDC = BeginPaint(window->_hWnd, &ps);
-				Gdiplus::Graphics graphics(hDC);
+				HDC hDC_Buffer = 0;
 
-				IntersectRect(&Buff, &ps.rcPaint, &scRect); // test!
+				if (window->_doubleBuffer) {
+					hDC_Buffer = window->_renderBuffer->getDC();
+				}
+				Gdiplus::Graphics graphics((window->_doubleBuffer) ? (hDC_Buffer) : (hDC));
+
 				for (auto handler : window->_paintHandlers) {
 					handler(graphics);
 				}
+
+				if (window->_doubleBuffer) {
+					window->_renderBuffer->swap(hDC);
+				}
+
 				EndPaint(window->_hWnd, &ps);
 			} break;
 			case WM_MOVE: {
@@ -247,6 +243,8 @@ namespace explorer {
 				parentEvent.Pos_Y = window->_pos_y;
 				parentEvent.Width = window->_width;
 				parentEvent.Height = window->_hieght;
+
+				window->_renderBuffer->resizeBuffer(window->_width, window->_hieght);
 
 				for (auto child : window->_childList) {
 					for (auto handler : child->_parentHandlers) {
@@ -534,10 +532,10 @@ namespace explorer {
 		UpdateWindow(_hWnd);
 		ShowWindow(_hWnd, (show ? SW_SHOW : SW_HIDE));
 
-		_hDC = GetDC(_hWnd);
-
 		_g_pos_X = getGlobalPosX();
 		_g_pos_Y = getGlobalPosY();
+
+		_renderBuffer = std::make_shared<RenderBuffer>(_hWnd, _width, _hieght);
 		return true;
 	}
 	bool Window::m_createWindow(Window* parent)

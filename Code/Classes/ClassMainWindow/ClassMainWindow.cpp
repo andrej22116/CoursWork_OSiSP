@@ -38,6 +38,8 @@ namespace explorer {
 		Gdiplus::SolidBrush textbrush(Gdiplus::Color(255, 255, 255));
 		Gdiplus::Point point(3, 20);
 		graphics.DrawString(L"Test", -1, &font, Gdiplus::PointF(3, 20), &textbrush);
+
+		setDoubleBuffered(true);
 	}
 
 	void MainWindow::createWindow()

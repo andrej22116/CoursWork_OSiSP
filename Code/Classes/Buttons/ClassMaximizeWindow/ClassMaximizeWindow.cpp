@@ -17,6 +17,7 @@ namespace explorer {
 #endif
 
 		_maximized = false;
+		setDoubleBuffered(true);
 	}
 
 

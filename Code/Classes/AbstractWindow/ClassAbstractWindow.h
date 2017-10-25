@@ -6,6 +6,8 @@
 #include "..\..\Includes\Ivents\Ivents.h"
 #include "..\..\Includes\DefaultParams\ConstantParams.h"
 
+#include "..\Another\RenderBuffer\RenderBuffer.h"
+
 #ifndef _CLASS_WINDOW_H_
 #define _CLASS_WINDOW_H_
 /*
@@ -58,13 +60,15 @@ namespace explorer {
 		int _pos_x, _pos_y;
 		int _g_pos_X, _g_pos_Y;
 		HWND _hWnd;
-		HDC _hDC;
 
 		WNDCLASSEX _WndClass;
 		std::wstring _windowName;
 
 		bool _thisWindowIsCreated;
 		bool _hoverStatus;
+		bool _doubleBuffer;
+
+		std::shared_ptr<RenderBuffer> _renderBuffer;
 
 	public:
 		Window();
@@ -78,7 +82,6 @@ namespace explorer {
 		int getWidth() const;
 		int getHieght() const;
 		HWND getHWND() const;
-		HDC getHDC() const;
 		Window* getParent() const;
 
 		int getPosX() const;
@@ -90,6 +93,7 @@ namespace explorer {
 		std::wstring getWindowName() const;
 		void minimizeWindow(bool hide);
 		void setWindowName(std::wstring name);
+		void setDoubleBuffered(bool set);
 
 		void moveWindowPos(int x, int y, bool repaint = false);
 		void resizeWindow(int width, int hieght, bool show);
