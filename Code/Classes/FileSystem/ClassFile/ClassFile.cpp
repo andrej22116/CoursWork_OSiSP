@@ -25,7 +25,17 @@ namespace explorer {
 		}
 	}
 
-	std::wstring File::getPath()
+	std::wstring File::getPrevDirection()
+	{
+		std::wstring prevDir;
+
+		auto pos = _path.find_last_of('\\');
+		pos = _path.find_last_of('\\', pos - 1);
+
+		prevDir = _path.substr(0, pos + 1);
+		return prevDir;
+	}
+	std::wstring File::getDirection()
 	{
 		if (_isDir) {
 			return _path;
@@ -33,6 +43,7 @@ namespace explorer {
 		else {
 			std::wstring path;
 			auto position = _path.find_last_of('\\');
+
 			path = _path.substr(0, position + 1);
 			return path;
 		}

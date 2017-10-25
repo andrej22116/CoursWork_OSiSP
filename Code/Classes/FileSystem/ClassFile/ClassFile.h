@@ -16,9 +16,11 @@ namespace explorer {
 		bool _isDir;
 
 	public:
+		File() = delete;
 		File(std::wstring path);
 
-		std::wstring getPath();
+		std::wstring getPrevDirection();
+		std::wstring getDirection();
 		std::wstring getName();
 
 		bool isFile();
