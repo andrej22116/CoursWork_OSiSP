@@ -8,18 +8,26 @@
 namespace explorer {
 
 	class RenderBuffer {
-		HDC _hDC;
+		HDC _hDC_Device;
+		HDC _hDC_Buffer;
 		HBITMAP _hBitmap;
 
+		int _width, _height;
+
 	public:
-		RenderBuffer(int width, int hieght);
+		RenderBuffer(HDC hDC, int width, int hieght);
 		~RenderBuffer();
 
 
 		HDC getDC();
-		HBITMAP getBitmap();
+		HBITMAP getHBitmap();
+		int getWidth();
+		int getHeight();
+
 		void resizeBuffer(int width, int hieght);
 
+		void copyTo(RenderBuffer& buffer);
+		void copyTo(RenderBuffer& buffer, int x, int y);
 		void copyTo(RenderBuffer& buffer, int x, int y, int width, int hieght);
 	};
 
