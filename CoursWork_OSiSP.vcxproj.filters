@@ -110,11 +110,11 @@
     <ClCompile Include="Code\Classes\Buttons\ClassMinimizeWindow\ClassMinimizeWindow.cpp">
       <Filter>Interface\Windows\Buttons\ClassMinimizeWindow</Filter>
     </ClCompile>
-    <ClCompile Include="Code\Classes\FileSystem\ClassFile\ClassFile.cpp">
-      <Filter>Core\FileSystem\ClassFile</Filter>
-    </ClCompile>
     <ClCompile Include="Code\Classes\Another\RenderBuffer\RenderBuffer.cpp">
       <Filter>Interface\Another\ClassRenderBuffer</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Classes\FileSystem\ClassFile\ClassFile.cpp">
+      <Filter>Core\FileSystem\ClassFile</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -151,14 +151,11 @@
     <ClInclude Include="Code\Includes\Ivents\Ivents.h">
       <Filter>Interface\Windows\IventsHeaders</Filter>
     </ClInclude>
-    <ClInclude Include="Code\Classes\FileSystem\ClassFile\ClassFile.h">
-      <Filter>Core\FileSystem\ClassFile</Filter>
-    </ClInclude>
     <ClInclude Include="Code\Classes\Another\RenderBuffer\RenderBuffer.h">
       <Filter>Interface\Another\ClassRenderBuffer</Filter>
     </ClInclude>
-    <ClInclude Include="Code\Includes\DefaultParams\ConstantParams.h">
-      <Filter>Core\Includes</Filter>
+    <ClInclude Include="Code\Classes\FileSystem\ClassFile\ClassFile.h">
+      <Filter>Core\FileSystem\ClassFile</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
