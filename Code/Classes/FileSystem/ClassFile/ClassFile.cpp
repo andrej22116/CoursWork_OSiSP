@@ -16,6 +16,9 @@ namespace explorer {
 		}
 		else if (Attributes & FILE_ATTRIBUTE_DIRECTORY) {
 			_isDir = true;
+			if (_path[_path.size() - 1] != '\\') {
+				_path += '\\';
+			}
 		}
 		else {
 			_isFile = true;
@@ -24,29 +27,57 @@ namespace explorer {
 
 	std::wstring File::getPath()
 	{
-		return L"";
+		if (_isDir) {
+			return _path;
+		}
+		else {
+			std::wstring path;
+			auto position = _path.find_last_of('\\');
+			path = _path.substr(0, position + 1);
+			return path;
+		}
 	}
 	std::wstring File::getName()
 	{
-		return L"";
+		std::wstring path;
+		auto position = _path.find_last_of('\\');
+		path = _path.substr(position + 1, _path.size());
+		return path;
 	}
 
 	bool File::isFile()
 	{
-		return true;
+		return _isFile;
 	}
 	bool File::isDirectory()
 	{
-		return false;
+		return _isDir;
 	}
 
 	std::vector<std::wstring> File::list()
 	{
-		return std::vector<std::wstring>();
+		return list(std::wstring(L"*"));
 	}
 	std::vector<std::wstring> File::list(std::wstring filter)
 	{
-		return std::vector<std::wstring>();
+		HANDLE hFind;
+		WIN32_FIND_DATA findData;
+
+		std::wstring find = _path;
+		find += filter;
+
+		hFind = FindFirstFile(find.c_str(), &findData);
+		if (INVALID_HANDLE_VALUE == hFind) {
+			throw FileException(L"File exception: Find error!");
+		}
+
+
+		std::vector<std::wstring> result;
+		do {
+			result.push_back(findData.cFileName);
+		} while (FindNextFile(hFind, &findData));
+
+		return result;
 	}
 
 
