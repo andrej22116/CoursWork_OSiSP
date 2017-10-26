@@ -154,6 +154,7 @@
     <ClCompile Include="Code\Classes\ClassListOfFilesWindow\ClassListOfFilesWindow.cpp" />
     <ClCompile Include="Code\Classes\ClassMainWindow\ClassMainWindow.cpp" />
     <ClCompile Include="Code\Classes\Exceptions\ClassException\ClassException.cpp" />
+    <ClCompile Include="Code\Classes\Exceptions\ClassFileException\ClassFileException.cpp" />
     <ClCompile Include="Code\Classes\Exceptions\ClassWindowClassException\ClassWindowClassException.cpp" />
     <ClCompile Include="Code\Classes\Exceptions\ClassWindowException\ClassWindowException.cpp" />
     <ClCompile Include="Code\Classes\FileSystem\ClassFile\ClassFile.cpp" />
@@ -170,6 +171,7 @@
     <ClInclude Include="Code\Classes\ClassListOfFilesWindow\ClassListOfFilesWindow.h" />
     <ClInclude Include="Code\Classes\ClassMainWindow\ClassMainWindow.h" />
     <ClInclude Include="Code\Classes\Exceptions\ClassException\ClassException.h" />
+    <ClInclude Include="Code\Classes\Exceptions\ClassFileException\ClassFileException.h" />
     <ClInclude Include="Code\Classes\Exceptions\ClassWindowClassException\ClassWindowClassException.h" />
     <ClInclude Include="Code\Classes\Exceptions\ClassWindowException\ClassWindowException.h" />
     <ClInclude Include="Code\Classes\FileSystem\ClassFile\ClassFile.h" />

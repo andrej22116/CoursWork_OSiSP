@@ -39,12 +39,12 @@ namespace explorer {
 		Gdiplus::SolidBrush textbrush(Gdiplus::Color(255, 255, 255));
 		Gdiplus::Point point(3, 20);
 		graphics.DrawString(L"Test я ем говно", -1, &font, Gdiplus::PointF(3, 20), &lbrush);
-
-		setDoubleBuffered(true);
+	
 	}
 
 	void MainWindow::createWindow()
 	{
+		setDoubleBuffered(true);
 		buttonClose.create(
 			L"exit",
 			*this,

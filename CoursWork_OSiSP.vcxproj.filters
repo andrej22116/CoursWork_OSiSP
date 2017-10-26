@@ -125,6 +125,9 @@
     <ClCompile Include="Code\Classes\ClassListOfFilesWindow\ClassListOfFilesWindow.cpp">
       <Filter>Interface\Windows\ClassListOfFilesWindow</Filter>
     </ClCompile>
+    <ClCompile Include="Code\Classes\Exceptions\ClassFileException\ClassFileException.cpp">
+      <Filter>Core\Exceptions\ClassFileException</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Code\Classes\ClassMainWindow\ClassMainWindow.h">
@@ -171,6 +174,9 @@
     </ClInclude>
     <ClInclude Include="Code\Classes\ClassListOfFilesWindow\ClassListOfFilesWindow.h">
       <Filter>Interface\Windows\ClassListOfFilesWindow</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Classes\Exceptions\ClassFileException\ClassFileException.h">
+      <Filter>Core\Exceptions\ClassFileException</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

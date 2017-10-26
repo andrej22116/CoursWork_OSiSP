@@ -610,8 +610,8 @@ namespace explorer {
 			_g_pos_X = getGlobalPosX();
 			_g_pos_Y = getGlobalPosY();
 
-			if ((point.x >= _g_pos_X && point.x <= _g_pos_X + getWidth())
-				&& (point.y >= _g_pos_Y && point.y <= _g_pos_Y + getHieght())) {
+			if ((point.x >= _g_pos_X && point.x <= _g_pos_X + getWidth() - 1)
+				&& (point.y >= _g_pos_Y && point.y <= _g_pos_Y + getHieght() - 1)) {
 				if (!_hoverStatus) {
 					_hoverStatus = true;
 					SendMessage(_hWnd, WM_MOUSEHOVER, 1, 0);
