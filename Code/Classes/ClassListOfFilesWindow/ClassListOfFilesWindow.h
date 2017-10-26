@@ -1,6 +1,7 @@
 #pragma once
 
 #include "..\AbstractWindow\ClassAbstractWindow.h"
+#include "..\FileSystem\ClassFile\ClassFile.h"
 
 #ifndef _CLASS_LIST_OF_FILES_WINDOW_H_
 #define _CLASS_LIST_OF_FILES_WINDOW_H_
@@ -24,6 +25,8 @@ namespace explorer {
 
 
 		void resizeParentHandler(const ParentEvent& parentEvent);
+
+		void updateList();
 	};
 
 }
