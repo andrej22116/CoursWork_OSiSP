@@ -10,7 +10,7 @@ namespace explorer {
 		m_registerHendler(METHOD(&ListOfFiles::mouseMoveHandler));
 		m_registerHendler(METHOD(&ListOfFiles::resizeParentHandler));
 
-		_thisDirection = L"E:\\";
+		_thisDirection = L"E:\\Andrej\\Lern\\CoursWork_OSiSP\\CoursWork_OSiSP";
 	}
 
 	void ListOfFiles::createWindow()
