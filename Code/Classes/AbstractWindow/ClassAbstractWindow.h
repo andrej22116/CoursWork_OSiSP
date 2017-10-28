@@ -1,5 +1,7 @@
 #pragma once
 
+#include <Dwmapi.h>
+
 #include "..\Exceptions\ClassWindowException\ClassWindowException.h"
 #include "..\Exceptions\ClassWindowClassException\ClassWindowClassException.h"
 
@@ -10,15 +12,7 @@
 
 #ifndef _CLASS_WINDOW_H_
 #define _CLASS_WINDOW_H_
-/*
-#define PAINT_METHOD(method)			(std::bind((method), this, std::placeholders::_1))
-#define MOUSE_CLICK_METHOD(method)		(std::bind((method), this, std::placeholders::_1))
-#define MOUSE_WHEEL_METHOD(method)		(std::bind((method), this, std::placeholders::_1))
-#define MOUSE_MOVE_METHOD(method)		(std::bind((method), this, std::placeholders::_1))
-#define PARENT_HANDLER_METHOD(method)	(std::bind((method), this, std::placeholders::_1))
-#define KEYBOARD_METHOD(method)			(std::bind((method), this, std::placeholders::_1))
-#define TIMER_METHOD(method)			(std::bind((method), this, std::placeholders::_1))
-*/
+
 #define METHOD(method) (std::bind((method), this, std::placeholders::_1))
 
 namespace explorer {
@@ -57,8 +51,11 @@ namespace explorer {
 
 
 		int _width, _hieght, _oldWidth, _oldHieght;
+		int _minWidth, _minHieght;
+		int _maxWidth, _maxHieght;
 		int _pos_x, _pos_y;
 		int _g_pos_X, _g_pos_Y;
+		int _borderSize;
 		HWND _hWnd;
 
 		WNDCLASSEX _WndClass;
@@ -69,6 +66,10 @@ namespace explorer {
 		bool _doubleBuffer;
 		bool _moveWhenParentResiz;
 		bool _resizeWhenParentResize;
+
+		bool _canBeResize_top, _canBeResize_bottom;
+		bool _canBeResize_left, _canBeResize_right;
+		bool _haveHeader;
 
 		std::shared_ptr<RenderBuffer> _renderBuffer;
 
@@ -96,6 +97,18 @@ namespace explorer {
 		void minimizeWindow(bool hide);
 		void setWindowName(std::wstring name);
 		void setDoubleBuffered(bool set);
+		void setResizeWhenParentResizeing(bool resize = false);
+		void setMoveWhenParentResizeing(bool move = false);
+		void setBorderSize(int size = 1);
+		void setResizebleAll(bool left = false, bool right = false, bool top = false, bool bottom = false);
+		void setResizebleTop(bool top = false);
+		void setResizebleLeft(bool left = false);
+		void setResizebleRight(bool right = false);
+		void setResizebleBottom(bool bottom = false);
+		void setMinSize(int width, int height);
+		void setMaxSize(int width, int height);
+		void setHeader(bool header);
+
 
 		void moveWindowPos(int x, int y, bool repaint = false);
 		void resizeWindow(int width, int hieght, bool show);

@@ -8,17 +8,19 @@ namespace explorer {
 
 	Window::Window() :
 		_width(0), _hieght(0), _oldWidth(0), _oldHieght(0),
+		_minWidth(50), _minHieght(15),
 		_pos_x(0), _pos_y(0),
+		_borderSize(3),
 		_parent(nullptr),
 		_thisWindowIsCreated(false),
 		_moveWhenParentResiz(false),
-		_resizeWhenParentResize(false)
+		_resizeWhenParentResize(false),
+		_canBeResize_top(false), _canBeResize_bottom(false),
+		_canBeResize_left(false), _canBeResize_right(false),
+		_haveHeader(false)
 	{
 			Gdiplus::GdiplusStartupInput gdiplusStartupInput;
 			Gdiplus::GdiplusStartup(&_gdiplusToken, &gdiplusStartupInput, NULL);
-
-			//m_registerHendler(METHOD(&Window::closeWindow));
-			//m_registerHendler(WM_PAINT, METHOD(&Window::paintWindow));
 			m_registerTimerHendler(METHOD(&Window::timerCheckHoverWindow));
 	}
 	Window::~Window()
@@ -67,6 +69,58 @@ namespace explorer {
 	void Window::setDoubleBuffered(bool set)
 	{
 		_doubleBuffer = set;
+	}
+	void Window::setResizeWhenParentResizeing(bool resize)
+	{
+		_resizeWhenParentResize = resize;
+	}
+	void Window::setMoveWhenParentResizeing(bool move)
+	{
+		_moveWhenParentResiz = move;
+	}
+	void Window::setBorderSize(int size)
+	{
+		if (size < 0) {
+			return;
+		}
+		_borderSize = size;
+	}
+	void Window::setResizebleAll(bool left, bool right, bool top, bool bottom)
+	{
+		_canBeResize_top = top;
+		_canBeResize_left = left;
+		_canBeResize_right = right;
+		_canBeResize_bottom = bottom;
+	}
+	void Window::setResizebleTop(bool top)
+	{
+		_canBeResize_top = top;
+	}
+	void Window::setResizebleLeft(bool left)
+	{
+		_canBeResize_left = left;
+	}
+	void Window::setResizebleRight(bool right)
+	{
+		_canBeResize_right = right;
+	}
+	void Window::setResizebleBottom(bool bottom)
+	{
+		_canBeResize_bottom = bottom;
+	}
+	void Window::setMinSize(int width, int height)
+	{
+		_minWidth = width;
+		_minHieght = height;
+	}
+	void Window::setMaxSize(int width, int height)
+	{
+		_maxWidth = width;
+		_maxHieght = height;
+	}
+	void Window::setHeader(bool header)
+	{
+		_haveHeader = header;
 	}
 
 	void Window::moveWindowPos(int x, int y, bool repaint)
@@ -203,25 +257,29 @@ namespace explorer {
 		if (s_windowsMap.find(hWnd) != s_windowsMap.end()) {
 			Window* window = s_windowsMap[hWnd];
 			switch (msg) {
-			case WM_CREATE: { window->createWindow(); } break;
+			case WM_CREATE: { 
+				window->createWindow();
+			} break;
+			case WM_GETMINMAXINFO: {
+				MINMAXINFO *min_max = reinterpret_cast<MINMAXINFO *>(lParam);
+
+				min_max->ptMinTrackSize.x = window->_minWidth;
+				min_max->ptMinTrackSize.y = window->_minHieght;
+				min_max->ptMaxTrackSize.x = GetSystemMetrics(SM_CXMAXTRACK);
+				min_max->ptMaxTrackSize.y = GetSystemMetrics(SM_CYMAXTRACK);
+			} break;
 			case WM_SIZING: {
-				//RedrawWindow(hWnd, NULL, NULL, RDW_INVALIDATE | RDW_NOERASE | RDW_INTERNALPAINT);
-				//InvalidateRect(hWnd, nullptr, true);
-				//return DefWindowProc(hWnd, msg, wParam, lParam);
-				ParentEvent parentEvent;
-				parentEvent.Code = PARENT_RESIZE;
-				parentEvent.Pos_X = window->_pos_x;
-				parentEvent.Pos_Y = window->_pos_y;
-				parentEvent.Width = window->_width;
-				parentEvent.Height = window->_hieght;
+				RECT* rect = reinterpret_cast<RECT*>(lParam);
 
-				window->_renderBuffer->resizeBuffer(window->_width, window->_hieght);
+				window->_oldWidth = window->_width;
+				window->_oldHieght = window->_hieght;
+				window->_width = rect->right - rect->left;
+				window->_hieght = rect->bottom - rect->top;
 
-				for (auto child : window->_childList) {
-					for (auto handler : child->_parentHandlers) {
-						handler(parentEvent);
-					}
-				}
+				window->m_calculateNewPositionWindowIfParentResize();
+				window->m_calculateNewSizeWindowIfParentResize();
+				RedrawWindow(hWnd, NULL, NULL, RDW_INVALIDATE | RDW_NOERASE | RDW_INTERNALPAINT | RDW_UPDATENOW | RDW_ALLCHILDREN);
+				return DefWindowProc(hWnd, msg, wParam, lParam);
 			} break;
 			case WM_ERASEBKGND: {} break;
 			case WM_PAINT: {
@@ -259,6 +317,7 @@ namespace explorer {
 				}
 			} break;
 			case WM_SIZE: {
+				
 				ParentEvent parentEvent;
 				parentEvent.Code = PARENT_RESIZE;
 				parentEvent.Pos_X = window->_pos_x;
@@ -273,7 +332,9 @@ namespace explorer {
 						handler(parentEvent);
 					}
 				}
-				RedrawWindow(hWnd, NULL, NULL, RDW_INVALIDATE | RDW_NOERASE | RDW_INTERNALPAINT | RDW_UPDATENOW | RDW_ALLCHILDREN);
+				
+				//RedrawWindow(hWnd, NULL, NULL, RDW_INVALIDATE | RDW_NOERASE | RDW_INTERNALPAINT | RDW_UPDATENOW | RDW_ALLCHILDREN);
+				//RedrawWindow(hWnd, NULL, NULL, RDW_INVALIDATE | RDW_NOERASE | RDW_INTERNALPAINT);
 			} break;
 			case WM_MOUSEMOVE: {
 				POINT cursorPoint;
@@ -387,17 +448,40 @@ namespace explorer {
 			case WM_NCCALCSIZE: {
 				if (wParam) {
 					NCCALCSIZE_PARAMS* Params = reinterpret_cast<NCCALCSIZE_PARAMS *>(lParam);
-					Params->rgrc[0].bottom += MAIN_WINDOW_BORDER_SIZE;
-					Params->rgrc[0].right += MAIN_WINDOW_BORDER_SIZE;
-					Params->rgrc[1].bottom += MAIN_WINDOW_BORDER_SIZE;
-					Params->rgrc[1].right += MAIN_WINDOW_BORDER_SIZE;
-					Params->rgrc[2].bottom += MAIN_WINDOW_BORDER_SIZE;
-					Params->rgrc[2].right += MAIN_WINDOW_BORDER_SIZE;
+					Params->rgrc[0].bottom += window->_borderSize;
+					Params->rgrc[0].right += window->_borderSize;
+					Params->rgrc[1].bottom += window->_borderSize;
+					Params->rgrc[1].right += window->_borderSize;
+					Params->rgrc[2].bottom += window->_borderSize;
+					Params->rgrc[2].right += window->_borderSize;
 					return 0;
 				}
 				return DefWindowProc(hWnd, msg, wParam, lParam);
 			} break;
-			case WM_NCHITTEST: {} break;
+			case WM_NCHITTEST: {
+				POINT pos;
+				GetCursorPos(&pos);
+				RECT WindowRect;
+				GetWindowRect(hWnd, &WindowRect);
+
+				int x = pos.x - WindowRect.left;
+				int y = pos.y - WindowRect.top;
+
+				if (x >= window->_borderSize && x <= window->_width - window->_borderSize 
+					&& y >= window->_borderSize && y <= MAIN_WINDOW_HEADER_HEIGHT
+					&& window->_haveHeader)
+					return HTCAPTION;
+				else if (x < window->_borderSize && window->_canBeResize_left)
+					return HTLEFT;
+				else if (y < window->_borderSize && window->_canBeResize_top)
+					return HTTOP;
+				else if (x > window->_width - window->_borderSize && window->_canBeResize_right)
+					return HTRIGHT;
+				else if (y > window->_hieght - window->_borderSize && window->_canBeResize_bottom)
+					return HTBOTTOM;
+				else
+					return HTCLIENT;
+			} break;
 
 			case WM_VSCROLL: {
 				SCROLLINFO vscroll;
@@ -553,20 +637,20 @@ namespace explorer {
 			return false;
 		}
 
-		UpdateWindow(_hWnd);
-		ShowWindow(_hWnd, (show ? SW_SHOW : SW_HIDE));
-
 		_g_pos_X = getGlobalPosX();
 		_g_pos_Y = getGlobalPosY();
 
 		_renderBuffer = std::make_shared<RenderBuffer>(_hWnd, _width, _hieght);
+		SetWindowPos(_hWnd, 0, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE | SWP_FRAMECHANGED | (show ? SWP_SHOWWINDOW : SWP_HIDEWINDOW));
+		//RedrawWindow(_hWnd, NULL, NULL, RDW_INVALIDATE | RDW_NOERASE | RDW_INTERNALPAINT | RDW_UPDATENOW | RDW_ALLCHILDREN);
 		return true;
 	}
 	bool Window::m_createWindow(Window* parent)
 	{
-		long int style = ((parent) ? (WS_CHILD | WS_CLIPSIBLINGS) : (WS_POPUP)) | WS_CLIPCHILDREN;
+		long int style = ((parent) ? (WS_CHILD | WS_CLIPSIBLINGS) : (WS_POPUP | WS_BORDER)) | WS_CLIPCHILDREN | WS_VISIBLE;
 
-		_hWnd = CreateWindow(
+		_hWnd = CreateWindowExW(
+			0,
 			_className.c_str(),
 			_windowName.c_str(),
 			style,
@@ -583,7 +667,6 @@ namespace explorer {
 		if (!_hWnd) {
 			throw WindowException(L"Create Window " + _windowName + L" error!");
 		}
-
 		s_windowsMap.insert(std::pair<HWND, Window*>(_hWnd, this));
 		SendMessage(_hWnd, WM_CREATE, 0, 0);
 		return true;
