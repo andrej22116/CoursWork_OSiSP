@@ -64,8 +64,8 @@ namespace explorer {
 		bool _thisWindowIsCreated;
 		bool _hoverStatus;
 		bool _doubleBuffer;
-		bool _moveWhenParentResiz;
-		bool _resizeWhenParentResize;
+		bool _moveWhenParentResiz_X, _moveWhenParentResiz_Y;
+		bool _resizeWhenParentResize_Width, _resizeWhenParentResize_Height;
 
 		bool _canBeResize_top, _canBeResize_bottom;
 		bool _canBeResize_left, _canBeResize_right;
@@ -97,8 +97,8 @@ namespace explorer {
 		void minimizeWindow(bool hide);
 		void setWindowName(std::wstring name);
 		void setDoubleBuffered(bool set);
-		void setResizeWhenParentResizeing(bool resize = false);
-		void setMoveWhenParentResizeing(bool move = false);
+		void setResizeWhenParentResizeing(bool resize_width = false, bool resize_height = false);
+		void setMoveWhenParentResizeing(bool move_x = false, bool move_y = false);
 		void setBorderSize(int size = 1);
 		void setResizebleAll(bool left = false, bool right = false, bool top = false, bool bottom = false);
 		void setResizebleTop(bool top = false);

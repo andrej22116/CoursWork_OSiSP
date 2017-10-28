@@ -13,8 +13,8 @@ namespace explorer {
 		_borderSize(3),
 		_parent(nullptr),
 		_thisWindowIsCreated(false),
-		_moveWhenParentResiz(false),
-		_resizeWhenParentResize(false),
+		_moveWhenParentResiz_X(false), _moveWhenParentResiz_Y(false),
+		_resizeWhenParentResize_Width(false), _resizeWhenParentResize_Height(false),
 		_canBeResize_top(false), _canBeResize_bottom(false),
 		_canBeResize_left(false), _canBeResize_right(false),
 		_haveHeader(false)
@@ -70,13 +70,15 @@ namespace explorer {
 	{
 		_doubleBuffer = set;
 	}
-	void Window::setResizeWhenParentResizeing(bool resize)
+	void Window::setResizeWhenParentResizeing(bool resize_width, bool resize_height)
 	{
-		_resizeWhenParentResize = resize;
+		_resizeWhenParentResize_Width = resize_width;
+		_resizeWhenParentResize_Height = resize_height;
 	}
-	void Window::setMoveWhenParentResizeing(bool move)
+	void Window::setMoveWhenParentResizeing(bool move_x, bool move_y)
 	{
-		_moveWhenParentResiz = move;
+		_moveWhenParentResiz_X = move_x;
+		_moveWhenParentResiz_Y = move_y;
 	}
 	void Window::setBorderSize(int size)
 	{
@@ -742,12 +744,16 @@ namespace explorer {
 	void Window::m_calculateNewPositionWindowIfParentResize()
 	{
 		for (Window* window : _childList) {
-			if (window->_moveWhenParentResiz) {
+			if (window->_moveWhenParentResiz_X || window->_moveWhenParentResiz_Y) {
 				int childPos_x = window->_pos_x;
 				int childPos_y = window->_pos_y;
 
-				int newChildPos_x = _width - (_oldWidth - childPos_x);
-				int newChildPos_y = _hieght - (_oldHieght - childPos_y);
+				int newChildPos_x = (window->_moveWhenParentResiz_X) ? 
+					(_width - (_oldWidth - childPos_x)) :
+					(childPos_x);
+				int newChildPos_y = (window->_moveWhenParentResiz_Y) ?
+					(_hieght - (_oldHieght - childPos_y)) : 
+					(childPos_y);
 
 				window->moveWindowPos(newChildPos_x, newChildPos_y, false);
 			}
@@ -756,12 +762,16 @@ namespace explorer {
 	void Window::m_calculateNewSizeWindowIfParentResize()
 	{
 		for (Window* window : _childList) {
-			if (window->_resizeWhenParentResize) {
+			if (window->_resizeWhenParentResize_Width || window->_resizeWhenParentResize_Height) {
 				int childWidth = window->_width;
 				int childHeight = window->_hieght;
 
-				int newChildWidth = childWidth + _width - _oldWidth;
-				int newChildHeight = childHeight + _hieght - _oldHieght;
+				int newChildWidth = (window->_resizeWhenParentResize_Width) ? 
+					(childWidth + _width - _oldWidth) : 
+					(childWidth);
+				int newChildHeight = (window->_resizeWhenParentResize_Height) ? 
+					(childHeight + _hieght - _oldHieght) : 
+					(childHeight);
 
 				window->resizeWindow(newChildWidth, newChildHeight, true);
 			}
