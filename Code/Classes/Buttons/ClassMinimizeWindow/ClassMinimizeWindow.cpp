@@ -32,17 +32,6 @@ namespace explorer {
 
 	void ButtonMinimize::resizeParentHandler(const ParentEvent& parentEvent)
 	{
-		/*
-		if (parentEvent.Code == PARENT_RESIZE) {
-			resizeWindow(
-				MAIN_WINDOW_BUTTON_MINIMIZE_POS_X(parentEvent.Width),
-				MAIN_WINDOW_BUTTON_MINIMIZE_POS_Y(1),
-				MAIN_WINDOW_BUTTON_MINIMIZE_WIDTH,
-				MAIN_WINDOW_BUTTON_MINIMIZE_HEIGHT,
-				true
-			);
-		}
-		*/
 	}
 
 }

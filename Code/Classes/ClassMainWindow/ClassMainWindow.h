@@ -18,15 +18,6 @@ namespace explorer {
 		ButtonMinimize buttonMinimize;
 		ListOfFiles listOfFiles;
 
-		int _oldCursorPosX, _oldCursorPosY;
-
-		bool _moving;
-		bool _resize_x, _resize_y;
-
-		bool _inBorder_x_left, _inBorder_x_right;
-		bool _inBorder_y_top, _inBorder_y_bot;
-		bool _inHeader;
-
 	public:
 		MainWindow();
 
@@ -39,11 +30,6 @@ namespace explorer {
 		void mouseMoveHandler(MouseEvent& mouseEvent);
 
 	private:
-		void checkCursorPosInBorder(MouseEvent& mouseEvent);
-		void checkCursorPosInHeader(MouseEvent& mouseEvent);
-
-		void move(MouseEvent& mouseEvent);
-		void resize(MouseEvent& mouseEvent);
 	};
 }
 

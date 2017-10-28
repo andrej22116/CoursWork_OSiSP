@@ -89,17 +89,6 @@ namespace explorer {
 
 	void ButtonMaximize::resizeParentHandler(const ParentEvent& parentEvent)
 	{
-		/*
-		if (parentEvent.Code == PARENT_RESIZE) {
-			resizeWindow(
-				MAIN_WINDOW_BUTTON_MAXIMIZE_POS_X(parentEvent.Width),
-				MAIN_WINDOW_BUTTON_MAXIMIZE_POS_Y(1),
-				MAIN_WINDOW_BUTTON_MAXIMIZE_WIDTH,
-				MAIN_WINDOW_BUTTON_MAXIMIZE_HEIGHT,
-				true
-			);
-		}
-		*/
 	}
 #ifdef _DEBUG
 	void ButtonMaximize::testHandler(HWND hWnd, WPARAM wParam, LPARAM lParam)

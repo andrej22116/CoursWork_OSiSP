@@ -39,16 +39,5 @@ namespace explorer {
 
 	void ButtonClose::resizeParentHandler(const ParentEvent& parentEvent)
 	{
-		/*
-		if (parentEvent.Code == PARENT_RESIZE) {
-			resizeWindow(
-				MAIN_WINDOW_BUTTON_EXIT_POS_X(parentEvent.Width),
-				MAIN_WINDOW_BUTTON_EXIT_POS_Y(1),
-				MAIN_WINDOW_BUTTON_EXIT_WIDTH,
-				MAIN_WINDOW_BUTTON_EXIT_HEIGHT,
-				true
-			);
-		}
-		*/
 	}
 }
