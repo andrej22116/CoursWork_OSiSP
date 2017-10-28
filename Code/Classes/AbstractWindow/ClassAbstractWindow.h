@@ -56,7 +56,7 @@ namespace explorer {
 		std::list<HoverHandler> _hoverHandlers;
 
 
-		int _width, _hieght;
+		int _width, _hieght, _oldWidth, _oldHieght;
 		int _pos_x, _pos_y;
 		int _g_pos_X, _g_pos_Y;
 		HWND _hWnd;
@@ -67,6 +67,8 @@ namespace explorer {
 		bool _thisWindowIsCreated;
 		bool _hoverStatus;
 		bool _doubleBuffer;
+		bool _moveWhenParentResiz;
+		bool _resizeWhenParentResize;
 
 		std::shared_ptr<RenderBuffer> _renderBuffer;
 
@@ -145,6 +147,9 @@ namespace explorer {
 		bool m_createWindow(Window* parent = nullptr);
 		void m_addChildWindow(Window* child);
 		void m_removeChildWindow(Window* child);
+
+		void m_calculateNewPositionWindowIfParentResize();
+		void m_calculateNewSizeWindowIfParentResize();
 	};
 }
 

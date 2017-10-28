@@ -7,10 +7,12 @@ namespace explorer {
 	ULONG_PTR Window::_gdiplusToken = 0;
 
 	Window::Window() :
-		_width(0), _hieght(0),
+		_width(0), _hieght(0), _oldWidth(0), _oldHieght(0),
 		_pos_x(0), _pos_y(0),
 		_parent(nullptr),
-		_thisWindowIsCreated(false)
+		_thisWindowIsCreated(false),
+		_moveWhenParentResiz(false),
+		_resizeWhenParentResize(false)
 	{
 			Gdiplus::GdiplusStartupInput gdiplusStartupInput;
 			Gdiplus::GdiplusStartup(&_gdiplusToken, &gdiplusStartupInput, NULL);
@@ -82,6 +84,9 @@ namespace explorer {
 	void Window::resizeWindow(int pos_x, int pos_y, int width, int hieght, bool show)
 	{
 		//MessageBox(nullptr, std::wstring(L"Width: " + std::to_wstring(width) + L", Hieght: " + std::to_wstring(hieght)).c_str(), L"test", MB_OK);
+		_oldWidth = _width;
+		_oldHieght = _hieght;
+
 		_pos_x = pos_x;
 		_pos_y = pos_y;
 		_width = width;
@@ -90,9 +95,11 @@ namespace explorer {
 		_g_pos_X = getGlobalPosX();
 		_g_pos_Y = getGlobalPosY();
 		
+		m_calculateNewPositionWindowIfParentResize();
+		m_calculateNewSizeWindowIfParentResize();
 		MoveWindow(_hWnd, pos_x, pos_y, width, hieght, show);
 		//SetWindowPos(_hWnd, (HWND)1, pos_x, pos_y, width, hieght, SWP_SHOWWINDOW);
-		//InvalidateRect(_hWnd, nullptr, false)
+		//InvalidateRect(_hWnd, nullptr, false);
 		//m_sendMessageForAllChildren(WM_SIZE, 0, 0);
 	}
 	void Window::minimizeWindow(bool hide)
@@ -102,7 +109,6 @@ namespace explorer {
 	void Window::redrawWindow(bool erase)
 	{
 		InvalidateRect(_hWnd, nullptr, erase);
-		SendMessage(_hWnd, WM_PAINT, 0, 0);
 	}
 
 	void Window::showWindow(bool show)
@@ -147,8 +153,8 @@ namespace explorer {
 		_windowName = name;
 		_pos_x = pos_x;
 		_pos_y = pos_y;
-		_width = width;
-		_hieght = hieght;
+		_oldWidth = _width = width;
+		_oldHieght = _hieght = hieght;
 
 		if (!m_create(nullptr, true)) {
 			return false;
@@ -168,8 +174,8 @@ namespace explorer {
 		_windowName = name;
 		_pos_x = pos_x;
 		_pos_y = pos_y;
-		_width = width;
-		_hieght = hieght;
+		_oldWidth = _width = width;
+		_oldHieght = _hieght = hieght;
 
 		if (!m_create(&parent, show)) {
 			return false;
@@ -199,9 +205,25 @@ namespace explorer {
 			switch (msg) {
 			case WM_CREATE: { window->createWindow(); } break;
 			case WM_SIZING: {
-				RedrawWindow(hWnd, NULL, NULL, RDW_INVALIDATE | RDW_NOERASE | RDW_INTERNALPAINT);
-				return DefWindowProc(hWnd, msg, wParam, lParam);
-			}
+				//RedrawWindow(hWnd, NULL, NULL, RDW_INVALIDATE | RDW_NOERASE | RDW_INTERNALPAINT);
+				//InvalidateRect(hWnd, nullptr, true);
+				//return DefWindowProc(hWnd, msg, wParam, lParam);
+				ParentEvent parentEvent;
+				parentEvent.Code = PARENT_RESIZE;
+				parentEvent.Pos_X = window->_pos_x;
+				parentEvent.Pos_Y = window->_pos_y;
+				parentEvent.Width = window->_width;
+				parentEvent.Height = window->_hieght;
+
+				window->_renderBuffer->resizeBuffer(window->_width, window->_hieght);
+
+				for (auto child : window->_childList) {
+					for (auto handler : child->_parentHandlers) {
+						handler(parentEvent);
+					}
+				}
+			} break;
+			case WM_ERASEBKGND: {} break;
 			case WM_PAINT: {
 				PAINTSTRUCT ps;
 				HDC hDC = BeginPaint(window->_hWnd, &ps);
@@ -251,6 +273,7 @@ namespace explorer {
 						handler(parentEvent);
 					}
 				}
+				RedrawWindow(hWnd, NULL, NULL, RDW_INVALIDATE | RDW_NOERASE | RDW_INTERNALPAINT | RDW_UPDATENOW | RDW_ALLCHILDREN);
 			} break;
 			case WM_MOUSEMOVE: {
 				POINT cursorPoint;
@@ -374,6 +397,7 @@ namespace explorer {
 				}
 				return DefWindowProc(hWnd, msg, wParam, lParam);
 			} break;
+			case WM_NCHITTEST: {} break;
 
 			case WM_VSCROLL: {
 				SCROLLINFO vscroll;
@@ -540,7 +564,7 @@ namespace explorer {
 	}
 	bool Window::m_createWindow(Window* parent)
 	{
-		long int style = (parent) ? (WS_CHILD) : (WS_POPUP);
+		long int style = ((parent) ? (WS_CHILD | WS_CLIPSIBLINGS) : (WS_POPUP)) | WS_CLIPCHILDREN;
 
 		_hWnd = CreateWindow(
 			_className.c_str(),
@@ -571,7 +595,7 @@ namespace explorer {
 		}
 
 		_WndClass.cbSize = sizeof(_WndClass);
-		_WndClass.style = 0;
+		_WndClass.style = CS_DBLCLKS | CS_SAVEBITS;
 		_WndClass.lpfnWndProc = WndProc;
 		_WndClass.cbClsExtra = 0;
 		_WndClass.cbWndExtra = 0;
@@ -629,6 +653,35 @@ namespace explorer {
 	{
 		for (Window* child : _childList) {
 			InvalidateRect(child->getHWND(), nullptr, false);
+		}
+	}
+
+	void Window::m_calculateNewPositionWindowIfParentResize()
+	{
+		for (Window* window : _childList) {
+			if (window->_moveWhenParentResiz) {
+				int childPos_x = window->_pos_x;
+				int childPos_y = window->_pos_y;
+
+				int newChildPos_x = _width - (_oldWidth - childPos_x);
+				int newChildPos_y = _hieght - (_oldHieght - childPos_y);
+
+				window->moveWindowPos(newChildPos_x, newChildPos_y, false);
+			}
+		}
+	}
+	void Window::m_calculateNewSizeWindowIfParentResize()
+	{
+		for (Window* window : _childList) {
+			if (window->_resizeWhenParentResize) {
+				int childWidth = window->_width;
+				int childHeight = window->_hieght;
+
+				int newChildWidth = childWidth + _width - _oldWidth;
+				int newChildHeight = childHeight + _hieght - _oldHieght;
+
+				window->resizeWindow(newChildWidth, newChildHeight, true);
+			}
 		}
 	}
 }
