@@ -9,6 +9,7 @@ namespace explorer {
 		m_registerHendler(METHOD(&ButtonMinimize::resizeParentHandler));
 
 		m_registerHendler(METHOD(&ButtonMinimize::minimizeHandler));
+		setMoveWhenParentResizeing(true);
 
 		setDoubleBuffered(true);
 	}
@@ -31,6 +32,7 @@ namespace explorer {
 
 	void ButtonMinimize::resizeParentHandler(const ParentEvent& parentEvent)
 	{
+		/*
 		if (parentEvent.Code == PARENT_RESIZE) {
 			resizeWindow(
 				MAIN_WINDOW_BUTTON_MINIMIZE_POS_X(parentEvent.Width),
@@ -40,6 +42,7 @@ namespace explorer {
 				true
 			);
 		}
+		*/
 	}
 
 }

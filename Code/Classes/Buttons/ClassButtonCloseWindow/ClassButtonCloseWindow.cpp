@@ -10,6 +10,7 @@ namespace explorer {
 		m_registerHendler(METHOD(&ButtonClose::resizeParentHandler));
 
 		setDoubleBuffered(true);
+		setMoveWhenParentResizeing(true);
 	}
 
 
@@ -38,6 +39,7 @@ namespace explorer {
 
 	void ButtonClose::resizeParentHandler(const ParentEvent& parentEvent)
 	{
+		/*
 		if (parentEvent.Code == PARENT_RESIZE) {
 			resizeWindow(
 				MAIN_WINDOW_BUTTON_EXIT_POS_X(parentEvent.Width),
@@ -47,5 +49,6 @@ namespace explorer {
 				true
 			);
 		}
+		*/
 	}
 }

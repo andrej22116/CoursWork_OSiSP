@@ -11,6 +11,7 @@ namespace explorer {
 		m_registerHendler(METHOD(&ButtonMaximize::resizeParentHandler));
 
 		m_registerHendler(METHOD(&ButtonMaximize::maximizeHandler));
+		setMoveWhenParentResizeing(true);
 
 #ifdef _DEBUGU
 		m_registerHendler(WM_RBUTTONDOWN, METHOD(&ButtonMaximize::testHandler));
@@ -88,6 +89,7 @@ namespace explorer {
 
 	void ButtonMaximize::resizeParentHandler(const ParentEvent& parentEvent)
 	{
+		/*
 		if (parentEvent.Code == PARENT_RESIZE) {
 			resizeWindow(
 				MAIN_WINDOW_BUTTON_MAXIMIZE_POS_X(parentEvent.Width),
@@ -97,6 +99,7 @@ namespace explorer {
 				true
 			);
 		}
+		*/
 	}
 #ifdef _DEBUG
 	void ButtonMaximize::testHandler(HWND hWnd, WPARAM wParam, LPARAM lParam)

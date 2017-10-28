@@ -11,6 +11,7 @@ namespace explorer {
 		m_registerHendler(METHOD(&ListOfFiles::resizeParentHandler));
 
 		_thisDirection = L"E:\\";
+		setResizeWhenParentResizeing(true);
 	}
 
 	void ListOfFiles::createWindow()
@@ -69,6 +70,7 @@ namespace explorer {
 
 	void ListOfFiles::resizeParentHandler(const ParentEvent& parentEvent)
 	{
+		/*
 		if (parentEvent.Code == PARENT_RESIZE) {
 			resizeWindow(
 				LISTBOX_POS_X,
@@ -78,6 +80,7 @@ namespace explorer {
 				true
 			);
 		}
+		*/
 	}
 
 

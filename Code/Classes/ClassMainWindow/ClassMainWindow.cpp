@@ -21,6 +21,11 @@ namespace explorer {
 		_inBorder_y_top = false;
 		_inBorder_y_bot = false;
 		_inHeader = false;
+
+		setHeader(true);
+		setResizebleAll(true, true, true, true);
+
+		//setBorderSize(3);
 	}
 
 	void MainWindow::paintHandler(Gdiplus::Graphics& graphics)
@@ -141,8 +146,8 @@ namespace explorer {
 			return;
 		}
 
-		checkCursorPosInBorder(mouseEvent);
-		checkCursorPosInHeader(mouseEvent);
+		//checkCursorPosInBorder(mouseEvent);
+		//checkCursorPosInHeader(mouseEvent);
 	}
 
 
@@ -213,6 +218,7 @@ namespace explorer {
 
 	void MainWindow::resize(MouseEvent& mouseEvent)
 	{
+		/*
 		if (_resize_x) {
 			if (_inBorder_x_left) {
 				int width = getPosX() + getWidth() - mouseEvent.global_x;
@@ -242,5 +248,6 @@ namespace explorer {
 				}
 			}
 		}
+		*/
 	}
 }
