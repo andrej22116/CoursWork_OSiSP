@@ -1,12 +1,14 @@
 #pragma once
 
-#include "..\ClassAbstractButton\ClassAbstractButton.h"
-#include "..\..\ClassListOfFilesWindow\ClassListOfFilesWindow.h"
-
 #ifndef _CLASS_BUTTON_UP_WINDOW_H_
 #define _CLASS_BUTTON_UP_WINDOW_H_
 
+#include "..\ClassAbstractButton\ClassAbstractButton.h"
+#include "..\..\ClassListOfFilesWindow\ClassListOfFilesWindow.h"
+
 namespace explorer {
+
+	class ListOfFiles;
 
 	class ButtonUp : public Button {
 	private:

@@ -2,7 +2,7 @@
 #include "ClassMainWindow.h"
 
 namespace explorer {
-	MainWindow::MainWindow() : buttonUp(&listOfFiles)
+	MainWindow::MainWindow() : buttonUp(&listOfFiles), listOfFiles(&buttonUp)
 	{
 		m_registerHendler(METHOD(&MainWindow::paintHandler));
 		m_registerHendler(METHOD(&MainWindow::mouseClickHandler));

@@ -3,14 +3,17 @@
 
 namespace explorer {
 
-	ListOfFiles::ListOfFiles() : _activeLine(-1), _selectedLine(-1)
+	ListOfFiles::ListOfFiles(ButtonUp* buttonUp) : _activeLine(-1), _selectedLine(-1)
 	{
+		_buttonUp = buttonUp;
+
 		m_registerHendler(METHOD(&ListOfFiles::paintHandler));
 		m_registerHendler(METHOD(&ListOfFiles::mouseClickHandler));
 		m_registerHendler(METHOD(&ListOfFiles::mouseMoveHandler));
 		m_registerHendler(METHOD(&ListOfFiles::resizeParentHandler));
 
-		_thisDirection = L"E:\\";
+		_thisDirection = L"";
+		_inDrive = false;
 		setResizeWhenParentResizeing(true, true);
 	}
 
@@ -133,11 +136,31 @@ namespace explorer {
 		_thisDirection = directory;
 	}
 
+	void ListOfFiles::updateButtonUP(bool lock)
+	{
+		_buttonUp->setLock(lock);
+		_buttonUp->redrawWindow(false);
+	}
+
 
 	void ListOfFiles::updateList()
 	{
-		File file(_thisDirection);
-		_thisCatalog = file.list(L"*");
+		if (!_thisDirection.empty()) {
+			File file(_thisDirection);
+			_thisCatalog = file.list(L"*");
+			_inDrive = true;
+			updateButtonUP(false);
+		}
+		else {
+			_logicalDrives = File::getAllLogicalDrives();
+			_inDrive = false;
+
+			_thisCatalog.clear();
+			for (auto drive : _logicalDrives) {
+				_thisCatalog.push_back(drive.first);
+			}
+			updateButtonUP(true);
+		}
 		redrawWindow(false);
 		_activeLine = -1;
 		_selectedLine = -1;
@@ -202,7 +225,7 @@ namespace explorer {
 		}
 
 		if (_selectedLine >= 0) {
-			if (_thisDirection[_thisDirection.size() - 1] != '\\') {
+			if (!_thisDirection.empty() && _thisDirection[_thisDirection.size() - 1] != '\\') {
 				_thisDirection += '\\';
 			}
 			std::wstring newDirection = _thisDirection + _thisCatalog[_selectedLine];

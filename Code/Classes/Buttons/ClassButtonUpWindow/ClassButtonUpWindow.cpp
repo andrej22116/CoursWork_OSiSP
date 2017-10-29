@@ -28,10 +28,14 @@ namespace explorer {
 	{
 		//graphics.SetSmoothingMode(Gdiplus::SmoothingMode::SmoothingModeAntiAlias);
 		Gdiplus::Pen pen(Gdiplus::Color::White, 1.55);
-		Gdiplus::SolidBrush brush((isHover()) ? (MAIN_WINDOW_COLOR_HEADER_BUTTON_SELECTED) : (MAIN_WINDOW_COLOR_HEADER));
+		Gdiplus::SolidBrush brush((isHover() && !isLocked()) ? (MAIN_WINDOW_COLOR_HEADER_BUTTON_SELECTED) : (MAIN_WINDOW_COLOR_HEADER));
 		graphics.FillRectangle(&brush, -1, -1, getWidth() + 1, getHieght() + 1);
 
 		graphics.DrawImage(_image,2, 2, 12, 12);
+		if (this->isLocked()) {
+			Gdiplus::SolidBrush lockBrush(Gdiplus::Color(192, 56, 56, 56));
+			graphics.FillRectangle(&lockBrush, -1, -1, getWidth() + 1, getHieght() + 1);
+		}
 	}
 
 	void ButtonUp::mouseClickUpHandler(const MouseEventClick& mouseEventClick)
@@ -39,10 +43,20 @@ namespace explorer {
 		if (mouseEventClick.Click == MOUSE_CLICK_ONE
 			&& mouseEventClick.Button == MOUSE_LEFT
 			&& mouseEventClick.Status == KEY_PRESSED) {
-			File file(_listOfFiles->getCurrentDirectory());
-			std::wstring backPath = file.getPrevDirection();
-			_listOfFiles->setCurrentDirectory(backPath);
-			_listOfFiles->updateList();
+			std::wstring currentDirection = _listOfFiles->getCurrentDirectory();
+			if (!currentDirection.empty()) {
+				File file(currentDirection);
+				std::wstring backPath = file.getPrevDirection();
+				_listOfFiles->setCurrentDirectory(backPath);
+				_listOfFiles->updateList();
+
+				if (backPath.empty()) {
+					setLock(true);
+				}
+				else {
+					setLock(false);
+				}
+			}
 		}
 	}
 
