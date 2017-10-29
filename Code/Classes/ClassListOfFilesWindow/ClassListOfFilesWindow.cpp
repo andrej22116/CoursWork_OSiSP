@@ -3,7 +3,7 @@
 
 namespace explorer {
 
-	ListOfFiles::ListOfFiles()
+	ListOfFiles::ListOfFiles() : _activeLine(-1), _selectedLine(-1)
 	{
 		m_registerHendler(METHOD(&ListOfFiles::paintHandler));
 		m_registerHendler(METHOD(&ListOfFiles::mouseClickHandler));
@@ -11,7 +11,7 @@ namespace explorer {
 		m_registerHendler(METHOD(&ListOfFiles::resizeParentHandler));
 
 		_thisDirection = L"E:\\";
-		setResizeWhenParentResizeing(true);
+		setResizeWhenParentResizeing(true, true);
 	}
 
 	void ListOfFiles::createWindow()
@@ -33,11 +33,29 @@ namespace explorer {
 		Gdiplus::SolidBrush hoverBackground(LISTBOX_COLOR_BACKGROUND_HOVER);
 
 		/*Тест выделения*/
-		graphics.FillRectangle(&selectBackground, 0, 0, getWidth() - 1, LISTBOX_LINE_HEIGHT - 1);
-		graphics.DrawRectangle(&borderPen, 0, 0, getWidth() - 1, LISTBOX_LINE_HEIGHT - 1);
+		//graphics.FillRectangle(&selectBackground, 0, 0, getWidth() - 1, LISTBOX_LINE_HEIGHT - 1);
+		//graphics.DrawRectangle(&borderPen, 0, 0, getWidth() - 1, LISTBOX_LINE_HEIGHT - 1);
 
-		graphics.FillRectangle(&hoverBackground, 0, LISTBOX_LINE_HEIGHT, getWidth() - 1, LISTBOX_LINE_HEIGHT - 1);
-		graphics.DrawRectangle(&borderPen, 0, LISTBOX_LINE_HEIGHT, getWidth() - 1, LISTBOX_LINE_HEIGHT - 1);
+		if (_activeLine >= 0 && _activeLine != _selectedLine) {
+			graphics.FillRectangle(&hoverBackground,
+				0, LISTBOX_LINE_HEIGHT * _activeLine,
+				getWidth() - 1, LISTBOX_LINE_HEIGHT - 1
+			);
+			graphics.DrawRectangle(&borderPen,
+				0, LISTBOX_LINE_HEIGHT * _activeLine,
+				getWidth() - 1, LISTBOX_LINE_HEIGHT - 1
+			);
+		}
+		if (_selectedLine >= 0) {
+			graphics.FillRectangle(&selectBackground,
+				0, LISTBOX_LINE_HEIGHT * _selectedLine,
+				getWidth() - 1, LISTBOX_LINE_HEIGHT - 1
+			);
+			graphics.DrawRectangle(&borderPen,
+				0, LISTBOX_LINE_HEIGHT * _selectedLine,
+				getWidth() - 1, LISTBOX_LINE_HEIGHT - 1
+			);
+		}
 		/*Тест выделения*/
 
 		graphics.SetSmoothingMode(Gdiplus::SmoothingMode::SmoothingModeAntiAlias);
@@ -60,34 +78,140 @@ namespace explorer {
 
 	void ListOfFiles::mouseClickHandler(const MouseEventClick& mouseEventClick)
 	{
-
+		if (mouseEventClick.Click == MOUSE_CLICK_ONE 
+			&& mouseEventClick.Button == MOUSE_LEFT
+			&& mouseEventClick.Status == KEY_PRESSED) {
+			calcOneLeftClick(mouseEventClick);
+		}
+		else if (mouseEventClick.Click == MOUSE_CLICK_DOUBLE
+			&& mouseEventClick.Button == MOUSE_LEFT) {
+			calcDoubleLeftClick(mouseEventClick);
+		}
 	}
 
 	void ListOfFiles::mouseMoveHandler(MouseEvent& mouseEvent)
 	{
+		int filesCount = _thisCatalog.size();
+		int oldLine = _activeLine;
+		if (mouseEvent.y <= (filesCount * LISTBOX_LINE_HEIGHT) - 1) {
+			_activeLine = int(mouseEvent.y / LISTBOX_LINE_HEIGHT);
+		}
+		else {
+			_activeLine = -1;
+		}
 
+		if (oldLine != _activeLine) {
+			RECT oldLineRect;
+			RECT newLineRect;
+			oldLineRect.left = newLineRect.left = 0;
+			oldLineRect.right = newLineRect.right = getWidth();
+
+			oldLineRect.top = oldLine * LISTBOX_LINE_HEIGHT;
+			oldLineRect.bottom = oldLine * LISTBOX_LINE_HEIGHT + LISTBOX_LINE_HEIGHT;
+
+			newLineRect.top = _activeLine * LISTBOX_LINE_HEIGHT;
+			newLineRect.bottom = _activeLine * LISTBOX_LINE_HEIGHT + LISTBOX_LINE_HEIGHT;
+
+			InvalidateRect(getHWND(), &oldLineRect, false);
+			if (_activeLine >= 0) {
+				InvalidateRect(getHWND(), &newLineRect, false);
+			}
+		}
 	}
 
 	void ListOfFiles::resizeParentHandler(const ParentEvent& parentEvent)
 	{
-		/*
-		if (parentEvent.Code == PARENT_RESIZE) {
-			resizeWindow(
-				LISTBOX_POS_X,
-				LISTBOX_POS_Y,
-				getParent()->getWidth() - MAIN_WINDOW_BORDER_SIZE - LISTBOX_POS_X - 1,
-				getParent()->getHieght() - MAIN_WINDOW_BORDER_SIZE - LISTBOX_POS_Y - 1,
-				true
-			);
-		}
-		*/
 	}
 
+	
+	const std::wstring& ListOfFiles::getCurrentDirectory()
+	{
+		return _thisDirection;
+	}
+	void ListOfFiles::setCurrentDirectory(std::wstring& directory)
+	{
+		_thisDirection = directory;
+	}
 
 
 	void ListOfFiles::updateList()
 	{
 		File file(_thisDirection);
 		_thisCatalog = file.list(L"*");
+		redrawWindow(false);
+	}
+
+	void ListOfFiles::calcOneLeftClick(const MouseEventClick& mouseEventClick)
+	{
+		int filesCount = _thisCatalog.size();
+		int oldLine = _selectedLine;
+		if (mouseEventClick.y <= (filesCount * LISTBOX_LINE_HEIGHT) - 1) {
+			_selectedLine = int(mouseEventClick.y / LISTBOX_LINE_HEIGHT);
+		}
+		else {
+			_selectedLine = -1;
+		}
+
+		if (oldLine != _selectedLine) {
+			RECT oldLineRect;
+			RECT newLineRect;
+			oldLineRect.left = newLineRect.left = 0;
+			oldLineRect.right = newLineRect.right = getWidth();
+
+			oldLineRect.top = oldLine * LISTBOX_LINE_HEIGHT;
+			oldLineRect.bottom = oldLine * LISTBOX_LINE_HEIGHT + LISTBOX_LINE_HEIGHT;
+
+			newLineRect.top = _activeLine * LISTBOX_LINE_HEIGHT;
+			newLineRect.bottom = _activeLine * LISTBOX_LINE_HEIGHT + LISTBOX_LINE_HEIGHT;
+
+			InvalidateRect(getHWND(), &oldLineRect, false);
+			if (_selectedLine >= 0) {
+				InvalidateRect(getHWND(), &newLineRect, false);
+			}
+		}
+	}
+	void ListOfFiles::calcDoubleLeftClick(const MouseEventClick& mouseEventClick)
+	{
+		int filesCount = _thisCatalog.size();
+		int oldLine = _selectedLine;
+		if (mouseEventClick.y <= (filesCount * LISTBOX_LINE_HEIGHT) - 1) {
+			_selectedLine = int(mouseEventClick.y / LISTBOX_LINE_HEIGHT);
+		}
+		else {
+			_selectedLine = -1;
+		}
+
+		if (oldLine != _selectedLine) {
+			RECT oldLineRect;
+			RECT newLineRect;
+			oldLineRect.left = newLineRect.left = 0;
+			oldLineRect.right = newLineRect.right = getWidth();
+
+			oldLineRect.top = oldLine * LISTBOX_LINE_HEIGHT;
+			oldLineRect.bottom = oldLine * LISTBOX_LINE_HEIGHT + LISTBOX_LINE_HEIGHT;
+
+			newLineRect.top = _activeLine * LISTBOX_LINE_HEIGHT;
+			newLineRect.bottom = _activeLine * LISTBOX_LINE_HEIGHT + LISTBOX_LINE_HEIGHT;
+
+			InvalidateRect(getHWND(), &oldLineRect, false);
+			if (_selectedLine >= 0) {
+				InvalidateRect(getHWND(), &newLineRect, false);
+			}
+		}
+
+		if (_selectedLine >= 0) {
+			if (_thisDirection[_thisDirection.size() - 1] != '\\') {
+				_thisDirection += '\\';
+			}
+			std::wstring newDirection = _thisDirection + _thisCatalog[_selectedLine];
+			File file(newDirection);
+			if (file.isDirectory()) {
+				_thisDirection = newDirection;
+				updateList();
+			}
+		}
+
+		//_thisDirection = _thisCatalog[_selectedLine];
+		//updateList();
 	}
 }

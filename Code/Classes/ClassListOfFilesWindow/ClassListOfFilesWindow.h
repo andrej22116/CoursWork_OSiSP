@@ -13,6 +13,9 @@ namespace explorer {
 		std::wstring _thisDirection;
 		std::vector<std::wstring> _thisCatalog;
 
+		int _activeLine;
+		int _selectedLine;
+
 	public:
 		ListOfFiles();
 
@@ -27,6 +30,12 @@ namespace explorer {
 		void resizeParentHandler(const ParentEvent& parentEvent);
 
 		void updateList();
+		const std::wstring& getCurrentDirectory();
+		void setCurrentDirectory(std::wstring& directory);
+
+	private:
+		void calcOneLeftClick(const MouseEventClick& mouseEventClick);
+		void calcDoubleLeftClick(const MouseEventClick& mouseEventClick);
 	};
 
 }
