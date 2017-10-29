@@ -83,6 +83,15 @@
     <Filter Include="Interface\Windows\ClassListOfFilesWindow">
       <UniqueIdentifier>{906b8279-9385-4d70-a818-84a9f7f2046c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Interface\Windows\Buttons\ClassOptionsWindow">
+      <UniqueIdentifier>{da081928-45fb-486d-82c1-b5f2e162eeea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Interface\Windows\Buttons\ClassBackwardWindow">
+      <UniqueIdentifier>{4462cad1-e876-4405-a77d-294f33396bee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Interface\Windows\Buttons\ClassButtonUpWindow">
+      <UniqueIdentifier>{5a3da9cc-4402-492a-893a-5a5c087ceb7c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Code\WinMain.cpp" />
@@ -127,6 +136,9 @@
     </ClCompile>
     <ClCompile Include="Code\Classes\Exceptions\ClassFileException\ClassFileException.cpp">
       <Filter>Core\Exceptions\ClassFileException</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Classes\Buttons\ClassButtonUpWindow\ClassButtonUpWindow.cpp">
+      <Filter>Interface\Windows\Buttons\ClassButtonUpWindow</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -177,6 +189,9 @@
     </ClInclude>
     <ClInclude Include="Code\Classes\Exceptions\ClassFileException\ClassFileException.h">
       <Filter>Core\Exceptions\ClassFileException</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Classes\Buttons\ClassButtonUpWindow\ClassButtonUpWindow.h">
+      <Filter>Interface\Windows\Buttons\ClassButtonUpWindow</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
