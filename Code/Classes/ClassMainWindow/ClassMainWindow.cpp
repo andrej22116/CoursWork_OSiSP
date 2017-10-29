@@ -2,7 +2,7 @@
 #include "ClassMainWindow.h"
 
 namespace explorer {
-	MainWindow::MainWindow()
+	MainWindow::MainWindow() : buttonUp(&listOfFiles)
 	{
 		m_registerHendler(METHOD(&MainWindow::paintHandler));
 		m_registerHendler(METHOD(&MainWindow::mouseClickHandler));
@@ -70,6 +70,15 @@ namespace explorer {
 			LISTBOX_POS_Y,
 			getWidth() - MAIN_WINDOW_BORDER_SIZE - LISTBOX_POS_X - 1,
 			getHieght() - MAIN_WINDOW_BORDER_SIZE - LISTBOX_POS_Y - 1,
+			true
+		);
+		buttonUp.create(
+			L"ListOfFiles",
+			*this,
+			MAIN_WINDOW_BUTTON_UP_POS_X,
+			MAIN_WINDOW_BUTTON_UP_POS_Y,
+			MAIN_WINDOW_BUTTON_UP_WIDTH,
+			MAIN_WINDOW_BUTTON_UP_HEIGHT,
 			true
 		);
 		//MessageBox(nullptr, (L"IT'S WORK!!! " + getWindowName()).c_str(), L"TEST", MB_OK);
