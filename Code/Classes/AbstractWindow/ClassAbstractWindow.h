@@ -74,6 +74,8 @@ namespace explorer {
 		bool _isLocked;
 
 		std::shared_ptr<RenderBuffer> _renderBuffer;
+		int _viewportWidth, _viewportHeight;
+		int _bufferedWidth, _bufferedHeight;
 
 	public:
 		Window();
