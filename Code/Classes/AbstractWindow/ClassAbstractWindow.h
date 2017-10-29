@@ -71,6 +71,8 @@ namespace explorer {
 		bool _canBeResize_left, _canBeResize_right;
 		bool _haveHeader;
 
+		bool _isLocked;
+
 		std::shared_ptr<RenderBuffer> _renderBuffer;
 
 	public:
@@ -108,6 +110,9 @@ namespace explorer {
 		void setMinSize(int width, int height);
 		void setMaxSize(int width, int height);
 		void setHeader(bool header);
+
+		void setLock(bool lock);
+		bool isLocked();
 
 
 		void moveWindowPos(int x, int y, bool repaint = false);

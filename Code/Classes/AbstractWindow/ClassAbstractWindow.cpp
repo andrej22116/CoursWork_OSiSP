@@ -125,6 +125,16 @@ namespace explorer {
 		_haveHeader = header;
 	}
 
+	void Window::setLock(bool lock)
+	{
+		_isLocked = lock;
+	}
+	bool Window::isLocked()
+	{
+		return _isLocked;
+	}
+
+
 	void Window::moveWindowPos(int x, int y, bool repaint)
 	{
 		_pos_x = x;
