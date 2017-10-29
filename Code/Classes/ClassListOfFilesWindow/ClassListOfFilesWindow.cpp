@@ -139,6 +139,8 @@ namespace explorer {
 		File file(_thisDirection);
 		_thisCatalog = file.list(L"*");
 		redrawWindow(false);
+		_activeLine = -1;
+		_selectedLine = -1;
 	}
 
 	void ListOfFiles::calcOneLeftClick(const MouseEventClick& mouseEventClick)
