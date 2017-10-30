@@ -62,7 +62,7 @@ namespace explorer {
 
 	std::wstring Window::getClassName() const { return _className; }
 	std::wstring Window::getWindowName() const { return _windowName; }
-	void Window::setWindowName(std::wstring name)
+	void Window::setWindowName(std::wstring& name)
 	{
 		_windowName = name;
 	}
@@ -204,13 +204,13 @@ namespace explorer {
 
 	bool Window::create(int pos_x, int pos_y, int width, int hieght, bool show)
 	{
-		return create(L"Window", pos_x, pos_y, width, hieght, show);
+		return create(std::wstring(L"Window"), pos_x, pos_y, width, hieght, show);
 	}
 	bool Window::create(Window& parent, int pos_x, int pos_y, int width, int hieght, bool show )
 	{
-		return create(L"Window", parent, pos_x, pos_y, width, hieght, show);
+		return create(std::wstring(L"Window"), parent, pos_x, pos_y, width, hieght, show);
 	}
-	bool Window::create(std::wstring name, int pos_x, int pos_y, int width, int hieght, bool show)
+	bool Window::create(std::wstring& name, int pos_x, int pos_y, int width, int hieght, bool show)
 	{
 		if (_thisWindowIsCreated) {
 			return false;
@@ -231,7 +231,7 @@ namespace explorer {
 		_thisWindowIsCreated = true;
 		return true;
 	}
-	bool Window::create(std::wstring name, Window& parent, int pos_x, int pos_y, int width, int hieght, bool show)
+	bool Window::create(std::wstring& name, Window& parent, int pos_x, int pos_y, int width, int hieght, bool show)
 	{
 		if (_thisWindowIsCreated) {
 			return false;

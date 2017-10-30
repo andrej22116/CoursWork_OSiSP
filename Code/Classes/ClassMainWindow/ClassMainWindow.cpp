@@ -38,7 +38,7 @@ namespace explorer {
 	{
 		setDoubleBuffered(true);
 		buttonClose.create(
-			L"exit",
+			std::wstring(L"exit"),
 			*this,
 			MAIN_WINDOW_BUTTON_EXIT_POS_X(this->getWidth()),
 			MAIN_WINDOW_BUTTON_EXIT_POS_Y(1),
@@ -47,7 +47,7 @@ namespace explorer {
 			true);
 
 		buttonMaximize.create(
-			L"maximize",
+			std::wstring(L"maximize"),
 			*this,
 			MAIN_WINDOW_BUTTON_MAXIMIZE_POS_X(this->getWidth()),
 			MAIN_WINDOW_BUTTON_MAXIMIZE_POS_Y(1),
@@ -56,7 +56,7 @@ namespace explorer {
 			true);
 
 		buttonMinimize.create(
-			L"minimize",
+			std::wstring(L"minimize"),
 			*this,
 			MAIN_WINDOW_BUTTON_MINIMIZE_POS_X(this->getWidth()),
 			MAIN_WINDOW_BUTTON_MINIMIZE_POS_Y(1),
@@ -64,7 +64,7 @@ namespace explorer {
 			MAIN_WINDOW_BUTTON_MINIMIZE_HEIGHT,
 			true);
 		listOfFiles.create(
-			L"ListOfFiles",
+			std::wstring(L"ListOfFiles"),
 			*this,
 			LISTBOX_POS_X,
 			LISTBOX_POS_Y,
@@ -73,7 +73,7 @@ namespace explorer {
 			true
 		);
 		buttonUp.create(
-			L"ListOfFiles",
+			std::wstring(L"ListOfFiles"),
 			*this,
 			MAIN_WINDOW_BUTTON_UP_POS_X,
 			MAIN_WINDOW_BUTTON_UP_POS_Y,

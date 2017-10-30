@@ -83,8 +83,8 @@ namespace explorer {
 
 		bool create(int pos_x, int pos_y, int width, int hieght, bool show = true);
 		bool create(Window& parent, int pos_x, int pos_y, int width, int hieght, bool show = true);
-		bool create(std::wstring name, int pos_x, int pos_y, int width, int hieght, bool show = true);
-		bool create(std::wstring name, Window& parent, int pos_x, int pos_y, int width, int hieght, bool show = true);
+		bool create(std::wstring& name, int pos_x, int pos_y, int width, int hieght, bool show = true);
+		bool create(std::wstring& name, Window& parent, int pos_x, int pos_y, int width, int hieght, bool show = true);
 
 		int getWidth() const;
 		int getHieght() const;
@@ -99,7 +99,7 @@ namespace explorer {
 		std::wstring getClassName() const;
 		std::wstring getWindowName() const;
 		void minimizeWindow(bool hide);
-		void setWindowName(std::wstring name);
+		void setWindowName(std::wstring& name);
 		void setDoubleBuffered(bool set);
 		void setResizeWhenParentResizeing(bool resize_width = false, bool resize_height = false);
 		void setMoveWhenParentResizeing(bool move_x = false, bool move_y = false);
