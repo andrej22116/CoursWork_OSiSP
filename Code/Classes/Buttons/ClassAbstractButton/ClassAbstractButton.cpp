@@ -6,6 +6,7 @@ namespace explorer {
 	Button::Button()
 	{
 		m_registerHendler(METHOD(&Button::hoverHandler));
+		setLock(false);
 	}
 
 	void Button::createWindow()
