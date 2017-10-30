@@ -8,6 +8,7 @@
 #include <string>
 #include <vector>
 #include <set>
+#include <stack>
 
 #include <memory>
 #include <functional>
