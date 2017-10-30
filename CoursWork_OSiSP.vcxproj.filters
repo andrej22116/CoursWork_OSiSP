@@ -140,6 +140,9 @@
     <ClCompile Include="Code\Classes\Buttons\ClassButtonUpWindow\ClassButtonUpWindow.cpp">
       <Filter>Interface\Windows\Buttons\ClassButtonUpWindow</Filter>
     </ClCompile>
+    <ClCompile Include="Code\Classes\Buttons\ClassOptionsWindow\ClassOptionsWindow.cpp">
+      <Filter>Interface\Windows\Buttons\ClassOptionsWindow</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Code\Classes\ClassMainWindow\ClassMainWindow.h">
@@ -192,6 +195,9 @@
     </ClInclude>
     <ClInclude Include="Code\Classes\Buttons\ClassButtonUpWindow\ClassButtonUpWindow.h">
       <Filter>Interface\Windows\Buttons\ClassButtonUpWindow</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Classes\Buttons\ClassOptionsWindow\ClassOptionsWindow.h">
+      <Filter>Interface\Windows\Buttons\ClassOptionsWindow</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

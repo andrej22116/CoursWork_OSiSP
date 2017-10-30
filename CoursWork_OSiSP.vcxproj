@@ -214,6 +214,7 @@
     <ClCompile Include="Code\Classes\Buttons\ClassButtonUpWindow\ClassButtonUpWindow.cpp" />
     <ClCompile Include="Code\Classes\Buttons\ClassMaximizeWindow\ClassMaximizeWindow.cpp" />
     <ClCompile Include="Code\Classes\Buttons\ClassMinimizeWindow\ClassMinimizeWindow.cpp" />
+    <ClCompile Include="Code\Classes\Buttons\ClassOptionsWindow\ClassOptionsWindow.cpp" />
     <ClCompile Include="Code\Classes\ClassListOfFilesWindow\ClassListOfFilesWindow.cpp" />
     <ClCompile Include="Code\Classes\ClassMainWindow\ClassMainWindow.cpp" />
     <ClCompile Include="Code\Classes\Exceptions\ClassException\ClassException.cpp" />
@@ -232,6 +233,7 @@
     <ClInclude Include="Code\Classes\Buttons\ClassButtonUpWindow\ClassButtonUpWindow.h" />
     <ClInclude Include="Code\Classes\Buttons\ClassMaximizeWindow\ClassMaximizeWindow.h" />
     <ClInclude Include="Code\Classes\Buttons\ClassMinimizeWindow\ClassMinimizeWindow.h" />
+    <ClInclude Include="Code\Classes\Buttons\ClassOptionsWindow\ClassOptionsWindow.h" />
     <ClInclude Include="Code\Classes\ClassListOfFilesWindow\ClassListOfFilesWindow.h" />
     <ClInclude Include="Code\Classes\ClassMainWindow\ClassMainWindow.h" />
     <ClInclude Include="Code\Classes\Exceptions\ClassException\ClassException.h" />

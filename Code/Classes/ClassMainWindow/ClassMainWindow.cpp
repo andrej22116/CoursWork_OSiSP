@@ -2,7 +2,10 @@
 #include "ClassMainWindow.h"
 
 namespace explorer {
-	MainWindow::MainWindow() : buttonUp(&listOfFiles), listOfFiles(&buttonUp)
+	MainWindow::MainWindow() : 
+		buttonUp(&listOfFiles),
+		buttonOptions(&listOfFiles),
+		listOfFiles(&buttonUp)
 	{
 		m_registerHendler(METHOD(&MainWindow::paintHandler));
 		m_registerHendler(METHOD(&MainWindow::mouseClickHandler));
@@ -73,12 +76,21 @@ namespace explorer {
 			true
 		);
 		buttonUp.create(
-			std::wstring(L"ListOfFiles"),
+			std::wstring(L"ButtonUp"),
 			*this,
 			MAIN_WINDOW_BUTTON_UP_POS_X,
 			MAIN_WINDOW_BUTTON_UP_POS_Y,
 			MAIN_WINDOW_BUTTON_UP_WIDTH,
 			MAIN_WINDOW_BUTTON_UP_HEIGHT,
+			true
+		);
+		buttonOptions.create(
+			std::wstring(L"ButtonOptions"),
+			*this,
+			MAIN_WINDOW_BUTTON_OPTIONS_POS_X,
+			MAIN_WINDOW_BUTTON_OPTIONS_POS_Y,
+			MAIN_WINDOW_BUTTON_OPTIONS_WIDTH,
+			MAIN_WINDOW_BUTTON_OPTIONS_HEIGHT,
 			true
 		);
 		//MessageBox(nullptr, (L"IT'S WORK!!! " + getWindowName()).c_str(), L"TEST", MB_OK);

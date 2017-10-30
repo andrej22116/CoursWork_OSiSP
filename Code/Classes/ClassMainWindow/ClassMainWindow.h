@@ -6,6 +6,7 @@
 #include "..\Buttons\ClassMinimizeWindow\ClassMinimizeWindow.h"
 #include "..\ClassListOfFilesWindow\ClassListOfFilesWindow.h"
 #include "..\Buttons\ClassButtonUpWindow\ClassButtonUpWindow.h"
+#include "..\Buttons\ClassOptionsWindow\ClassOptionsWindow.h"
 
 #ifndef _CLASS_MAIN_WINDOW_H_
 #define _CLASS_MAIN_WINDOW_H_
@@ -19,6 +20,7 @@ namespace explorer {
 		ButtonMinimize buttonMinimize;
 		ListOfFiles listOfFiles;
 		ButtonUp buttonUp;
+		ButtonOptions buttonOptions;
 
 	public:
 		MainWindow();
