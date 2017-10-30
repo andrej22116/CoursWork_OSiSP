@@ -211,7 +211,6 @@
     <ClCompile Include="Code\Classes\Another\RenderBuffer\RenderBuffer.cpp" />
     <ClCompile Include="Code\Classes\Buttons\ClassAbstractButton\ClassAbstractButton.cpp" />
     <ClCompile Include="Code\Classes\Buttons\ClassButtonCloseWindow\ClassButtonCloseWindow.cpp" />
-    <ClCompile Include="Code\Classes\Buttons\ClassButtonUpWindow\ClassButtonUpWindow.cpp" />
     <ClCompile Include="Code\Classes\Buttons\ClassMaximizeWindow\ClassMaximizeWindow.cpp" />
     <ClCompile Include="Code\Classes\Buttons\ClassMinimizeWindow\ClassMinimizeWindow.cpp" />
     <ClCompile Include="Code\Classes\Buttons\ClassOptionsWindow\ClassOptionsWindow.cpp" />
@@ -231,7 +230,6 @@
     <ClInclude Include="Code\Classes\Another\RenderBuffer\RenderBuffer.h" />
     <ClInclude Include="Code\Classes\Buttons\ClassAbstractButton\ClassAbstractButton.h" />
     <ClInclude Include="Code\Classes\Buttons\ClassButtonCloseWindow\ClassButtonCloseWindow.h" />
-    <ClInclude Include="Code\Classes\Buttons\ClassButtonUpWindow\ClassButtonUpWindow.h" />
     <ClInclude Include="Code\Classes\Buttons\ClassMaximizeWindow\ClassMaximizeWindow.h" />
     <ClInclude Include="Code\Classes\Buttons\ClassMinimizeWindow\ClassMinimizeWindow.h" />
     <ClInclude Include="Code\Classes\Buttons\ClassOptionsWindow\ClassOptionsWindow.h" />
