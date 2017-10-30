@@ -3,10 +3,8 @@
 
 namespace explorer {
 
-	ListOfFiles::ListOfFiles(ButtonUp* buttonUp) : _activeLine(-1), _selectedLine(-1)
+	ListOfFiles::ListOfFiles() : _activeLine(-1), _selectedLine(-1)
 	{
-		_buttonUp = buttonUp;
-
 		m_registerHendler(METHOD(&ListOfFiles::paintHandler));
 		m_registerHendler(METHOD(&ListOfFiles::mouseClickHandler));
 		m_registerHendler(METHOD(&ListOfFiles::mouseMoveHandler));
@@ -138,8 +136,8 @@ namespace explorer {
 
 	void ListOfFiles::updateButtonUP(bool lock)
 	{
-		_buttonUp->setLock(lock);
-		_buttonUp->redrawWindow(false);
+		ButtonReturn::buttons[ButtonReturn::BUTTON_RETURN_UP]->setLock(lock);
+		ButtonReturn::buttons[ButtonReturn::BUTTON_RETURN_UP]->redrawWindow(false);
 	}
 
 

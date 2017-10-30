@@ -3,9 +3,10 @@
 
 namespace explorer {
 	MainWindow::MainWindow() : 
-		buttonUp(&listOfFiles),
-		buttonOptions(&listOfFiles),
-		listOfFiles(&buttonUp)
+		buttonUp(&listOfFiles, ButtonReturn::BUTTON_RETURN_UP),
+		buttonForward(&listOfFiles, ButtonReturn::BUTTON_RETURN_FORWARD),
+		buttonBackward(&listOfFiles, ButtonReturn::BUTTON_RETURN_BACKWARD),
+		buttonOptions(&listOfFiles)
 	{
 		m_registerHendler(METHOD(&MainWindow::paintHandler));
 		m_registerHendler(METHOD(&MainWindow::mouseClickHandler));
@@ -75,6 +76,15 @@ namespace explorer {
 			getHieght() - MAIN_WINDOW_BORDER_SIZE - LISTBOX_POS_Y - 1,
 			true
 		);
+		buttonOptions.create(
+			std::wstring(L"ButtonOptions"),
+			*this,
+			MAIN_WINDOW_BUTTON_OPTIONS_POS_X,
+			MAIN_WINDOW_BUTTON_OPTIONS_POS_Y,
+			MAIN_WINDOW_BUTTON_OPTIONS_WIDTH,
+			MAIN_WINDOW_BUTTON_OPTIONS_HEIGHT,
+			true
+		);
 		buttonUp.create(
 			std::wstring(L"ButtonUp"),
 			*this,
@@ -84,13 +94,22 @@ namespace explorer {
 			MAIN_WINDOW_BUTTON_UP_HEIGHT,
 			true
 		);
-		buttonOptions.create(
-			std::wstring(L"ButtonOptions"),
+		buttonForward.create(
+			std::wstring(L"ButtonForward"),
 			*this,
-			MAIN_WINDOW_BUTTON_OPTIONS_POS_X,
-			MAIN_WINDOW_BUTTON_OPTIONS_POS_Y,
-			MAIN_WINDOW_BUTTON_OPTIONS_WIDTH,
-			MAIN_WINDOW_BUTTON_OPTIONS_HEIGHT,
+			MAIN_WINDOW_BUTTON_FORWARD_POS_X,
+			MAIN_WINDOW_BUTTON_FORWARD_POS_Y,
+			MAIN_WINDOW_BUTTON_FORWARD_WIDTH,
+			MAIN_WINDOW_BUTTON_FORWARD_HEIGHT,
+			true
+		);
+		buttonBackward.create(
+			std::wstring(L"ButtonBackward"),
+			*this,
+			MAIN_WINDOW_BUTTON_BACKWARD_POS_X,
+			MAIN_WINDOW_BUTTON_BACKWARD_POS_Y,
+			MAIN_WINDOW_BUTTON_BACKWARD_WIDTH,
+			MAIN_WINDOW_BUTTON_BACKWARD_HEIGHT,
 			true
 		);
 		//MessageBox(nullptr, (L"IT'S WORK!!! " + getWindowName()).c_str(), L"TEST", MB_OK);

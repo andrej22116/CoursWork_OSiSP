@@ -5,16 +5,14 @@
 
 #include "..\AbstractWindow\ClassAbstractWindow.h"
 #include "..\FileSystem\ClassFile\ClassFile.h"
-#include "..\Buttons\ClassButtonUpWindow\ClassButtonUpWindow.h"
+#include "..\Buttons\ClassReturnWindow\ClassReturnWindow.h"
 
 namespace explorer {
 
-	class ButtonUp;
+	class ButtonReturn;
 
 	class ListOfFiles : public Window {
 	private:
-		ButtonUp* _buttonUp;
-
 		std::wstring _thisDirection;
 		std::vector<std::wstring> _thisCatalog;
 		std::vector<std::pair<std::wstring, int>> _logicalDrives;
@@ -25,7 +23,7 @@ namespace explorer {
 		bool _inDrive;
 
 	public:
-		ListOfFiles(ButtonUp* buttonUp);
+		ListOfFiles();
 
 		virtual void createWindow() override;
 		void paintHandler(Gdiplus::Graphics& graphics);

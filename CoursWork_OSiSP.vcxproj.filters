@@ -86,11 +86,11 @@
     <Filter Include="Interface\Windows\Buttons\ClassOptionsWindow">
       <UniqueIdentifier>{da081928-45fb-486d-82c1-b5f2e162eeea}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Interface\Windows\Buttons\ClassBackwardWindow">
-      <UniqueIdentifier>{4462cad1-e876-4405-a77d-294f33396bee}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Interface\Windows\Buttons\ClassButtonUpWindow">
       <UniqueIdentifier>{5a3da9cc-4402-492a-893a-5a5c087ceb7c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Interface\Windows\Buttons\ClassReturnWindow">
+      <UniqueIdentifier>{4462cad1-e876-4405-a77d-294f33396bee}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -142,6 +142,9 @@
     </ClCompile>
     <ClCompile Include="Code\Classes\Buttons\ClassOptionsWindow\ClassOptionsWindow.cpp">
       <Filter>Interface\Windows\Buttons\ClassOptionsWindow</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Classes\Buttons\ClassReturnWindow\ClassReturnWindow.cpp">
+      <Filter>Interface\Windows\Buttons\ClassReturnWindow</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -198,6 +201,9 @@
     </ClInclude>
     <ClInclude Include="Code\Classes\Buttons\ClassOptionsWindow\ClassOptionsWindow.h">
       <Filter>Interface\Windows\Buttons\ClassOptionsWindow</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Classes\Buttons\ClassReturnWindow\ClassReturnWindow.h">
+      <Filter>Interface\Windows\Buttons\ClassReturnWindow</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
