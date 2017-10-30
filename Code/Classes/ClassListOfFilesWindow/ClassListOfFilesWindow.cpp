@@ -125,13 +125,14 @@ namespace explorer {
 	}
 
 	
-	const std::wstring& ListOfFiles::getCurrentDirectory()
+	std::wstring ListOfFiles::getCurrentDirectory()
 	{
 		return _thisDirection;
 	}
 	void ListOfFiles::setCurrentDirectory(std::wstring& directory)
 	{
 		_thisDirection = directory;
+		updateList();
 	}
 
 	void ListOfFiles::updateButtonUP(bool lock)
@@ -229,8 +230,8 @@ namespace explorer {
 			std::wstring newDirection = _thisDirection + _thisCatalog[_selectedLine];
 			File file(newDirection);
 			if (file.isDirectory()) {
-				_thisDirection = newDirection;
-				updateList();
+				ButtonReturn::nextDirrectory(_thisDirection);
+				setCurrentDirectory(newDirection);
 			}
 		}
 

@@ -41,7 +41,7 @@ namespace explorer {
 		void mouseClickHandler_forward(const MouseEventClick& mouseEventClick);
 		void mouseClickHandler_up(const MouseEventClick& mouseEventClick);
 
-		static void nextDirrectory(std::wstring& newDirrectory);
+		static void nextDirrectory(std::wstring& oldDirrectory);
 	};
 
 }

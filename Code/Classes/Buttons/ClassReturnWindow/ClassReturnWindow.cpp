@@ -17,12 +17,13 @@ namespace explorer {
 		if (type == BUTTON_RETURN_BACKWARD) {
 			m_registerHendler(METHOD(&ButtonReturn::mouseClickHandler_backward));
 			m_registerHendler(METHOD(&ButtonReturn::paintHandler_backward));
-
+			setLock(true);
 		}
 		else if (type == BUTTON_RETURN_FORWARD) {
 			m_registerHendler(METHOD(&ButtonReturn::mouseClickHandler_forward));
 			m_registerHendler(METHOD(&ButtonReturn::paintHandler_forward));
 			_image->RotateFlip(Gdiplus::Rotate180FlipY);
+			setLock(true);
 		}
 		else if (type == BUTTON_RETURN_UP) {
 			m_registerHendler(METHOD(&ButtonReturn::mouseClickHandler_up));
@@ -55,9 +56,6 @@ namespace explorer {
 		Gdiplus::SolidBrush brush((isHover() && !isLocked()) ? (MAIN_WINDOW_COLOR_HEADER_BUTTON_SELECTED) : (MAIN_WINDOW_COLOR_HEADER));
 		graphics.FillRectangle(&brush, -1, -1, getWidth() + 1, getHieght() + 1);
 
-		//graphics.TranslateTransform(15, 15);
-		//graphics.RotateTransform(180);
-		//graphics.TranslateTransform(0, 0);
 		graphics.DrawImage(&(*_image), 2, 2, 12, 12);
 		if (this->isLocked()) {
 			Gdiplus::SolidBrush lockBrush(Gdiplus::Color(192, 56, 56, 56));
@@ -70,9 +68,6 @@ namespace explorer {
 		Gdiplus::SolidBrush brush((isHover() && !isLocked()) ? (MAIN_WINDOW_COLOR_HEADER_BUTTON_SELECTED) : (MAIN_WINDOW_COLOR_HEADER));
 		graphics.FillRectangle(&brush, -1, -1, getWidth() + 1, getHieght() + 1);
 
-		//graphics.TranslateTransform(15, 0);
-		//graphics.RotateTransform(90);
-		//graphics.TranslateTransform(0, 0);
 		graphics.DrawImage(&(*_image), 2, 2, 12, 12);
 		if (this->isLocked()) {
 			Gdiplus::SolidBrush lockBrush(Gdiplus::Color(192, 56, 56, 56));
@@ -82,21 +77,57 @@ namespace explorer {
 
 	void ButtonReturn::mouseClickHandler_backward(const MouseEventClick& mouseEventClick)
 	{
+		if (mouseEventClick.Click == MOUSE_CLICK_ONE
+			&& mouseEventClick.Button == MOUSE_LEFT
+			&& mouseEventClick.Status == KEY_PRESSED
+			&& !isLocked()) {
+			if (!_backwardStack.empty()) {
+				_forwardStack.push(_listOfFiles->getCurrentDirectory());
+				_listOfFiles->setCurrentDirectory(_backwardStack.top());
+				buttons[BUTTON_RETURN_FORWARD]->setLock(false);
+				_backwardStack.pop();
+				if (_backwardStack.empty()) {
+					setLock(true);
+				}
 
+				redrawWindow(false);
+				buttons[BUTTON_RETURN_FORWARD]->redrawWindow(false);
+
+			}
+		}
 	}
 	void ButtonReturn::mouseClickHandler_forward(const MouseEventClick& mouseEventClick)
 	{
+		if (mouseEventClick.Click == MOUSE_CLICK_ONE
+			&& mouseEventClick.Button == MOUSE_LEFT
+			&& mouseEventClick.Status == KEY_PRESSED
+			&& !isLocked()) {
+			if (!_forwardStack.empty()) {
+				_listOfFiles->setCurrentDirectory(_forwardStack.top());
+				buttons[BUTTON_RETURN_BACKWARD]->setLock(false);
+				_backwardStack.push(_forwardStack.top());
+				_forwardStack.pop();
+				if (_forwardStack.empty()) {
+					setLock(true);
+				}
 
+				redrawWindow(false);
+				buttons[BUTTON_RETURN_BACKWARD]->redrawWindow(false);
+
+			}
+		}
 	}
 	void ButtonReturn::mouseClickHandler_up(const MouseEventClick& mouseEventClick)
 	{
 		if (mouseEventClick.Click == MOUSE_CLICK_ONE
 			&& mouseEventClick.Button == MOUSE_LEFT
-			&& mouseEventClick.Status == KEY_PRESSED) {
+			&& mouseEventClick.Status == KEY_PRESSED
+			&& !isLocked()) {
 			std::wstring currentDirection = _listOfFiles->getCurrentDirectory();
 			if (!currentDirection.empty()) {
 				File file(currentDirection);
 				std::wstring backPath = file.getPrevDirection();
+				nextDirrectory(_listOfFiles->getCurrentDirectory());
 				_listOfFiles->setCurrentDirectory(backPath);
 				_listOfFiles->updateList();
 
@@ -110,8 +141,19 @@ namespace explorer {
 		}
 	}
 
-	void ButtonReturn::nextDirrectory(std::wstring& newDirrectory)
+	void ButtonReturn::nextDirrectory(std::wstring& oldDirrectory)
 	{
+		while (!_forwardStack.empty()) {
+			_forwardStack.pop();
+		}
 
+		buttons[BUTTON_RETURN_FORWARD]->setLock(true);
+		buttons[BUTTON_RETURN_FORWARD]->redrawWindow(false);
+
+		_backwardStack.push(oldDirrectory);
+		if (buttons[BUTTON_RETURN_BACKWARD]->isLocked()) {
+			buttons[BUTTON_RETURN_BACKWARD]->setLock(false);
+			buttons[BUTTON_RETURN_BACKWARD]->redrawWindow(false);
+		}
 	}
 }

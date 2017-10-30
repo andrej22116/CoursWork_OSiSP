@@ -36,7 +36,7 @@ namespace explorer {
 		void resizeParentHandler(const ParentEvent& parentEvent);
 
 		void updateList();
-		const std::wstring& getCurrentDirectory();
+		std::wstring getCurrentDirectory();
 		void setCurrentDirectory(std::wstring& directory);
 
 		void updateButtonUP(bool lock);
