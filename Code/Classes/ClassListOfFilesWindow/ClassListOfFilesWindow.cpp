@@ -30,24 +30,24 @@ namespace explorer {
 		Gdiplus::SolidBrush textBrush(LISTBOX_TEXT_COLOR);
 
 		Gdiplus::Pen borderPen(LISTBOX_COLOR_BORDER_LINE);
+		Gdiplus::Pen borderHoverPen(LISTBOX_COLOR_BORDER_HOVER_LINE);
 		Gdiplus::SolidBrush selectBackground(LISTBOX_COLOR_BACKGROUND_SELECT);
 		Gdiplus::SolidBrush hoverBackground(LISTBOX_COLOR_BACKGROUND_HOVER);
 
-		/*Тест выделения*/
-		//graphics.FillRectangle(&selectBackground, 0, 0, getWidth() - 1, LISTBOX_LINE_HEIGHT - 1);
-		//graphics.DrawRectangle(&borderPen, 0, 0, getWidth() - 1, LISTBOX_LINE_HEIGHT - 1);
+		graphics.DrawLine(&borderPen, 0, 0, 0, LISTBOX_LINE_HEIGHT * _thisCatalog.size() - 1);
 
-		if (_activeLine >= 0 && _activeLine != _selectedLine) {
-			graphics.FillRectangle(&hoverBackground,
-				0, LISTBOX_LINE_HEIGHT * _activeLine,
-				getWidth() - 1, LISTBOX_LINE_HEIGHT - 1
-			);
-			graphics.DrawRectangle(&borderPen,
-				0, LISTBOX_LINE_HEIGHT * _activeLine,
-				getWidth() - 1, LISTBOX_LINE_HEIGHT - 1
-			);
-		}
 		if (_selectedLine >= 0) {
+			graphics.FillRectangle(&selectBackground,
+				0, LISTBOX_LINE_HEIGHT * _selectedLine,
+				getWidth(), LISTBOX_LINE_HEIGHT - 1
+			);
+			graphics.DrawLine(&borderPen,
+				0, LISTBOX_LINE_HEIGHT * _selectedLine,
+				getWidth() - 1, LISTBOX_LINE_HEIGHT * _selectedLine);
+			graphics.DrawLine(&borderPen,
+				0, LISTBOX_LINE_HEIGHT * _selectedLine + LISTBOX_LINE_HEIGHT - 1,
+				getWidth() - 1, LISTBOX_LINE_HEIGHT * _selectedLine + LISTBOX_LINE_HEIGHT - 1);
+			/*
 			graphics.FillRectangle(&selectBackground,
 				0, LISTBOX_LINE_HEIGHT * _selectedLine,
 				getWidth() - 1, LISTBOX_LINE_HEIGHT - 1
@@ -56,6 +56,31 @@ namespace explorer {
 				0, LISTBOX_LINE_HEIGHT * _selectedLine,
 				getWidth() - 1, LISTBOX_LINE_HEIGHT - 1
 			);
+			*/
+		}
+
+		if (_activeLine >= 0) {
+			if (_selectedLine != _activeLine) {
+				graphics.DrawLine(&borderHoverPen,
+					0, LISTBOX_LINE_HEIGHT * _activeLine,
+					0, LISTBOX_LINE_HEIGHT * (_activeLine + 1) - 1);
+			}
+			graphics.DrawLine(&borderHoverPen,
+				0, LISTBOX_LINE_HEIGHT * _activeLine,
+				getWidth() - 1, LISTBOX_LINE_HEIGHT * _activeLine);
+			graphics.DrawLine(&borderHoverPen,
+				0, LISTBOX_LINE_HEIGHT * _activeLine + LISTBOX_LINE_HEIGHT - 1,
+				getWidth() - 1, LISTBOX_LINE_HEIGHT * _activeLine + LISTBOX_LINE_HEIGHT - 1);
+			/*
+			graphics.FillRectangle(&hoverBackground,
+			0, LISTBOX_LINE_HEIGHT * _activeLine,
+			getWidth() - 1, LISTBOX_LINE_HEIGHT - 1
+			);
+			graphics.DrawRectangle(&borderPen,
+			0, LISTBOX_LINE_HEIGHT * _activeLine,
+			getWidth() - 1, LISTBOX_LINE_HEIGHT - 1
+			);
+			*/
 		}
 		/*Тест выделения*/
 
