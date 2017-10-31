@@ -103,15 +103,15 @@ namespace explorer {
 			&& mouseEventClick.Status == KEY_PRESSED
 			&& !isLocked()) {
 			if (!_forwardStack.empty()) {
+				_backwardStack.push(_listOfFiles->getCurrentDirectory());
 				_listOfFiles->setCurrentDirectory(_forwardStack.top());
-				buttons[BUTTON_RETURN_BACKWARD]->setLock(false);
-				_backwardStack.push(_forwardStack.top());
 				_forwardStack.pop();
 				if (_forwardStack.empty()) {
 					setLock(true);
 				}
 
 				redrawWindow(false);
+				buttons[BUTTON_RETURN_BACKWARD]->setLock(false);
 				buttons[BUTTON_RETURN_BACKWARD]->redrawWindow(false);
 
 			}

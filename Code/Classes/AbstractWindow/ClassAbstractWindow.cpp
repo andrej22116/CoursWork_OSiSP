@@ -22,6 +22,7 @@ namespace explorer {
 			Gdiplus::GdiplusStartupInput gdiplusStartupInput;
 			Gdiplus::GdiplusStartup(&_gdiplusToken, &gdiplusStartupInput, NULL);
 			m_registerTimerHendler(METHOD(&Window::timerCheckHoverWindow));
+			setDoubleBuffered(true);
 	}
 	Window::~Window()
 	{
@@ -165,7 +166,7 @@ namespace explorer {
 		m_calculateNewSizeWindowIfParentResize();
 		MoveWindow(_hWnd, pos_x, pos_y, width, hieght, show);
 		//SetWindowPos(_hWnd, (HWND)1, pos_x, pos_y, width, hieght, SWP_SHOWWINDOW);
-		//InvalidateRect(_hWnd, nullptr, false);
+		redrawWindow(false);
 		//m_sendMessageForAllChildren(WM_SIZE, 0, 0);
 	}
 	void Window::minimizeWindow(bool hide)
@@ -174,7 +175,12 @@ namespace explorer {
 	}
 	void Window::redrawWindow(bool erase)
 	{
-		InvalidateRect(_hWnd, nullptr, erase);
+		RedrawWindow(_hWnd, NULL, NULL, 
+			RDW_INVALIDATE 
+			| (erase ? RDW_ERASE : RDW_NOERASE)
+			| RDW_INTERNALPAINT 
+			| RDW_UPDATENOW 
+			| RDW_ALLCHILDREN);
 	}
 
 	void Window::showWindow(bool show)
@@ -483,13 +489,13 @@ namespace explorer {
 					&& y >= window->_borderSize && y <= MAIN_WINDOW_HEADER_HEIGHT
 					&& window->_haveHeader)
 					return HTCAPTION;
-				else if (x < window->_borderSize && window->_canBeResize_left)
+				else if (x <= window->_borderSize && window->_canBeResize_left)
 					return HTLEFT;
-				else if (y < window->_borderSize && window->_canBeResize_top)
+				else if (y <= window->_borderSize && window->_canBeResize_top)
 					return HTTOP;
-				else if (x > window->_width - window->_borderSize && window->_canBeResize_right)
+				else if (x >= window->_width - window->_borderSize - 1 && window->_canBeResize_right)
 					return HTRIGHT;
-				else if (y > window->_hieght - window->_borderSize && window->_canBeResize_bottom)
+				else if (y >= window->_hieght - window->_borderSize - 1 && window->_canBeResize_bottom)
 					return HTBOTTOM;
 				else
 					return HTCLIENT;
@@ -652,8 +658,11 @@ namespace explorer {
 		_g_pos_X = getGlobalPosX();
 		_g_pos_Y = getGlobalPosY();
 
-		_renderBuffer = std::make_shared<RenderBuffer>(_hWnd, _width, _hieght);
-		SetWindowPos(_hWnd, 0, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE | SWP_FRAMECHANGED | (show ? SWP_SHOWWINDOW : SWP_HIDEWINDOW));
+		SetWindowPos(_hWnd, 0, 0, 0, 0, 0, 
+			SWP_NOSIZE 
+			| SWP_NOMOVE 
+			| SWP_FRAMECHANGED 
+			| (show ? SWP_SHOWWINDOW : SWP_HIDEWINDOW));
 		//RedrawWindow(_hWnd, NULL, NULL, RDW_INVALIDATE | RDW_NOERASE | RDW_INTERNALPAINT | RDW_UPDATENOW | RDW_ALLCHILDREN);
 		return true;
 	}
@@ -680,6 +689,7 @@ namespace explorer {
 			throw WindowException(L"Create Window " + _windowName + L" error!");
 		}
 		s_windowsMap.insert(std::pair<HWND, Window*>(_hWnd, this));
+		_renderBuffer = std::make_shared<RenderBuffer>(_hWnd, _width, _hieght);
 		SendMessage(_hWnd, WM_CREATE, 0, 0);
 		return true;
 	}
