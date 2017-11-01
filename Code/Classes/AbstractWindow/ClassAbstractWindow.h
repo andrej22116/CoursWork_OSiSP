@@ -76,6 +76,9 @@ namespace explorer {
 		std::shared_ptr<RenderBuffer> _renderBuffer;
 		int _viewportWidth, _viewportHeight;
 		int _bufferedWidth, _bufferedHeight;
+		int _scrollStatus;
+		int _scrollMaxStatus;
+		int _scrollSections;
 
 	public:
 		Window();
