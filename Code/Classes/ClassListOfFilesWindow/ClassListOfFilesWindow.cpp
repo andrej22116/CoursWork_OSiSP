@@ -86,7 +86,7 @@ namespace explorer {
 		/*Тест выделения*/
 
 		graphics.SetSmoothingMode(Gdiplus::SmoothingMode::SmoothingModeAntiAlias);
-		graphics.SetInterpolationMode(Gdiplus::InterpolationMode::InterpolationModeHighQualityBicubic);
+		//graphics.SetInterpolationMode(Gdiplus::InterpolationMode::InterpolationModeHighQualityBicubic);
 
 		int y_offset = 0;
 		int textOffset = (LISTBOX_LINE_HEIGHT - font.GetSize()) / 4;
