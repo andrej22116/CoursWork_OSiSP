@@ -9,6 +9,19 @@
 namespace explorer {
 
 	class File {
+	public:
+		struct FileInfo {
+			std::wstring Name;
+			bool IsFile;
+			bool IsDirectory;
+
+			bool haveIcon;
+			std::shared_ptr<Gdiplus::Bitmap> Icon;
+
+			FileInfo(std::wstring name, bool isFile, bool isDir, HICON* icon);
+		};
+
+	private:
 		std::wstring _path;
 		std::wstring _fileName;
 
@@ -26,8 +39,8 @@ namespace explorer {
 		bool isFile();
 		bool isDirectory();
 
-		std::vector<std::wstring> list();
-		std::vector<std::wstring> list(std::wstring filter);
+		std::vector<FileInfo> list();
+		std::vector<FileInfo> list(std::wstring filter);
 
 		static std::vector<std::pair<std::wstring, int>> getAllLogicalDrives();
 	};

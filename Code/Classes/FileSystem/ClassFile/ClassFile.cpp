@@ -3,6 +3,18 @@
 
 namespace explorer {
 
+	File::FileInfo::FileInfo(std::wstring name, bool isFile, bool isDir, HICON* icon)
+	{
+		Name = name;
+		IsFile = isFile;
+		IsDirectory = isDir;
+
+		if (icon) {
+			haveIcon = true;
+			Icon = std::make_shared<Gdiplus::Bitmap>(*icon);
+		}
+	}
+
 	File::File(std::wstring path)
 	{
 		_isDir = false;
@@ -65,11 +77,11 @@ namespace explorer {
 		return _isDir;
 	}
 
-	std::vector<std::wstring> File::list()
+	std::vector<File::FileInfo> File::list()
 	{
 		return list(std::wstring(L"*"));
 	}
-	std::vector<std::wstring> File::list(std::wstring filter)
+	std::vector<File::FileInfo> File::list(std::wstring filter)
 	{
 		HANDLE hFind;
 		WIN32_FIND_DATA findData;
@@ -83,12 +95,39 @@ namespace explorer {
 		}
 
 
-		std::vector<std::wstring> result;
+		std::vector<std::wstring> filelist;
 		do {
-			result.push_back(findData.cFileName);
+			filelist.push_back(findData.cFileName);
 		} while (FindNextFile(hFind, &findData));
 
 		FindClose(hFind);
+
+		std::vector<FileInfo> result;
+		for (auto file : filelist) {
+			bool isDir = false;
+
+			std::wstring full_path = _path + file;
+			std::unique_ptr<FileInfo> fInfo;
+
+			DWORD atributes = GetFileAttributes(full_path.c_str());
+			if (atributes & FILE_ATTRIBUTE_DIRECTORY) {
+				isDir = true;
+				fInfo = std::make_unique<FileInfo>(file, !isDir, isDir, nullptr);
+			}
+			else {
+				SHFILEINFO info;
+				SHGetFileInfo(full_path.c_str(),
+					FILE_ATTRIBUTE_NORMAL,
+					&info,
+					sizeof(SHFILEINFO),
+					SHGFI_USEFILEATTRIBUTES | SHGFI_ICON | SHGFI_SMALLICON | SHGFI_SHELLICONSIZE
+				);
+				fInfo = std::make_unique<FileInfo>(file, !isDir, isDir, &info.hIcon);
+				DestroyIcon(info.hIcon);
+			}
+
+			result.push_back(*fInfo);
+		}
 
 		return result;
 	}
