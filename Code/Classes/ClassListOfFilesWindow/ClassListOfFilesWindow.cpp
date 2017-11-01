@@ -59,6 +59,7 @@ namespace explorer {
 			*/
 		}
 
+		graphics.SetSmoothingMode(Gdiplus::SmoothingMode::SmoothingModeAntiAlias);
 		if (_activeLine >= 0) {
 			if (_selectedLine != _activeLine) {
 				graphics.DrawLine(&borderHoverPen,
@@ -85,13 +86,21 @@ namespace explorer {
 		/*Тест выделения*/
 
 		graphics.SetSmoothingMode(Gdiplus::SmoothingMode::SmoothingModeAntiAlias);
+		graphics.SetInterpolationMode(Gdiplus::InterpolationMode::InterpolationModeHighQualityBicubic);
 
 		int y_offset = 0;
 		int textOffset = (LISTBOX_LINE_HEIGHT - font.GetSize()) / 4;
 
-		for (auto name : _thisCatalog) {
+		for (auto dir : _thisCatalog) {
+			if (dir.Icon) {
+				graphics.DrawImage(&(*(dir.Icon)),
+					3, y_offset + 2,
+					LISTBOX_LINE_HEIGHT - 4, LISTBOX_LINE_HEIGHT - 4
+				);
+			}
+
 			graphics.DrawString(
-				name.c_str(),
+				dir.Name.c_str(),
 				-1,
 				&font,
 				Gdiplus::PointF(LISTBOX_TEXT_POS_X, y_offset + textOffset),
@@ -99,7 +108,6 @@ namespace explorer {
 			);
 			y_offset += LISTBOX_LINE_HEIGHT;
 		}
-
 	}
 
 	void ListOfFiles::mouseClickHandler(const MouseEventClick& mouseEventClick)
@@ -181,7 +189,7 @@ namespace explorer {
 
 			_thisCatalog.clear();
 			for (auto drive : _logicalDrives) {
-				_thisCatalog.push_back(drive.first);
+				_thisCatalog.push_back(File::FileInfo(drive.first, false, true, nullptr));
 			}
 			updateButtonUP(true);
 		}
@@ -253,7 +261,7 @@ namespace explorer {
 			if (!_thisDirection.empty() && _thisDirection[_thisDirection.size() - 1] != '\\') {
 				_thisDirection += '\\';
 			}
-			std::wstring newDirection = _thisDirection + _thisCatalog[_selectedLine];
+			std::wstring newDirection = _thisDirection + _thisCatalog[_selectedLine].Name;
 			File file(newDirection);
 			if (file.isDirectory()) {
 				ButtonReturn::nextDirrectory(_thisDirection);

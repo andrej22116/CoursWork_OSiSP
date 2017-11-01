@@ -14,7 +14,7 @@ namespace explorer {
 	class ListOfFiles : public Window {
 	private:
 		std::wstring _thisDirection;
-		std::vector<std::wstring> _thisCatalog;
+		std::vector<File::FileInfo> _thisCatalog;
 		std::vector<std::pair<std::wstring, int>> _logicalDrives;
 
 		int _activeLine;
