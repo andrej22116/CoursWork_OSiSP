@@ -15,6 +15,7 @@ namespace explorer {
 
 		setHeader(true);
 		setResizebleAll(true, true, true, true);
+		setMinSize(16 * 7 + 2, MAIN_WINDOW_BORDER_SIZE * 2 - 1 + MAIN_WINDOW_HEADER_HEIGHT);
 
 		//setBorderSize(3);
 	}
@@ -25,10 +26,11 @@ namespace explorer {
 		Gdiplus::LinearGradientBrush lbrush(Gdiplus::Point(0, 0), Gdiplus::Point(50, 0), Gdiplus::Color(255, 190, 70), Gdiplus::Color(255, 250, 140));
 		Gdiplus::Rect region_2(0, 0, this->getWidth(), this->getHieght());
 		graphics.FillRectangle(&brush_2, region_2);
-
+		/*
 		Gdiplus::SolidBrush brush(MAIN_WINDOW_COLOR_HEADER);
 		Gdiplus::Rect region(0, 0, this->getWidth(), 17);
 		graphics.FillRectangle(&brush, region);
+		*/
 	
 	}
 
@@ -67,7 +69,7 @@ namespace explorer {
 			LISTBOX_POS_X,
 			LISTBOX_POS_Y,
 			getWidth() - MAIN_WINDOW_BORDER_SIZE - LISTBOX_POS_X - 1,
-			getHieght() - MAIN_WINDOW_BORDER_SIZE - LISTBOX_POS_Y - 1,
+			getHieght() - MAIN_WINDOW_HEADER_HEIGHT - LISTBOX_POS_Y - 1,
 			true
 		);
 		buttonOptions.create(

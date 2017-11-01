@@ -185,9 +185,10 @@ namespace explorer {
 			}
 			updateButtonUP(true);
 		}
-		redrawWindow(false);
+
 		_activeLine = -1;
 		_selectedLine = -1;
+		redrawWindow(false);
 	}
 
 	void ListOfFiles::calcOneLeftClick(const MouseEventClick& mouseEventClick)
