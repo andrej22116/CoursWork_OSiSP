@@ -74,11 +74,14 @@ namespace explorer {
 		bool _isLocked;
 
 		std::shared_ptr<RenderBuffer> _renderBuffer;
-		int _viewportWidth, _viewportHeight;
-		int _bufferedWidth, _bufferedHeight;
-		int _scrollStatus;
-		int _scrollMaxStatus;
-		int _scrollSections;
+		int _scrollbarHorizontalStatus;
+		int _scrollbarVerticalStatus;
+		int _scrollbarHorizontalMaxStatus;
+		int _scrollbarVerticalMaxStatus;
+		int _scrollbarHorizontalStepSize;
+		int _scrollbarVerticalStepSize;
+		bool _scrollbarHorizontal_IsEnable;
+		bool _scrollbarVertical_IsEnable;
 
 	public:
 		Window();
@@ -130,6 +133,15 @@ namespace explorer {
 		void killTimer(UINT timer_ID);
 
 		void getHoverMessages(bool activate);
+
+		/* Scrolling */
+		void setRenderBufferSize();
+		void activateVerticalScrollbarIfRenderBufferHeightMoreThanHeightWindow(bool activate);
+		void activateHorizontalScrollbarIfRenderBufferWidthMoreThanWidthWindow(bool activate);
+		void setHorizontalSckrollStepSize(int horizontalStepSize);
+		void setVerticalSckrollStepSize(int verticalStepSize);
+		
+
 
 		/* Handlers */
 		// This method call when comes message WM_CREATE
