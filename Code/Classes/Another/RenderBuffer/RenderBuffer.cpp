@@ -47,7 +47,20 @@ namespace explorer {
 
 	void RenderBuffer::copyTo(RenderBuffer& buffer)
 	{
-		copyTo(buffer, 0, 0);
+		int bufferWidth = buffer.getWidth();
+		int bufferHeight = buffer.getHeight();
+
+		int width = 0;
+		int height = 0;
+		if (_width < bufferWidth || _height < bufferHeight) {
+			width = _width;
+			height = _height;
+		}
+		else {
+			width = bufferWidth;
+			height = bufferHeight;
+		}
+		m_copyTo(buffer, 0, 0, 0, 0, width, height);
 	}
 	void RenderBuffer::copyTo(RenderBuffer& buffer, int toX, int toY)
 	{
@@ -64,13 +77,23 @@ namespace explorer {
 			width = bufferWidth;
 			height = bufferHeight;
 		}
-		copyTo(buffer, 0, 0, width, height);
+		m_copyTo(buffer, 0, 0, toX, toY, width, height);
 	}
 	void RenderBuffer::copyTo(RenderBuffer& buffer, int toX, int toY, int width, int height)
 	{
-		copyTo(buffer, 0, 0, width, height);
+		m_copyTo(buffer, 0, 0, toX, toY, width, height);
 	}
 	void RenderBuffer::copyTo(RenderBuffer& buffer, int fromX, int fromY, int toX, int toY, int width, int height)
+	{
+		m_copyTo(buffer, fromX, fromY, toX, toY, width, height);
+	}
+
+	void RenderBuffer::swap(HDC hDC)
+	{
+		BitBlt(hDC, 0, 0, _width, _height, _hDC_Buffer, 0, 0, SRCCOPY);
+	}
+
+	void RenderBuffer::m_copyTo(RenderBuffer& buffer, int fromX, int fromY, int toX, int toY, int width, int height)
 	{
 		if (width + fromX > _width || width + toX > buffer.getWidth()) {
 			return;
@@ -79,10 +102,5 @@ namespace explorer {
 			return;
 		}
 		BitBlt(buffer.getDC(), toX, toY, width, height, _hDC_Buffer, fromX, fromY, SRCCOPY);
-	}
-
-	void RenderBuffer::swap(HDC hDC)
-	{
-		BitBlt(hDC, 0, 0, _width, _height, _hDC_Buffer, 0, 0, SRCCOPY);
 	}
 }
