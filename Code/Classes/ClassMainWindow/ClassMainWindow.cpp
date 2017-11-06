@@ -34,9 +34,8 @@ namespace explorer {
 	
 	}
 
-	void MainWindow::createWindow()
+	void MainWindow::eventCreateWindow()
 	{
-		setDoubleBuffered(true);
 		buttonClose.create(
 			std::wstring(L"exit"),
 			*this,

@@ -25,7 +25,7 @@ namespace explorer {
 	public:
 		ListOfFiles();
 
-		virtual void createWindow() override;
+		virtual void eventCreateWindow() override;
 		void paintHandler(Gdiplus::Graphics& graphics);
 
 		void mouseClickHandler(const MouseEventClick& mouseEventClick);

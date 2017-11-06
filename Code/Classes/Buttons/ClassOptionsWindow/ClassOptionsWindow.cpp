@@ -9,8 +9,6 @@ namespace explorer {
 
 		m_registerHendler(METHOD(&ButtonOptions::mouseClickOptionsHandler));
 		m_registerHendler(METHOD(&ButtonOptions::paintHandler));
-
-		setDoubleBuffered(true);
 	}
 
 	void ButtonOptions::paintHandler(Gdiplus::Graphics& graphics)

@@ -13,7 +13,7 @@ namespace explorer {
 	public:
 		Button();
 
-		virtual void createWindow() override final;
+		virtual void eventCreateWindow() override final;
 		void hoverHandler(bool status);
 
 		bool isHover();

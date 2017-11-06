@@ -9,7 +9,6 @@ namespace explorer {
 		m_registerHendler(METHOD(&ButtonClose::paintHandler));
 		m_registerHendler(METHOD(&ButtonClose::resizeParentHandler));
 
-		setDoubleBuffered(true);
 		setMoveWhenParentResizeing(true);
 	}
 

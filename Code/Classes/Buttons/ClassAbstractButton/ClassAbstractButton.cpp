@@ -9,7 +9,7 @@ namespace explorer {
 		setLock(false);
 	}
 
-	void Button::createWindow()
+	void Button::eventCreateWindow()
 	{
 		getHoverMessages(true);
 	}

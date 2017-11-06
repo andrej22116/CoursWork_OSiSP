@@ -15,9 +15,8 @@ namespace explorer {
 		setResizeWhenParentResizeing(true, true);
 	}
 
-	void ListOfFiles::createWindow()
+	void ListOfFiles::eventCreateWindow()
 	{
-		setDoubleBuffered(true);
 		updateList();
 	}
 

@@ -30,8 +30,6 @@ namespace explorer {
 			m_registerHendler(METHOD(&ButtonReturn::paintHandler_up));
 			_image->RotateFlip(Gdiplus::Rotate90FlipX);
 		}
-
-		setDoubleBuffered(true);
 	}
 	ButtonReturn::~ButtonReturn()
 	{
