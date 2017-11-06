@@ -17,12 +17,18 @@ namespace explorer {
 		_resizeWhenParentResize_Width(false), _resizeWhenParentResize_Height(false),
 		_canBeResize_top(false), _canBeResize_bottom(false),
 		_canBeResize_left(false), _canBeResize_right(false),
+
+		_scrollbarHorizontalStatus(0),
+		_scrollbarVerticalStatus(0),
+		_scrollbarHorizontalStepSize(0),
+		_scrollbarVerticalStepSize(0),
+
 		_haveHeader(false)
 	{
 			Gdiplus::GdiplusStartupInput gdiplusStartupInput;
 			Gdiplus::GdiplusStartup(&_gdiplusToken, &gdiplusStartupInput, NULL);
 			m_registerTimerHendler(METHOD(&Window::timerCheckHoverWindow));
-			setDoubleBuffered(true);
+			m_registerHendler(METHOD(&Window::abstratcWindowScrollIventHandler));
 	}
 	Window::~Window()
 	{
@@ -66,10 +72,6 @@ namespace explorer {
 	void Window::setWindowName(std::wstring& name)
 	{
 		_windowName = name;
-	}
-	void Window::setDoubleBuffered(bool set)
-	{
-		_doubleBuffer = set;
 	}
 	void Window::setResizeWhenParentResizeing(bool resize_width, bool resize_height)
 	{
@@ -207,6 +209,49 @@ namespace explorer {
 		}
 	}
 
+	void Window::setRenderBufferSize(int width, int height)
+	{
+		if (width < _width) {
+			width = _width;
+		}
+		if (height < _hieght) {
+			height = _hieght;
+		}
+		_renderBuffer->resizeBuffer(width, height);
+	}
+	void Window::activateVerticalScrollbarIfRenderBufferHeightMoreThanHeightWindow(bool activate)
+	{
+		_scrollbarVertical_IsEnable = activate;
+	}
+	void Window::activateHorizontalScrollbarIfRenderBufferWidthMoreThanWidthWindow(bool activate)
+	{
+		_scrollbarHorizontal_IsEnable = activate;
+	}
+	void Window::setHorizontalSckrollStepSize(int horizontalStepSize)
+	{
+		_scrollbarHorizontalStepSize = horizontalStepSize;
+	}
+	void Window::setVerticalSckrollStepSize(int verticalStepSize)
+	{
+		_scrollbarVerticalStepSize = verticalStepSize;
+	}
+	void Window::setHorizontalSckrollStatus(int status)
+	{
+		_scrollbarHorizontalStatus = status;
+	}
+	void Window::setVerticalSckrollStatus(int status)
+	{
+		_scrollbarVerticalStatus = status;
+	}
+	int Window::getHorizontalSckrollStatus()
+	{
+		return _scrollbarHorizontalStatus;
+	}
+	int Window::getVerticalSckrollStatus()
+	{
+		return _scrollbarVerticalStatus;
+	}
+
 
 	bool Window::create(int pos_x, int pos_y, int width, int hieght, bool show)
 	{
@@ -276,229 +321,51 @@ namespace explorer {
 			Window* window = s_windowsMap[hWnd];
 			switch (msg) {
 			case WM_CREATE: { 
-				window->createWindow();
+				window->eventCreateWindow();
 			} break;
 			case WM_GETMINMAXINFO: {
-				MINMAXINFO *min_max = reinterpret_cast<MINMAXINFO *>(lParam);
-
-				min_max->ptMinTrackSize.x = window->_minWidth;
-				min_max->ptMinTrackSize.y = window->_minHieght;
-				min_max->ptMaxTrackSize.x = GetSystemMetrics(SM_CXMAXTRACK);
-				min_max->ptMaxTrackSize.y = GetSystemMetrics(SM_CYMAXTRACK);
+				m_WndProcHandler_GetMinMaxInfo(window, hWnd, msg, wParam, lParam);
 			} break;
 			case WM_SIZING: {
-				RECT* rect = reinterpret_cast<RECT*>(lParam);
-
-				window->_oldWidth = window->_width;
-				window->_oldHieght = window->_hieght;
-				window->_width = rect->right - rect->left;
-				window->_hieght = rect->bottom - rect->top;
-
-				window->m_calculateNewPositionWindowIfParentResize();
-				window->m_calculateNewSizeWindowIfParentResize();
-				RedrawWindow(hWnd, NULL, NULL, RDW_INVALIDATE | RDW_NOERASE | RDW_INTERNALPAINT | RDW_UPDATENOW | RDW_ALLCHILDREN);
+				m_WndProcHandler_Sizing(window, hWnd, msg, wParam, lParam);
 				return DefWindowProc(hWnd, msg, wParam, lParam);
 			} break;
 			case WM_ERASEBKGND: {} break;
 			case WM_PAINT: {
-				PAINTSTRUCT ps;
-				HDC hDC = BeginPaint(window->_hWnd, &ps);
-				HDC hDC_Buffer = 0;
-
-				if (window->_doubleBuffer) {
-					hDC_Buffer = window->_renderBuffer->getDC();
-				}
-				Gdiplus::Graphics graphics((window->_doubleBuffer) ? (hDC_Buffer) : (hDC));
-
-				for (auto handler : window->_paintHandlers) {
-					handler(graphics);
-				}
-
-				if (window->_doubleBuffer) {
-					window->_renderBuffer->swap(hDC);
-				}
-
-				EndPaint(window->_hWnd, &ps);
+				m_WndProcHandler_Paint(window, hWnd, msg, wParam, lParam);
 			} break;
 			case WM_MOVE: {
-				ParentEvent parentEvent;
-				parentEvent.Code = PARENT_MOVE;
-				parentEvent.Pos_X = window->_pos_x;
-				parentEvent.Pos_Y = window->_pos_y;
-				parentEvent.Width = window->_width;
-				parentEvent.Height = window->_hieght;
-
-				for (auto child : window->_childList) {
-					for (auto handler : child->_parentHandlers) {
-						handler(parentEvent);
-					}
-				}
+				m_WndProcHandler_Move(window, hWnd, msg, wParam, lParam);
 			} break;
 			case WM_SIZE: {
-				
-				ParentEvent parentEvent;
-				parentEvent.Code = PARENT_RESIZE;
-				parentEvent.Pos_X = window->_pos_x;
-				parentEvent.Pos_Y = window->_pos_y;
-				parentEvent.Width = window->_width;
-				parentEvent.Height = window->_hieght;
-
-				window->_renderBuffer->resizeBuffer(window->_width, window->_hieght);
-
-				for (auto child : window->_childList) {
-					for (auto handler : child->_parentHandlers) {
-						handler(parentEvent);
-					}
-				}
-				
-				//RedrawWindow(hWnd, NULL, NULL, RDW_INVALIDATE | RDW_NOERASE | RDW_INTERNALPAINT | RDW_UPDATENOW | RDW_ALLCHILDREN);
-				//RedrawWindow(hWnd, NULL, NULL, RDW_INVALIDATE | RDW_NOERASE | RDW_INTERNALPAINT);
+				m_WndProcHandler_Size(window, hWnd, msg, wParam, lParam);
 			} break;
 			case WM_MOUSEMOVE: {
-				POINT cursorPoint;
-				GetCursorPos(&cursorPoint);
-
-				MouseEvent mouseEvent(LOWORD(lParam), HIWORD(lParam), cursorPoint.x, cursorPoint.y);
-
-				for (auto handler : window->_mouseMoveHandlers) {
-					handler(mouseEvent);
-				}
+				m_WndProcHandler_MouseMove(window, hWnd, msg, wParam, lParam);
 			} break;
 			case WM_LBUTTONDOWN: case WM_LBUTTONUP: case WM_LBUTTONDBLCLK:
 			case WM_RBUTTONDOWN: case WM_RBUTTONUP: case WM_RBUTTONDBLCLK:
 			case WM_MBUTTONDOWN: case WM_MBUTTONUP: case WM_MBUTTONDBLCLK: {
-				POINT cursorPoint;
-				GetCursorPos(&cursorPoint);
-
-				MouseKeyCodes keyCode;
-				MouseKeyClick keyClick;
-				KeyStatus keyStatus;
-
-				switch (msg) {
-				case WM_LBUTTONUP: case WM_RBUTTONUP: case WM_MBUTTONUP: { keyStatus = KEY_RELEASED; } break;
-				default: { keyStatus = KEY_PRESSED; } break;
-				}
-
-				switch (msg) {
-				case WM_LBUTTONDOWN: case WM_LBUTTONUP: case WM_LBUTTONDBLCLK: {
-					keyCode = MOUSE_LEFT;
-				} break;
-				case WM_RBUTTONDOWN: case WM_RBUTTONUP: case WM_RBUTTONDBLCLK: {
-					keyCode = MOUSE_RIGHT;
-				} break;
-				case WM_MBUTTONDOWN: case WM_MBUTTONUP: case WM_MBUTTONDBLCLK: {
-					keyCode = MOUSE_MIDDLE;
-				} break;
-				}
-
-				switch (msg) {
-				case WM_LBUTTONDBLCLK: case WM_RBUTTONDBLCLK: case WM_MBUTTONDBLCLK: {
-					keyClick = MOUSE_CLICK_DOUBLE;
-				} break;
-				default: {
-					keyClick = MOUSE_CLICK_ONE;
-				} break;
-				}
-
-				MouseEventClick mouseEventClick(
-					keyCode, keyClick, keyStatus,
-					LOWORD(lParam), HIWORD(lParam),
-					cursorPoint.x, cursorPoint.y
-				);
-
-				for (auto handler : window->_mouseClickHandlers) {
-					handler(mouseEventClick);
-				}
-
+				m_WndProcHandler_MouseButtons(window, hWnd, msg, wParam, lParam);
 			} break;
 			case WM_KEYDOWN: case WM_KEYUP: case WM_CHAR: {
-				static KeyStatus keyStatus;
-				if (msg == WM_KEYDOWN || msg == WM_KEYUP) {
-					if (msg == WM_KEYDOWN) { keyStatus = KEY_PRESSED; }
-					else if (msg == WM_KEYUP) { keyStatus = KEY_RELEASED; }
-				}
-				if (msg == WM_KEYUP || msg == WM_CHAR) {
-					static wchar_t symbol;
-
-					if (msg == WM_CHAR) {
-						symbol = wParam;
-					}
-
-					KeyEvent keyEvent(symbol, (KeyCodes)wParam, keyStatus);
-					for (auto handler : window->_keyboardHandlers) {
-						handler(keyEvent);
-					}
-				}
+				m_WndProcHandler_Keyboard(window, hWnd, msg, wParam, lParam);
 			} break;
 			case WM_MOUSEHOVER: {
-				for (auto handler : window->_hoverHandlers) {
-					handler(wParam);
-				}
+				m_WndProcHandler_MouseHover(window, hWnd, msg, wParam, lParam);
 			} break;
 			case WM_MOUSEWHEEL: {
-				short value = GET_WHEEL_DELTA_WPARAM(wParam) / WHEEL_DELTA;
-				MouseWheelCodes mouseWheelCodes;
-				if (value > 0) {
-					mouseWheelCodes = MOUSE_WHEEL_TOP;
-				}
-				else if (value < 0) {
-					mouseWheelCodes = MOUSE_WHEEL_BOT;
-				}
-
-				MouseEventWheel mouseEventWheel(mouseWheelCodes, LOWORD(lParam), HIWORD(lParam), LOWORD(lParam), HIWORD(lParam));
-				for (auto handler : window->_mouseWheelHandlers) {
-					handler(mouseEventWheel);
-				}
-
-				if (value > 0) {
-					PostMessage(hWnd, WM_VSCROLL, SB_LINEUP, NULL);
-				}
-				else {
-					PostMessage(hWnd, WM_VSCROLL, SB_LINEDOWN, NULL);
-				}
+				m_WndProcHandler_MouseWheel(window, hWnd, msg, wParam, lParam);
 			} break;
 			case WM_TIMER: {
-				for (auto handler : window->_timerHandlers) {
-					handler(wParam);
-				}
+				m_WndProcHandler_Timer(window, hWnd, msg, wParam, lParam);
 			} break;
-			case WM_DESTROY: { window->closeWindow(); } break;
-			case WM_NCCALCSIZE: {
-				if (wParam) {
-					NCCALCSIZE_PARAMS* Params = reinterpret_cast<NCCALCSIZE_PARAMS *>(lParam);
-					Params->rgrc[0].bottom += window->_borderSize;
-					Params->rgrc[0].right += window->_borderSize;
-					Params->rgrc[1].bottom += window->_borderSize;
-					Params->rgrc[1].right += window->_borderSize;
-					Params->rgrc[2].bottom += window->_borderSize;
-					Params->rgrc[2].right += window->_borderSize;
-					return 0;
-				}
-				return DefWindowProc(hWnd, msg, wParam, lParam);
+			case WM_DESTROY: { window->eventCloseWindow(); } break;
+			case WM_NCCALCSIZE: {		
+				return m_WndProcHandler_NcCalcSize(window, hWnd, msg, wParam, lParam);
 			} break;
 			case WM_NCHITTEST: {
-				POINT pos;
-				GetCursorPos(&pos);
-				RECT WindowRect;
-				GetWindowRect(hWnd, &WindowRect);
-
-				int x = pos.x - WindowRect.left;
-				int y = pos.y - WindowRect.top;
-
-				if (x >= window->_borderSize && x <= window->_width - window->_borderSize 
-					&& y >= window->_borderSize && y <= MAIN_WINDOW_HEADER_HEIGHT
-					&& window->_haveHeader)
-					return HTCAPTION;
-				else if (x <= window->_borderSize && window->_canBeResize_left)
-					return HTLEFT;
-				else if (y <= window->_borderSize && window->_canBeResize_top)
-					return HTTOP;
-				else if (x >= window->_width - window->_borderSize - 1 && window->_canBeResize_right)
-					return HTRIGHT;
-				else if (y >= window->_hieght - window->_borderSize - 1 && window->_canBeResize_bottom)
-					return HTBOTTOM;
-				else
-					return HTCLIENT;
+				return m_WndProcHandler_NcHitTest(window, hWnd, msg, wParam, lParam);
 			} break;
 
 			case WM_VSCROLL: {
@@ -719,16 +586,43 @@ namespace explorer {
 	}
 
 
-	void Window::createWindow()
+	void Window::eventCreateWindow()
 	{
+		this->defaultCreateHandler();
 	}
-	void Window::closeWindow()
+	void Window::defaultCreateHandler()
+	{
+
+	}
+	void Window::eventMoveWindow(int oldPosX, int oldPosY)
+	{
+		this->defaultMoveHandler(oldPosX, oldPosY);
+	}
+	void Window::defaultMoveHandler(int oldPosX, int oldPosY)
+	{
+
+	}
+	void Window::eventSizeWindow(int oldWidth, int oldHeight)
+	{
+		this->defaultSizeHandler(oldWidth, oldHeight);
+	}
+	void Window::defaultSizeHandler(int oldWidth, int oldHeight)
+	{
+		setRenderBufferSize(_width, _hieght);
+	}
+	void Window::eventCloseWindow()
+	{
+		this->defaultCloseHandler();
+	}
+	void Window::defaultCloseHandler()
 	{
 		s_windowsMap.erase(_hWnd);
 		if (s_windowsMap.size() == 0) {
 			PostQuitMessage(0);
 		}
 	}
+
+
 	void Window::timerCheckHoverWindow(const int& ID)
 	{
 		if (ID == TIMER_UPP_HOVER) {
@@ -749,6 +643,26 @@ namespace explorer {
 			else if (_hoverStatus) {
 				_hoverStatus = false;
 				SendMessage(_hWnd, WM_MOUSEHOVER, 0, 0);
+			}
+		}
+	}
+	void Window::abstratcWindowScrollIventHandler(MouseEventWheel mouseEventWheel)
+	{
+		if (mouseEventWheel.Wheel == MOUSE_WHEEL_BOT && _scrollbarVertical_IsEnable) {
+			_scrollbarVerticalStatus += _scrollbarVerticalStepSize;
+			int max_status = _renderBuffer->getHeight() - _hieght;
+
+			if (max_status < 0) {
+				_scrollbarVerticalStatus = 0;
+			}
+			else if (max_status < _scrollbarVerticalStatus){
+				_scrollbarVerticalStatus = max_status;
+			}
+		}
+		else if (mouseEventWheel.Wheel == MOUSE_WHEEL_TOP && _scrollbarVertical_IsEnable) {
+			_scrollbarVerticalStatus -= _scrollbarVerticalStepSize;
+			if (_scrollbarVerticalStatus < 0) {
+				_scrollbarVerticalStatus = 0;
 			}
 		}
 	}
@@ -796,5 +710,249 @@ namespace explorer {
 				window->resizeWindow(newChildWidth, newChildHeight, true);
 			}
 		}
+	}
+
+
+
+	void Window::m_WndProcHandler_GetMinMaxInfo(Window* wnd, HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
+	{
+		MINMAXINFO *min_max = reinterpret_cast<MINMAXINFO *>(lParam);
+
+		min_max->ptMinTrackSize.x = wnd->_minWidth;
+		min_max->ptMinTrackSize.y = wnd->_minHieght;
+		min_max->ptMaxTrackSize.x = GetSystemMetrics(SM_CXMAXTRACK);
+		min_max->ptMaxTrackSize.y = GetSystemMetrics(SM_CYMAXTRACK);
+	}
+	void Window::m_WndProcHandler_Sizing(Window* wnd, HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
+	{
+		RECT* rect = reinterpret_cast<RECT*>(lParam);
+
+		wnd->_oldWidth = wnd->_width;
+		wnd->_oldHieght = wnd->_hieght;
+		wnd->_width = rect->right - rect->left;
+		wnd->_hieght = rect->bottom - rect->top;
+
+		wnd->m_calculateNewPositionWindowIfParentResize();
+		wnd->m_calculateNewSizeWindowIfParentResize();
+		//RedrawWindow(hWnd, NULL, NULL, RDW_INVALIDATE | RDW_NOERASE | RDW_INTERNALPAINT | RDW_UPDATENOW | RDW_ALLCHILDREN);
+	}
+	void Window::m_WndProcHandler_Paint(Window* wnd, HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
+	{
+		PAINTSTRUCT ps;
+		HDC hDC = BeginPaint(wnd->_hWnd, &ps);
+		HDC hDC_Buffer = wnd->_renderBuffer->getDC();
+		RenderBuffer scrollBuffer(wnd->_hWnd, wnd->_width, wnd->_hieght);
+
+		Gdiplus::Graphics graphics(hDC_Buffer);
+
+		for (auto handler : wnd->_paintHandlers) {
+			handler(graphics);
+		}
+
+		wnd->_renderBuffer->copyTo(
+			scrollBuffer,
+			wnd->_scrollbarHorizontalStatus, wnd->_scrollbarVerticalStatus,
+			0, 0,
+			wnd->_width, wnd->_hieght
+		);
+		scrollBuffer.swap(hDC);
+
+		EndPaint(wnd->_hWnd, &ps);
+	}
+	void Window::m_WndProcHandler_Move(Window* wnd, HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
+	{
+		ParentEvent parentEvent;
+		parentEvent.Code = PARENT_MOVE;
+		parentEvent.Pos_X = wnd->_pos_x;
+		parentEvent.Pos_Y = wnd->_pos_y;
+		parentEvent.Width = wnd->_width;
+		parentEvent.Height = wnd->_hieght;
+
+		for (auto child : wnd->_childList) {
+			for (auto handler : child->_parentHandlers) {
+				handler(parentEvent);
+			}
+		}
+	}
+	void Window::m_WndProcHandler_Size(Window* wnd, HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
+	{
+		ParentEvent parentEvent;
+		parentEvent.Code = PARENT_RESIZE;
+		parentEvent.Pos_X = wnd->_pos_x;
+		parentEvent.Pos_Y = wnd->_pos_y;
+		parentEvent.Width = wnd->_width;
+		parentEvent.Height = wnd->_hieght;
+
+		//wnd->setRenderBufferSize(wnd->_width, wnd->_hieght);
+
+		for (auto child : wnd->_childList) {
+			for (auto handler : child->_parentHandlers) {
+				handler(parentEvent);
+			}
+		}
+
+		wnd->eventSizeWindow(wnd->_oldWidth, wnd->_oldHieght);
+		RedrawWindow(hWnd, NULL, NULL, RDW_INVALIDATE | RDW_NOERASE | RDW_INTERNALPAINT | RDW_UPDATENOW | RDW_ALLCHILDREN);
+		//RedrawWindow(hWnd, NULL, NULL, RDW_INVALIDATE | RDW_NOERASE | RDW_INTERNALPAINT);
+	}
+	void Window::m_WndProcHandler_MouseMove(Window* wnd, HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
+	{
+		POINT cursorPoint;
+		GetCursorPos(&cursorPoint);
+
+		MouseEvent mouseEvent(LOWORD(lParam), HIWORD(lParam), cursorPoint.x, cursorPoint.y);
+
+		for (auto handler : wnd->_mouseMoveHandlers) {
+			handler(mouseEvent);
+		}
+	}
+	void Window::m_WndProcHandler_MouseButtons(Window* wnd, HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
+	{
+		POINT cursorPoint;
+		GetCursorPos(&cursorPoint);
+
+		MouseKeyCodes keyCode;
+		MouseKeyClick keyClick;
+		KeyStatus keyStatus;
+
+		switch (msg) {
+		case WM_LBUTTONUP: case WM_RBUTTONUP: case WM_MBUTTONUP: { keyStatus = KEY_RELEASED; } break;
+		default: { keyStatus = KEY_PRESSED; } break;
+		}
+
+		switch (msg) {
+		case WM_LBUTTONDOWN: case WM_LBUTTONUP: case WM_LBUTTONDBLCLK: {
+			keyCode = MOUSE_LEFT;
+		} break;
+		case WM_RBUTTONDOWN: case WM_RBUTTONUP: case WM_RBUTTONDBLCLK: {
+			keyCode = MOUSE_RIGHT;
+		} break;
+		case WM_MBUTTONDOWN: case WM_MBUTTONUP: case WM_MBUTTONDBLCLK: {
+			keyCode = MOUSE_MIDDLE;
+		} break;
+		}
+
+		switch (msg) {
+		case WM_LBUTTONDBLCLK: case WM_RBUTTONDBLCLK: case WM_MBUTTONDBLCLK: {
+			keyClick = MOUSE_CLICK_DOUBLE;
+		} break;
+		default: {
+			keyClick = MOUSE_CLICK_ONE;
+		} break;
+		}
+
+		MouseEventClick mouseEventClick(
+			keyCode, keyClick, keyStatus,
+			LOWORD(lParam), HIWORD(lParam),
+			cursorPoint.x, cursorPoint.y
+		);
+
+		for (auto handler : wnd->_mouseClickHandlers) {
+			handler(mouseEventClick);
+		}
+
+	}
+	void Window::m_WndProcHandler_Keyboard(Window* wnd, HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
+	{
+		static KeyStatus keyStatus;
+		if (msg == WM_KEYDOWN || msg == WM_KEYUP) {
+			if (msg == WM_KEYDOWN) { keyStatus = KEY_PRESSED; }
+			else if (msg == WM_KEYUP) { keyStatus = KEY_RELEASED; }
+		}
+		if (msg == WM_KEYUP || msg == WM_CHAR) {
+			static wchar_t symbol;
+
+			if (msg == WM_CHAR) {
+				symbol = wParam;
+			}
+
+			KeyEvent keyEvent(symbol, (KeyCodes)wParam, keyStatus);
+			for (auto handler : wnd->_keyboardHandlers) {
+				handler(keyEvent);
+			}
+		}
+	}
+	void Window::m_WndProcHandler_MouseHover(Window* wnd, HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
+	{
+		for (auto handler : wnd->_hoverHandlers) {
+			handler(wParam);
+		}
+	}
+	void Window::m_WndProcHandler_MouseWheel(Window* wnd, HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
+	{
+		HWND hWnd_pos = WindowFromPoint(POINT{ LOWORD(lParam), HIWORD(lParam) });
+		if (!hWnd_pos) {
+			return;
+		}
+
+		short value = GET_WHEEL_DELTA_WPARAM(wParam) / WHEEL_DELTA;
+		MouseWheelCodes mouseWheelCodes;
+		if (value > 0) {
+			mouseWheelCodes = MOUSE_WHEEL_TOP;
+		}
+		else if (value < 0) {
+			mouseWheelCodes = MOUSE_WHEEL_BOT;
+		}
+
+		MouseEventWheel mouseEventWheel(mouseWheelCodes, LOWORD(lParam), HIWORD(lParam), LOWORD(lParam), HIWORD(lParam));
+		
+		if (s_windowsMap.find(hWnd_pos) != s_windowsMap.end()) {
+			for (auto handler : s_windowsMap[hWnd_pos]->_mouseWheelHandlers) {
+				handler(mouseEventWheel);
+			}
+			s_windowsMap[hWnd_pos]->redrawWindow(false);
+		}
+
+		if (value > 0) {
+			PostMessage(hWnd, WM_VSCROLL, SB_LINEUP, NULL);
+		}
+		else {
+			PostMessage(hWnd, WM_VSCROLL, SB_LINEDOWN, NULL);
+		}
+	}
+	void Window::m_WndProcHandler_Timer(Window* wnd, HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
+	{
+		for (auto handler : wnd->_timerHandlers) {
+			handler(wParam);
+		}
+	}
+	int Window::m_WndProcHandler_NcCalcSize(Window* wnd, HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
+	{
+		if (wParam) {
+			NCCALCSIZE_PARAMS* Params = reinterpret_cast<NCCALCSIZE_PARAMS *>(lParam);
+			Params->rgrc[0].bottom += wnd->_borderSize;
+			Params->rgrc[0].right += wnd->_borderSize;
+			Params->rgrc[1].bottom += wnd->_borderSize;
+			Params->rgrc[1].right += wnd->_borderSize;
+			Params->rgrc[2].bottom += wnd->_borderSize;
+			Params->rgrc[2].right += wnd->_borderSize;
+			return 0;
+		}
+		DefWindowProc(hWnd, msg, wParam, lParam);
+	}
+	int Window::m_WndProcHandler_NcHitTest(Window* wnd, HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
+	{
+		POINT pos;
+		GetCursorPos(&pos);
+		RECT WindowRect;
+		GetWindowRect(hWnd, &WindowRect);
+
+		int x = pos.x - WindowRect.left;
+		int y = pos.y - WindowRect.top;
+
+		if (x >= wnd->_borderSize && x <= wnd->_width - wnd->_borderSize
+			&& y >= wnd->_borderSize && y <= MAIN_WINDOW_HEADER_HEIGHT
+			&& wnd->_haveHeader)
+			return HTCAPTION;
+		else if (x <= wnd->_borderSize && wnd->_canBeResize_left)
+			return HTLEFT;
+		else if (y <= wnd->_borderSize && wnd->_canBeResize_top)
+			return HTTOP;
+		else if (x >= wnd->_width - wnd->_borderSize - 1 && wnd->_canBeResize_right)
+			return HTRIGHT;
+		else if (y >= wnd->_hieght - wnd->_borderSize - 1 && wnd->_canBeResize_bottom)
+			return HTBOTTOM;
+		else
+			return HTCLIENT;
 	}
 }

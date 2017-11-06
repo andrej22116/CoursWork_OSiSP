@@ -63,7 +63,6 @@ namespace explorer {
 
 		bool _thisWindowIsCreated;
 		bool _hoverStatus;
-		bool _doubleBuffer;
 		bool _moveWhenParentResiz_X, _moveWhenParentResiz_Y;
 		bool _resizeWhenParentResize_Width, _resizeWhenParentResize_Height;
 
@@ -76,8 +75,8 @@ namespace explorer {
 		std::shared_ptr<RenderBuffer> _renderBuffer;
 		int _scrollbarHorizontalStatus;
 		int _scrollbarVerticalStatus;
-		int _scrollbarHorizontalMaxStatus;
-		int _scrollbarVerticalMaxStatus;
+		//int _scrollbarHorizontalMaxStatus;
+		//int _scrollbarVerticalMaxStatus;
 		int _scrollbarHorizontalStepSize;
 		int _scrollbarVerticalStepSize;
 		bool _scrollbarHorizontal_IsEnable;
@@ -106,7 +105,6 @@ namespace explorer {
 		std::wstring getWindowName() const;
 		void minimizeWindow(bool hide);
 		void setWindowName(std::wstring& name);
-		void setDoubleBuffered(bool set);
 		void setResizeWhenParentResizeing(bool resize_width = false, bool resize_height = false);
 		void setMoveWhenParentResizeing(bool move_x = false, bool move_y = false);
 		void setBorderSize(int size = 1);
@@ -135,19 +133,34 @@ namespace explorer {
 		void getHoverMessages(bool activate);
 
 		/* Scrolling */
-		void setRenderBufferSize();
+		void setRenderBufferSize(int width, int height);
 		void activateVerticalScrollbarIfRenderBufferHeightMoreThanHeightWindow(bool activate);
 		void activateHorizontalScrollbarIfRenderBufferWidthMoreThanWidthWindow(bool activate);
 		void setHorizontalSckrollStepSize(int horizontalStepSize);
 		void setVerticalSckrollStepSize(int verticalStepSize);
+		void setHorizontalSckrollStatus(int status);
+		void setVerticalSckrollStatus(int status);
+		int getHorizontalSckrollStatus();
+		int getVerticalSckrollStatus();
 		
 
 
 		/* Handlers */
 		// This method call when comes message WM_CREATE
-		virtual void createWindow();
-		void closeWindow();
+		virtual void eventCreateWindow();
+		void defaultCreateHandler();
+		// This method call when comes message WM_MOVE
+		virtual void eventMoveWindow(int oldPosX, int oldPosY);
+		void defaultMoveHandler(int oldPosX, int oldPosY);
+		// This method call when comes message WM_SIZE
+		virtual void eventSizeWindow(int oldWidth, int oldHeight);
+		void defaultSizeHandler(int oldWidth, int oldHeight);
+		// This method call when comes message WM_DESTROY
+		virtual void eventCloseWindow();
+		void defaultCloseHandler();
+
 		void timerCheckHoverWindow(const int& ID);
+		void abstratcWindowScrollIventHandler(MouseEventWheel mouseEventWheel);
 
 		/*
 		 *	Send message to all windows!
@@ -185,6 +198,21 @@ namespace explorer {
 
 		void m_calculateNewPositionWindowIfParentResize();
 		void m_calculateNewSizeWindowIfParentResize();
+
+	private:
+		static void m_WndProcHandler_GetMinMaxInfo(Window* wnd, HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+		static void m_WndProcHandler_Sizing(Window* wnd, HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+		static void m_WndProcHandler_Paint(Window* wnd, HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+		static void m_WndProcHandler_Move(Window* wnd, HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+		static void m_WndProcHandler_Size(Window* wnd, HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+		static void m_WndProcHandler_MouseMove(Window* wnd, HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+		static void m_WndProcHandler_MouseButtons(Window* wnd, HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+		static void m_WndProcHandler_Keyboard(Window* wnd, HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+		static void m_WndProcHandler_MouseHover(Window* wnd, HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+		static void m_WndProcHandler_MouseWheel(Window* wnd, HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+		static void m_WndProcHandler_Timer(Window* wnd, HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+		static int m_WndProcHandler_NcCalcSize(Window* wnd, HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+		static int m_WndProcHandler_NcHitTest(Window* wnd, HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 	};
 }
 

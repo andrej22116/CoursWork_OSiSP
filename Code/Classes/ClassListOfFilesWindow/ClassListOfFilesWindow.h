@@ -26,6 +26,8 @@ namespace explorer {
 		ListOfFiles();
 
 		virtual void eventCreateWindow() override;
+		virtual void eventSizeWindow(int oldWidth, int oldHeight) override;
+
 		void paintHandler(Gdiplus::Graphics& graphics);
 
 		void mouseClickHandler(const MouseEventClick& mouseEventClick);

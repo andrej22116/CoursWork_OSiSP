@@ -13,17 +13,26 @@ namespace explorer {
 		_thisDirection = L"";
 		_inDrive = false;
 		setResizeWhenParentResizeing(true, true);
+		activateVerticalScrollbarIfRenderBufferHeightMoreThanHeightWindow(true);
+
+		setVerticalSckrollStepSize(30);
 	}
 
 	void ListOfFiles::eventCreateWindow()
 	{
 		updateList();
 	}
+	void ListOfFiles::eventSizeWindow(int oldWidth, int oldHeight)
+	{
+		setRenderBufferSize(getWidth(), _thisCatalog.size() * LISTBOX_LINE_HEIGHT);
+	}
 
 	void ListOfFiles::paintHandler(Gdiplus::Graphics& graphics)
 	{
+		int amountOfLines = _thisCatalog.size() * LISTBOX_LINE_HEIGHT;
+		int HeightOfRectangleForFill = max(amountOfLines, this->getHieght());
 		Gdiplus::SolidBrush background(LISTBOX_COLOR_BACKGROUND);
-		graphics.FillRectangle(&background, 0, 0, getWidth(), getHieght());
+		graphics.FillRectangle(&background, 0, 0, getWidth(), HeightOfRectangleForFill);
 
 		Gdiplus::Font font(&Gdiplus::FontFamily(L"Arial"), 8);
 		Gdiplus::SolidBrush textBrush(LISTBOX_TEXT_COLOR);
@@ -126,8 +135,11 @@ namespace explorer {
 	{
 		int filesCount = _thisCatalog.size();
 		int oldLine = _activeLine;
-		if (mouseEvent.y <= (filesCount * LISTBOX_LINE_HEIGHT) - 1) {
-			_activeLine = int(mouseEvent.y / LISTBOX_LINE_HEIGHT);
+
+		int absolutPosY = mouseEvent.y + getVerticalSckrollStatus();
+
+		if (absolutPosY <= (filesCount * LISTBOX_LINE_HEIGHT) - 1) {
+			_activeLine = int(absolutPosY / LISTBOX_LINE_HEIGHT);
 		}
 		else {
 			_activeLine = -1;
@@ -140,15 +152,16 @@ namespace explorer {
 			oldLineRect.right = newLineRect.right = getWidth();
 
 			oldLineRect.top = oldLine * LISTBOX_LINE_HEIGHT;
-			oldLineRect.bottom = oldLine * LISTBOX_LINE_HEIGHT + LISTBOX_LINE_HEIGHT;
+			oldLineRect.bottom = oldLineRect.top + LISTBOX_LINE_HEIGHT;
 
 			newLineRect.top = _activeLine * LISTBOX_LINE_HEIGHT;
-			newLineRect.bottom = _activeLine * LISTBOX_LINE_HEIGHT + LISTBOX_LINE_HEIGHT;
+			newLineRect.bottom = newLineRect.top + LISTBOX_LINE_HEIGHT;
 
-			InvalidateRect(getHWND(), &oldLineRect, false);
-			if (_activeLine >= 0) {
-				InvalidateRect(getHWND(), &newLineRect, false);
-			}
+			//InvalidateRect(getHWND(), &oldLineRect, false);
+			//if (_activeLine >= 0) {
+			//	InvalidateRect(getHWND(), &newLineRect, false);
+			//}
+			redrawWindow(false);
 		}
 	}
 
@@ -195,6 +208,11 @@ namespace explorer {
 
 		_activeLine = -1;
 		_selectedLine = -1;
+
+		setVerticalSckrollStatus(0);
+		setHorizontalSckrollStatus(0);
+		setRenderBufferSize(getWidth(), _thisCatalog.size() * LISTBOX_LINE_HEIGHT);
+
 		redrawWindow(false);
 	}
 
@@ -202,8 +220,11 @@ namespace explorer {
 	{
 		int filesCount = _thisCatalog.size();
 		int oldLine = _selectedLine;
-		if (mouseEventClick.y <= (filesCount * LISTBOX_LINE_HEIGHT) - 1) {
-			_selectedLine = int(mouseEventClick.y / LISTBOX_LINE_HEIGHT);
+
+		int absolutPosY = mouseEventClick.y + getVerticalSckrollStatus();
+
+		if (absolutPosY <= (filesCount * LISTBOX_LINE_HEIGHT) - 1) {
+			_selectedLine = int(absolutPosY / LISTBOX_LINE_HEIGHT);
 		}
 		else {
 			_selectedLine = -1;
@@ -231,8 +252,11 @@ namespace explorer {
 	{
 		int filesCount = _thisCatalog.size();
 		int oldLine = _selectedLine;
-		if (mouseEventClick.y <= (filesCount * LISTBOX_LINE_HEIGHT) - 1) {
-			_selectedLine = int(mouseEventClick.y / LISTBOX_LINE_HEIGHT);
+
+		int absolutPosY = mouseEventClick.y + getVerticalSckrollStatus();
+
+		if (absolutPosY <= (filesCount * LISTBOX_LINE_HEIGHT) - 1) {
+			_selectedLine = int(absolutPosY / LISTBOX_LINE_HEIGHT);
 		}
 		else {
 			_selectedLine = -1;
