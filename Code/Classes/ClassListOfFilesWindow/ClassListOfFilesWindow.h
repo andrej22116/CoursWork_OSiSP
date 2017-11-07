@@ -13,6 +13,8 @@ namespace explorer {
 
 	class ListOfFiles : public Window {
 	private:
+		std::mutex _mutexForContainer;
+
 		std::wstring _thisDirection;
 		std::vector<File::FileInfo> _thisCatalog;
 		std::vector<std::pair<std::wstring, int>> _logicalDrives;

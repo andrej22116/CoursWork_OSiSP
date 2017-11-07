@@ -24,6 +24,16 @@ namespace explorer {
 	}
 	void ListOfFiles::eventSizeWindow(int oldWidth, int oldHeight)
 	{
+		int verStatus = getVerticalSckrollStatus();
+		int maxStatus = _thisCatalog.size() * LISTBOX_LINE_HEIGHT - getHieght();
+		if (maxStatus <= 0) {
+			verStatus = 0;
+		}
+		else if (verStatus > maxStatus) {
+			verStatus = maxStatus;
+		}
+		setVerticalSckrollStatus(verStatus);
+
 		setRenderBufferSize(getWidth(), _thisCatalog.size() * LISTBOX_LINE_HEIGHT);
 	}
 
@@ -242,10 +252,7 @@ namespace explorer {
 			newLineRect.top = _activeLine * LISTBOX_LINE_HEIGHT;
 			newLineRect.bottom = _activeLine * LISTBOX_LINE_HEIGHT + LISTBOX_LINE_HEIGHT;
 
-			InvalidateRect(getHWND(), &oldLineRect, false);
-			if (_selectedLine >= 0) {
-				InvalidateRect(getHWND(), &newLineRect, false);
-			}
+			redrawWindow(false);
 		}
 	}
 	void ListOfFiles::calcDoubleLeftClick(const MouseEventClick& mouseEventClick)
@@ -274,10 +281,7 @@ namespace explorer {
 			newLineRect.top = _activeLine * LISTBOX_LINE_HEIGHT;
 			newLineRect.bottom = _activeLine * LISTBOX_LINE_HEIGHT + LISTBOX_LINE_HEIGHT;
 
-			InvalidateRect(getHWND(), &oldLineRect, false);
-			if (_selectedLine >= 0) {
-				InvalidateRect(getHWND(), &newLineRect, false);
-			}
+			redrawWindow(false);
 		}
 
 		if (_selectedLine >= 0) {
