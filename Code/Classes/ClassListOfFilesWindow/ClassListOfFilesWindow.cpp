@@ -45,7 +45,11 @@ namespace explorer {
 		graphics.FillRectangle(&background, 0, 0, getWidth(), HeightOfRectangleForFill);
 
 		Gdiplus::Font font(&Gdiplus::FontFamily(L"Arial"), 10);
-		Gdiplus::SolidBrush textBrush(Gdiplus::Color::Black);
+		Gdiplus::SolidBrush textBrush(Gdiplus::Color::White);
+
+		Gdiplus::Image acrylic(L".\\Icons\\Acrylic.png", true);
+		Gdiplus::TextureBrush texBrush(&acrylic);
+		graphics.FillRectangle(&texBrush, 0, 0, getWidth(), HeightOfRectangleForFill);
 
 		Gdiplus::Pen borderPen(LISTBOX_COLOR_BORDER_LINE);
 		Gdiplus::Pen borderHoverPen(LISTBOX_COLOR_BORDER_HOVER_LINE);
