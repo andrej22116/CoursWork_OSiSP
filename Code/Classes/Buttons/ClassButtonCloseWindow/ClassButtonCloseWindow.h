@@ -9,7 +9,6 @@ namespace explorer {
 
 	class ButtonClose : public Button {
 	private:
-		Gdiplus::Region _region;
 
 	public:
 		ButtonClose();

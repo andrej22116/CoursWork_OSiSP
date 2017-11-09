@@ -14,7 +14,7 @@ namespace explorer {
 	void ButtonOptions::paintHandler(Gdiplus::Graphics& graphics)
 	{
 		//graphics.SetSmoothingMode(Gdiplus::SmoothingMode::SmoothingModeAntiAlias);
-		Gdiplus::Pen pen(Gdiplus::Color::White, 1);
+		Gdiplus::Pen pen(Gdiplus::Color::Black, 1);
 		Gdiplus::SolidBrush brush((isHover() && !isLocked()) ? (MAIN_WINDOW_COLOR_HEADER_BUTTON_SELECTED) : (MAIN_WINDOW_COLOR_HEADER));
 		graphics.FillRectangle(&brush, -1, -1, getWidth() + 1, getHieght() + 1);
 
