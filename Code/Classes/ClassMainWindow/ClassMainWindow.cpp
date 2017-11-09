@@ -110,15 +110,6 @@ namespace explorer {
 			MAIN_WINDOW_BUTTON_BACKWARD_HEIGHT,
 			true
 		);
-		DWM_BLURBEHIND lol;
-		HRGN rgn = CreateRectRgn(0, 0, getWidth(), getHieght());
-		lol.dwFlags = DWM_BB_BLURREGION | DWM_BB_ENABLE | DWM_BB_TRANSITIONONMAXIMIZED;
-		lol.hRgnBlur = rgn;
-		lol.fEnable = true;
-		lol.fTransitionOnMaximized = true;
-
-		DwmEnableBlurBehindWindow(getHWND(), &lol);
-		DeleteObject(rgn);
 		//MessageBox(nullptr, (L"IT'S WORK!!! " + getWindowName()).c_str(), L"TEST", MB_OK);
 	}
 	void MainWindow::eventSizeWindow(int oldWidth, int oldHeight)
