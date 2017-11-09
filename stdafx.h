@@ -16,6 +16,7 @@
 #include <algorithm>
 #include <thread>
 #include <condition_variable>
+#include <tuple>
 
 #include <gdiplus.h>
 #pragma comment(lib, "gdiplus.lib")

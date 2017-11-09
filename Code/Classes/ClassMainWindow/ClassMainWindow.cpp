@@ -4,6 +4,18 @@
 #include <dwmapi.h>
 #pragma comment(lib, "Dwmapi.lib")
 
+struct WINCOMPATTRDATA {
+	DWORD attribute;
+	PVOID pData;
+	ULONG dataSize;
+};
+struct AccentPolicy {
+	int AccentState;
+	int AccentFlags;
+	int GradientColor;
+	int AnimationId;
+};
+
 namespace explorer {
 	MainWindow::MainWindow() : 
 		buttonUp(&listOfFiles, ButtonReturn::BUTTON_RETURN_UP),
@@ -26,7 +38,6 @@ namespace explorer {
 	void MainWindow::paintHandler(Gdiplus::Graphics& graphics)
 	{
 		Gdiplus::SolidBrush brush_2(MAIN_WINDOW_COLOR_BACKGROUND);
-		Gdiplus::LinearGradientBrush lbrush(Gdiplus::Point(0, 0), Gdiplus::Point(50, 0), Gdiplus::Color(255, 190, 70), Gdiplus::Color(255, 250, 140));
 		Gdiplus::Rect region_2(0, 0, this->getWidth(), this->getHieght());
 		graphics.FillRectangle(&brush_2, region_2);
 		/*
@@ -114,15 +125,45 @@ namespace explorer {
 	}
 	void MainWindow::eventSizeWindow(int oldWidth, int oldHeight)
 	{
-		DWM_BLURBEHIND lol;
-		HRGN rgn = CreateRectRgn(0, 0, getWidth(), getHieght());
-		lol.dwFlags = DWM_BB_BLURREGION | DWM_BB_ENABLE | DWM_BB_TRANSITIONONMAXIMIZED;
-		lol.hRgnBlur = rgn;
-		lol.fEnable = true;
-		lol.fTransitionOnMaximized = true;
+		defaultSizeHandler(oldWidth, oldHeight);
 
-		DwmEnableBlurBehindWindow(getHWND(), &lol);
-		DeleteObject(rgn);
+		auto version = getSystemVersion();
+		int major = version.first;
+		int minor = version.second;
+
+		if (major == 6 && minor <= 1) {
+			DWM_BLURBEHIND lol;
+			HRGN rgn = CreateRectRgn(0, 0, getWidth(), getHieght());
+			lol.dwFlags = DWM_BB_BLURREGION | DWM_BB_ENABLE | DWM_BB_TRANSITIONONMAXIMIZED;
+			lol.hRgnBlur = rgn;
+			lol.fEnable = true;
+			lol.fTransitionOnMaximized = true;
+
+			DwmEnableBlurBehindWindow(getHWND(), &lol);
+			DeleteObject(rgn);
+		}
+		else if (major == 10) {
+			HINSTANCE le_module = LoadLibrary(L"user32.dll");
+			if (le_module) {
+				auto adresse_la_func = GetProcAddress(le_module, "SetWindowCompositionAttribute");
+				if (adresse_la_func) {
+					void(*pFunction)(int, int);
+					BOOL(*SetWindowCompositionAttribute)(HWND, WINCOMPATTRDATA*);
+					(FARPROC &)SetWindowCompositionAttribute = adresse_la_func;
+
+					WINCOMPATTRDATA data;
+					AccentPolicy policy = { 0, 0, 0, 0 };
+					policy.AccentState = 3;
+
+					data.attribute = 19;
+					data.pData = &policy;
+					data.dataSize = sizeof(policy);
+
+					SetWindowCompositionAttribute(getHWND(), &data);
+				}
+			}
+			FreeLibrary(le_module);
+		}
 	}
 
 	void MainWindow::mouseClickHandler(const MouseEventClick& mouseEventClick)

@@ -168,6 +168,9 @@ namespace explorer {
 		static LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 		static UINT workWidthMessages();
 
+		// return system MAJOR and system MINOR versions 
+		static std::pair<int, int> getSystemVersion();
+
 	protected:
 		/*
 		 *	message, METHOD( & your_method );

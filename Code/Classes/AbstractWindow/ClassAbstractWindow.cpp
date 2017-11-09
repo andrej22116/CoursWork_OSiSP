@@ -434,6 +434,16 @@ namespace explorer {
 		return msg.wParam;
 	}
 
+	std::pair<int, int> Window::getSystemVersion()
+	{
+		OSVERSIONINFO version;
+		ZeroMemory(&version, sizeof(OSVERSIONINFO));
+		version.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
+		GetVersionEx(&version);
+
+		return std::pair<int, int>(version.dwMajorVersion, version.dwMinorVersion);
+	}
+
 	void Window::m_registerHendler(PaintHandler method)
 	{
 		_paintHandlers.push_back(method);
