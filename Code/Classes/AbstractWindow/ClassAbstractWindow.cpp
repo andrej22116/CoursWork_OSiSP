@@ -436,10 +436,11 @@ namespace explorer {
 
 	std::pair<int, int> Window::getSystemVersion()
 	{
-		OSVERSIONINFO version;
-		ZeroMemory(&version, sizeof(OSVERSIONINFO));
-		version.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
-		GetVersionEx(&version);
+		OSVERSIONINFOEX version;
+		ZeroMemory(&version, sizeof(OSVERSIONINFOEX));
+		version.dwOSVersionInfoSize = sizeof(OSVERSIONINFOEX);
+
+		GetVersionEx((OSVERSIONINFO*)(&version));
 
 		return std::pair<int, int>(version.dwMajorVersion, version.dwMinorVersion);
 	}

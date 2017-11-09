@@ -3,6 +3,7 @@
 
 #include <dwmapi.h>
 #pragma comment(lib, "Dwmapi.lib")
+#include <stdio.h>
 
 struct WINCOMPATTRDATA {
 	DWORD attribute;
@@ -15,6 +16,8 @@ struct AccentPolicy {
 	int GradientColor;
 	int AnimationId;
 };
+
+typedef BOOL (WINAPI *SWCA)(HWND, WINCOMPATTRDATA*);
 
 namespace explorer {
 	MainWindow::MainWindow() : 
@@ -142,15 +145,11 @@ namespace explorer {
 			DwmEnableBlurBehindWindow(getHWND(), &lol);
 			DeleteObject(rgn);
 		}
-		else if (major == 10) {
+		else if (major == 6 && minor > 1) {
 			HINSTANCE le_module = LoadLibrary(L"user32.dll");
 			if (le_module) {
-				auto adresse_la_func = GetProcAddress(le_module, "SetWindowCompositionAttribute");
-				if (adresse_la_func) {
-					void(*pFunction)(int, int);
-					BOOL(*SetWindowCompositionAttribute)(HWND, WINCOMPATTRDATA*);
-					(FARPROC &)SetWindowCompositionAttribute = adresse_la_func;
-
+				auto SetWindowCompositionAttribute = (SWCA)GetProcAddress(le_module, "SetWindowCompositionAttribute");
+				if (SetWindowCompositionAttribute) {
 					WINCOMPATTRDATA data;
 					AccentPolicy policy = { 0, 0, 0, 0 };
 					policy.AccentState = 3;
@@ -161,8 +160,8 @@ namespace explorer {
 
 					SetWindowCompositionAttribute(getHWND(), &data);
 				}
+				//FreeLibrary(le_module);
 			}
-			FreeLibrary(le_module);
 		}
 	}
 
