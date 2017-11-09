@@ -53,6 +53,29 @@ namespace explorer {
 
 	void MainWindow::eventCreateWindow()
 	{
+		auto version = getSystemVersion();
+		int major = version.first;
+		int minor = version.second;
+		if (major == 6 && minor > 1) {
+			HINSTANCE le_module = LoadLibrary(L"user32.dll");
+			if (le_module) {
+				auto SetWindowCompositionAttribute = (SWCA)GetProcAddress(le_module, "SetWindowCompositionAttribute");
+				if (SetWindowCompositionAttribute) {
+					WINCOMPATTRDATA data;
+					AccentPolicy policy = { 0, 0, 0, 229 };
+					policy.AccentState = 3;
+					policy.GradientColor = 0xFF00FFFF;
+
+					data.attribute = 19;
+					data.pData = &policy;
+					data.dataSize = sizeof(policy);
+
+					SetWindowCompositionAttribute(getHWND(), &data);
+				}
+				FreeLibrary(le_module);
+			}
+		}
+
 		buttonClose.create(
 			std::wstring(L"exit"),
 			*this,
@@ -144,24 +167,6 @@ namespace explorer {
 
 			DwmEnableBlurBehindWindow(getHWND(), &lol);
 			DeleteObject(rgn);
-		}
-		else if (major == 6 && minor > 1) {
-			HINSTANCE le_module = LoadLibrary(L"user32.dll");
-			if (le_module) {
-				auto SetWindowCompositionAttribute = (SWCA)GetProcAddress(le_module, "SetWindowCompositionAttribute");
-				if (SetWindowCompositionAttribute) {
-					WINCOMPATTRDATA data;
-					AccentPolicy policy = { 0, 0, 0, 0 };
-					policy.AccentState = 3;
-
-					data.attribute = 19;
-					data.pData = &policy;
-					data.dataSize = sizeof(policy);
-
-					SetWindowCompositionAttribute(getHWND(), &data);
-				}
-				//FreeLibrary(le_module);
-			}
 		}
 	}
 
