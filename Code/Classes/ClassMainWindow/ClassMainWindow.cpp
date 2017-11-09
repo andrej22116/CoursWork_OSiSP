@@ -63,8 +63,9 @@ namespace explorer {
 				if (SetWindowCompositionAttribute) {
 					WINCOMPATTRDATA data;
 					AccentPolicy policy = { 0, 0, 0, 229 };
+					policy.AccentFlags = 2;
 					policy.AccentState = 3;
-					policy.GradientColor = 0xFF00FFFF;
+					policy.GradientColor = 0xC4010101;
 
 					data.attribute = 19;
 					data.pData = &policy;
