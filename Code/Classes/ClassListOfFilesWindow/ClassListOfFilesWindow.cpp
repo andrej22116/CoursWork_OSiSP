@@ -47,10 +47,6 @@ namespace explorer {
 		Gdiplus::Font font(&Gdiplus::FontFamily(L"Arial"), 10);
 		Gdiplus::SolidBrush textBrush(Gdiplus::Color::White);
 
-		Gdiplus::Image acrylic(L".\\Icons\\Acrylic.png", true);
-		Gdiplus::TextureBrush texBrush(&acrylic);
-		graphics.FillRectangle(&texBrush, 0, 0, getWidth(), HeightOfRectangleForFill);
-
 		Gdiplus::Pen borderPen(LISTBOX_COLOR_BORDER_LINE);
 		Gdiplus::Pen borderHoverPen(LISTBOX_COLOR_BORDER_HOVER_LINE);
 		Gdiplus::SolidBrush selectBackground(LISTBOX_COLOR_BACKGROUND_SELECT);
@@ -63,12 +59,27 @@ namespace explorer {
 				0, LISTBOX_LINE_HEIGHT * _selectedLine,
 				getWidth(), LISTBOX_LINE_HEIGHT - 1
 			);
+
+			Gdiplus::LinearGradientBrush selectedLine_top(
+				Gdiplus::Point(0, LISTBOX_LINE_HEIGHT * _selectedLine - 6),
+				Gdiplus::Point(0, LISTBOX_LINE_HEIGHT * _selectedLine - 1),
+				Gdiplus::Color(0, 87, 116, 48), Gdiplus::Color(254, 56, 180, 35)
+			);
+			Gdiplus::LinearGradientBrush selectedLine_bot(
+				Gdiplus::Point(0, LISTBOX_LINE_HEIGHT * _selectedLine + LISTBOX_LINE_HEIGHT + 5),
+				Gdiplus::Point(0, LISTBOX_LINE_HEIGHT * _selectedLine + LISTBOX_LINE_HEIGHT),
+				Gdiplus::Color(0, 87, 116, 48), Gdiplus::Color(254, 56, 180, 35)
+			);
+			graphics.FillRectangle(&selectedLine_top, 0, LISTBOX_LINE_HEIGHT * _selectedLine - 5, getWidth(), 5);
+			graphics.FillRectangle(&selectedLine_bot, 0, LISTBOX_LINE_HEIGHT * _selectedLine + LISTBOX_LINE_HEIGHT, getWidth(), 5);
+			/*
 			graphics.DrawLine(&borderPen,
 				0, LISTBOX_LINE_HEIGHT * _selectedLine,
 				getWidth() - 1, LISTBOX_LINE_HEIGHT * _selectedLine);
 			graphics.DrawLine(&borderPen,
 				0, LISTBOX_LINE_HEIGHT * _selectedLine + LISTBOX_LINE_HEIGHT - 1,
 				getWidth() - 1, LISTBOX_LINE_HEIGHT * _selectedLine + LISTBOX_LINE_HEIGHT - 1);
+			*/
 			/*
 			graphics.FillRectangle(&selectBackground,
 				0, LISTBOX_LINE_HEIGHT * _selectedLine,
