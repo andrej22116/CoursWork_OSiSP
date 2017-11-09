@@ -14,7 +14,7 @@ namespace explorer {
 
 	void ButtonMinimize::paintHandler(Gdiplus::Graphics& graphics)
 	{
-		Gdiplus::Pen pen(Gdiplus::Color::Black, 1.6);
+		Gdiplus::Pen pen(Gdiplus::Color::White, 1.6);
 		Gdiplus::SolidBrush brush((isHover()) ? 
 			(MAIN_WINDOW_COLOR_HEADER_BUTTON_SELECTED) :
 			(MAIN_WINDOW_COLOR_HEADER));

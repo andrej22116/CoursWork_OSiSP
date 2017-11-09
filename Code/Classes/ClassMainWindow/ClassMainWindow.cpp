@@ -56,7 +56,19 @@ namespace explorer {
 		auto version = getSystemVersion();
 		int major = version.first;
 		int minor = version.second;
-		if (major == 6 && minor > 1) {
+
+		if (major == 6 && minor <= 1) {
+			DWM_BLURBEHIND lol;
+			HRGN rgn = CreateRectRgn(0, 0, GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN));
+			lol.dwFlags = DWM_BB_BLURREGION | DWM_BB_ENABLE | DWM_BB_TRANSITIONONMAXIMIZED;
+			lol.hRgnBlur = rgn;
+			lol.fEnable = true;
+			lol.fTransitionOnMaximized = true;
+
+			DwmEnableBlurBehindWindow(getHWND(), &lol);
+			DeleteObject(rgn);
+		}
+		else if (major == 6 && minor > 1) {
 			HINSTANCE le_module = LoadLibrary(L"user32.dll");
 			if (le_module) {
 				auto SetWindowCompositionAttribute = (SWCA)GetProcAddress(le_module, "SetWindowCompositionAttribute");
@@ -149,26 +161,6 @@ namespace explorer {
 			true
 		);
 		//MessageBox(nullptr, (L"IT'S WORK!!! " + getWindowName()).c_str(), L"TEST", MB_OK);
-	}
-	void MainWindow::eventSizeWindow(int oldWidth, int oldHeight)
-	{
-		defaultSizeHandler(oldWidth, oldHeight);
-
-		auto version = getSystemVersion();
-		int major = version.first;
-		int minor = version.second;
-
-		if (major == 6 && minor <= 1) {
-			DWM_BLURBEHIND lol;
-			HRGN rgn = CreateRectRgn(0, 0, getWidth(), getHieght());
-			lol.dwFlags = DWM_BB_BLURREGION | DWM_BB_ENABLE | DWM_BB_TRANSITIONONMAXIMIZED;
-			lol.hRgnBlur = rgn;
-			lol.fEnable = true;
-			lol.fTransitionOnMaximized = true;
-
-			DwmEnableBlurBehindWindow(getHWND(), &lol);
-			DeleteObject(rgn);
-		}
 	}
 
 	void MainWindow::mouseClickHandler(const MouseEventClick& mouseEventClick)
