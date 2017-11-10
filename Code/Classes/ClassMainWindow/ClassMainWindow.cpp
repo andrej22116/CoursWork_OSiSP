@@ -88,6 +88,7 @@ namespace explorer {
 				FreeLibrary(le_module);
 			}
 		}
+		redrawWindow(false);
 
 		buttonClose.create(
 			std::wstring(L"exit"),

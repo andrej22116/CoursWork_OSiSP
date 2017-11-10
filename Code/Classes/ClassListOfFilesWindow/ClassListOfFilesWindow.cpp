@@ -59,27 +59,14 @@ namespace explorer {
 				0, LISTBOX_LINE_HEIGHT * _selectedLine,
 				getWidth(), LISTBOX_LINE_HEIGHT - 1
 			);
-
-			Gdiplus::LinearGradientBrush selectedLine_top(
-				Gdiplus::Point(0, LISTBOX_LINE_HEIGHT * _selectedLine - 6),
-				Gdiplus::Point(0, LISTBOX_LINE_HEIGHT * _selectedLine - 1),
-				Gdiplus::Color(0, 87, 116, 48), Gdiplus::Color(254, 56, 180, 35)
-			);
-			Gdiplus::LinearGradientBrush selectedLine_bot(
-				Gdiplus::Point(0, LISTBOX_LINE_HEIGHT * _selectedLine + LISTBOX_LINE_HEIGHT + 5),
-				Gdiplus::Point(0, LISTBOX_LINE_HEIGHT * _selectedLine + LISTBOX_LINE_HEIGHT),
-				Gdiplus::Color(0, 87, 116, 48), Gdiplus::Color(254, 56, 180, 35)
-			);
-			graphics.FillRectangle(&selectedLine_top, 0, LISTBOX_LINE_HEIGHT * _selectedLine - 5, getWidth(), 5);
-			graphics.FillRectangle(&selectedLine_bot, 0, LISTBOX_LINE_HEIGHT * _selectedLine + LISTBOX_LINE_HEIGHT, getWidth(), 5);
-			/*
+			
 			graphics.DrawLine(&borderPen,
 				0, LISTBOX_LINE_HEIGHT * _selectedLine,
 				getWidth() - 1, LISTBOX_LINE_HEIGHT * _selectedLine);
 			graphics.DrawLine(&borderPen,
 				0, LISTBOX_LINE_HEIGHT * _selectedLine + LISTBOX_LINE_HEIGHT - 1,
 				getWidth() - 1, LISTBOX_LINE_HEIGHT * _selectedLine + LISTBOX_LINE_HEIGHT - 1);
-			*/
+			
 			/*
 			graphics.FillRectangle(&selectBackground,
 				0, LISTBOX_LINE_HEIGHT * _selectedLine,
@@ -137,7 +124,7 @@ namespace explorer {
 				dir.Name.c_str(),
 				-1,
 				&font,
-				Gdiplus::PointF(LISTBOX_TEXT_POS_X, y_offset + textOffset),
+				Gdiplus::PointF(LISTBOX_TEXT_POS_X, y_offset + textOffset - 1),
 				&textBrush
 			);
 			y_offset += LISTBOX_LINE_HEIGHT;

@@ -115,6 +115,7 @@ namespace explorer {
 				fInfo = std::make_unique<FileInfo>(file, !isDir, isDir, nullptr);
 			}
 			else {
+				/*
 				SHFILEINFO info;
 				SHGetFileInfo(full_path.c_str(),
 					FILE_ATTRIBUTE_NORMAL,
@@ -122,8 +123,9 @@ namespace explorer {
 					sizeof(SHFILEINFO),
 					SHGFI_USEFILEATTRIBUTES | SHGFI_ICON | SHGFI_SMALLICON | SHGFI_SHELLICONSIZE
 				);
-				fInfo = std::make_unique<FileInfo>(file, !isDir, isDir, &info.hIcon);
-				DestroyIcon(info.hIcon);
+				*/
+				fInfo = std::make_unique<FileInfo>(file, !isDir, isDir, nullptr);
+				//DestroyIcon(info.hIcon);
 			}
 
 			result.push_back(*fInfo);

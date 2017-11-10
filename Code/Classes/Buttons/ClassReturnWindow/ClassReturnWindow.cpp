@@ -44,7 +44,7 @@ namespace explorer {
 
 		graphics.DrawImage(&(*_image), 2, 2, 12, 12);
 		if (this->isLocked()) {
-			Gdiplus::SolidBrush lockBrush(Gdiplus::Color(192, 56, 56, 56));
+			Gdiplus::SolidBrush lockBrush(MAIN_WINDOW_COLOR_HEADER_BUTTON_LOCK);
 			graphics.FillRectangle(&lockBrush, -1, -1, getWidth() + 1, getHieght() + 1);
 		}
 	}
@@ -56,7 +56,7 @@ namespace explorer {
 
 		graphics.DrawImage(&(*_image), 2, 2, 12, 12);
 		if (this->isLocked()) {
-			Gdiplus::SolidBrush lockBrush(Gdiplus::Color(192, 56, 56, 56));
+			Gdiplus::SolidBrush lockBrush(MAIN_WINDOW_COLOR_HEADER_BUTTON_LOCK);
 			graphics.FillRectangle(&lockBrush, -1, -1, getWidth() + 1, getHieght() + 1);
 		}
 	}
@@ -68,7 +68,7 @@ namespace explorer {
 
 		graphics.DrawImage(&(*_image), 2, 2, 12, 12);
 		if (this->isLocked()) {
-			Gdiplus::SolidBrush lockBrush(Gdiplus::Color(192, 56, 56, 56));
+			Gdiplus::SolidBrush lockBrush(MAIN_WINDOW_COLOR_HEADER_BUTTON_LOCK);
 			graphics.FillRectangle(&lockBrush, -1, -1, getWidth() + 1, getHieght() + 1);
 		}
 	}
