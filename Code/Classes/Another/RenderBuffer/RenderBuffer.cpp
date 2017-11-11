@@ -87,10 +87,25 @@ namespace explorer {
 	{
 		m_copyTo(buffer, fromX, fromY, toX, toY, width, height);
 	}
-
-	void RenderBuffer::swap(HDC hDC)
+	void RenderBuffer::copyTo(HDC device)
 	{
-		BitBlt(hDC, 0, 0, _width, _height, _hDC_Buffer, 0, 0, SRCCOPY);
+		int width = _width;
+		int height = _height;
+		m_copyTo(device, 0, 0, 0, 0, width, height);
+	}
+	void RenderBuffer::copyTo(HDC device, int toX, int toY)
+	{
+		int width = _width;
+		int height = _height;
+		m_copyTo(device, 0, 0, toX, toY, width, height);
+	}
+	void RenderBuffer::copyTo(HDC device, int toX, int toY, int width, int height)
+	{
+		m_copyTo(device, 0, 0, toX, toY, width, height);
+	}
+	void RenderBuffer::copyTo(HDC device, int fromX, int fromY, int toX, int toY, int width, int height)
+	{
+		m_copyTo(device, fromX, fromY, toX, toY, width, height);
 	}
 
 	void RenderBuffer::m_copyTo(RenderBuffer& buffer, int fromX, int fromY, int toX, int toY, int width, int height)
@@ -102,5 +117,10 @@ namespace explorer {
 			return;
 		}
 		BitBlt(buffer.getDC(), toX, toY, width, height, _hDC_Buffer, fromX, fromY, SRCCOPY);
+	}
+
+	void RenderBuffer::m_copyTo(HDC device, int fromX, int fromY, int toX, int toY, int width, int height)
+	{
+		BitBlt(device, toX, toY, width, height, _hDC_Buffer, fromX, fromY, SRCCOPY);
 	}
 }

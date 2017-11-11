@@ -32,11 +32,14 @@ namespace explorer {
 		void copyTo(RenderBuffer& buffer, int toX, int toY);
 		void copyTo(RenderBuffer& buffer, int toX, int toY, int width, int hieght);
 		void copyTo(RenderBuffer& buffer, int fromX, int fromY, int toX, int toY, int width, int height);
-
-		void swap(HDC hDC);
+		void copyTo(HDC device);
+		void copyTo(HDC device, int toX, int toY);
+		void copyTo(HDC device, int toX, int toY, int width, int hieght);
+		void copyTo(HDC device, int fromX, int fromY, int toX, int toY, int width, int height);
 
 	private:
 		void m_copyTo(RenderBuffer& buffer, int fromX, int fromY, int toX, int toY, int width, int height);
+		void m_copyTo(HDC device, int fromX, int fromY, int toX, int toY, int width, int height);
 	};
 
 }
