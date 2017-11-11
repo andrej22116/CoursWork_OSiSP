@@ -111,23 +111,43 @@ namespace explorer {
 
 		int y_offset = 0;
 		int textOffset = (LISTBOX_LINE_HEIGHT - font.GetSize()) / 4;
+		int scrollOffset = getVerticalSckrollStatus();
+		int firstLineToOut = int(scrollOffset / LISTBOX_LINE_HEIGHT);
+		int lastLineToOut = int((scrollOffset + getWidth()) / LISTBOX_LINE_HEIGHT);
 
+		int line = 0;
 		for (auto dir : _thisCatalog) {
-			if (dir.Icon) {
-				graphics.DrawImage(&(*(dir.Icon)),
-					3, y_offset + 2,
-					LISTBOX_LINE_HEIGHT - 4, LISTBOX_LINE_HEIGHT - 4
-				);
-			}
+			if (line >= firstLineToOut && line <= lastLineToOut) {
+				if (dir.Icon) {
+					graphics.DrawImage(&(*(dir.Icon)),
+						3, y_offset + 2,
+						LISTBOX_LINE_HEIGHT - 4, LISTBOX_LINE_HEIGHT - 4
+					);
+				}
 
-			graphics.DrawString(
-				dir.Name.c_str(),
-				-1,
-				&font,
-				Gdiplus::PointF(LISTBOX_TEXT_POS_X, y_offset + textOffset - 1),
-				&textBrush
-			);
+				/*
+				HDC hDC = graphics.GetHDC();
+				if (0 == TextOut(hDC, LISTBOX_TEXT_POS_X, y_offset + textOffset - 1, dir.Name.c_str(), dir.Name.size())) {
+					DWORD error = GetLastError();
+					_RPT1(0, "Bad textout... error: %d\n", error);
+				}
+				graphics.ReleaseHDC(hDC);
+				*/
+
+				graphics.DrawString(
+					dir.Name.c_str(),
+					-1,
+					&font,
+					Gdiplus::PointF(LISTBOX_TEXT_POS_X, y_offset + textOffset),
+					&textBrush
+				);
+				if (line == lastLineToOut) {
+					break;
+				}
+			}
+			
 			y_offset += LISTBOX_LINE_HEIGHT;
+			line++;
 		}
 	}
 

@@ -59,13 +59,18 @@ namespace explorer {
 
 		if (major == 6 && minor <= 1) {
 			DWM_BLURBEHIND lol;
-			HRGN rgn = CreateRectRgn(0, 0, GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN));
+			//HRGN rgn = CreateRectRgn(0, 0, GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN));
+			HRGN rgn = CreateRectRgn(-1, -1, -1, -1);
 			lol.dwFlags = DWM_BB_BLURREGION | DWM_BB_ENABLE | DWM_BB_TRANSITIONONMAXIMIZED;
 			lol.hRgnBlur = rgn;
 			lol.fEnable = true;
 			lol.fTransitionOnMaximized = true;
 
-			DwmEnableBlurBehindWindow(getHWND(), &lol);
+			DWORD color = 0xFF123456;
+			BOOL blend = true;
+			if (DwmGetColorizationColor(&color, &blend) == S_OK) {
+				DwmEnableBlurBehindWindow(getHWND(), &lol);
+			}
 			DeleteObject(rgn);
 		}
 		else if (major == 6 && minor > 1) {
