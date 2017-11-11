@@ -89,6 +89,9 @@
     <Filter Include="Interface\Windows\Buttons\ClassReturnWindow">
       <UniqueIdentifier>{4462cad1-e876-4405-a77d-294f33396bee}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Interface\Windows\ClassOptionsWindow">
+      <UniqueIdentifier>{9ac111ba-addd-455b-950b-0edc71b6c519}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Code\WinMain.cpp" />
@@ -134,11 +137,14 @@
     <ClCompile Include="Code\Classes\Exceptions\ClassFileException\ClassFileException.cpp">
       <Filter>Core\Exceptions\ClassFileException</Filter>
     </ClCompile>
-    <ClCompile Include="Code\Classes\Buttons\ClassOptionsWindow\ClassOptionsWindow.cpp">
-      <Filter>Interface\Windows\Buttons\ClassOptionsWindow</Filter>
-    </ClCompile>
     <ClCompile Include="Code\Classes\Buttons\ClassReturnWindow\ClassReturnWindow.cpp">
       <Filter>Interface\Windows\Buttons\ClassReturnWindow</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Classes\ClassOptionsWindow\ClassOptionsWindow.cpp">
+      <Filter>Interface\Windows\ClassOptionsWindow</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Classes\Buttons\ClassOptionsWindow\ClassOptionsButton.cpp">
+      <Filter>Interface\Windows\Buttons\ClassOptionsWindow</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -190,11 +196,14 @@
     <ClInclude Include="Code\Classes\Exceptions\ClassFileException\ClassFileException.h">
       <Filter>Core\Exceptions\ClassFileException</Filter>
     </ClInclude>
-    <ClInclude Include="Code\Classes\Buttons\ClassOptionsWindow\ClassOptionsWindow.h">
-      <Filter>Interface\Windows\Buttons\ClassOptionsWindow</Filter>
-    </ClInclude>
     <ClInclude Include="Code\Classes\Buttons\ClassReturnWindow\ClassReturnWindow.h">
       <Filter>Interface\Windows\Buttons\ClassReturnWindow</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Classes\ClassOptionsWindow\ClassOptionsWindow.h">
+      <Filter>Interface\Windows\ClassOptionsWindow</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Classes\Buttons\ClassOptionsWindow\ClassOptionsButton.h">
+      <Filter>Interface\Windows\Buttons\ClassOptionsWindow</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

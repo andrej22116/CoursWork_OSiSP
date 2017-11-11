@@ -5,13 +5,24 @@
 #include "..\Buttons\ClassMaximizeWindow\ClassMaximizeWindow.h"
 #include "..\Buttons\ClassMinimizeWindow\ClassMinimizeWindow.h"
 #include "..\ClassListOfFilesWindow\ClassListOfFilesWindow.h"
-#include "..\Buttons\ClassOptionsWindow\ClassOptionsWindow.h"
+#include "..\ClassOptionsWindow\ClassOptionsWindow.h"
+#include "..\Buttons\ClassOptionsWindow\ClassOptionsButton.h"
 #include "..\Buttons\ClassReturnWindow\ClassReturnWindow.h"
 
 #ifndef _CLASS_MAIN_WINDOW_H_
 #define _CLASS_MAIN_WINDOW_H_
 
 namespace explorer {
+
+	class ButtonClose;
+	class ButtonMaximize;
+	class ButtonMinimize;
+	class ListOfFiles;
+	class ButtonReturn;
+	class ButtonReturn;
+	class ButtonReturn;
+	class ButtonOptions;
+	class OptionsWindow;
 
 	class MainWindow : public Window {
 	private:
@@ -23,6 +34,7 @@ namespace explorer {
 		ButtonReturn buttonForward;
 		ButtonReturn buttonUp;
 		ButtonOptions buttonOptions;
+		OptionsWindow windowOptions;
 
 	public:
 		MainWindow();
@@ -34,6 +46,9 @@ namespace explorer {
 		void keyboardHandler(const KeyEvent& keyEvent);
 		
 		void mouseMoveHandler(MouseEvent& mouseEvent);
+
+		bool windowOptionsIsShow();
+		void showWindowOptions(bool show);
 
 	private:
 	};

@@ -1,5 +1,6 @@
 #include "stdafx.h"
-#include "ClassOptionsWindow.h"
+#include "ClassOptionsButton.h"
+#include "..\..\ClassMainWindow\ClassMainWindow.h"
 
 namespace explorer {
 
@@ -25,6 +26,11 @@ namespace explorer {
 
 	void ButtonOptions::mouseClickOptionsHandler(const MouseEventClick& mouseEventClick)
 	{
+		if (mouseEventClick.Click == MOUSE_CLICK_ONE
+			&& mouseEventClick.Button == MOUSE_LEFT
+			&& mouseEventClick.Status == KEY_PRESSED) {
+			((MainWindow*)getParent())->showWindowOptions(true);
+		}
 	}
 
 }

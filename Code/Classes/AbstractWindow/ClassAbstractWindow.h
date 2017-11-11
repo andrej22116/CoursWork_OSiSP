@@ -26,7 +26,7 @@ namespace explorer {
 	typedef std::function<void(MouseEvent& mouseEvent)> MouseMoveHandler;
 	typedef std::function<void(const ParentEvent& parentEvent)> ParentHandler;
 	typedef std::function<void(const KeyEvent& keyEvent)> KeyboardHandler;
-	typedef std::function<void(const int& timer_ID)> TimerHandler;
+	typedef std::function<void(const int timer_ID)> TimerHandler;
 	typedef std::function<void(bool status)> HoverHandler;
 
 

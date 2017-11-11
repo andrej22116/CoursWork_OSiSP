@@ -3,8 +3,8 @@
 #include "..\ClassAbstractButton\ClassAbstractButton.h"
 #include "..\..\ClassListOfFilesWindow\ClassListOfFilesWindow.h"
 
-#ifndef _CLASS_OPTIONS_WINDOW_H_
-#define _CLASS_OPTIONS_WINDOW_H_
+#ifndef _CLASS_OPTIONS_BUTTON_H_
+#define _CLASS_OPTIONS_BUTTON_H_
 
 namespace explorer {
 

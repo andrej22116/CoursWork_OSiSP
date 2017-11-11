@@ -57,7 +57,7 @@
 #define LISTBOX_TEXT_POS_X 20
 #define LISTBOX_TEXT_COLOR Gdiplus::Color(254, 255, 255, 255)
 
-#define LISTBOX_COLOR_BACKGROUND (Gdiplus::Color(255, 48, 48, 48))		//Gdiplus::Color(32, 32, 32)
+#define LISTBOX_COLOR_BACKGROUND (Gdiplus::Color(192, 48, 48, 48))		//Gdiplus::Color(32, 32, 32)
 #define LISTBOX_COLOR_BACKGROUND_SELECT	(MAIN_WINDOW_COLOR_HEADER)	//Gdiplus::Color(96, 96, 96)
 #define LISTBOX_COLOR_BACKGROUND_HOVER Gdiplus::Color(150, 48, 48, 48)
 #define LISTBOX_COLOR_BORDER_LINE Gdiplus::Color(254, 87, 116, 48)

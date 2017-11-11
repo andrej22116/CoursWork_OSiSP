@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "ClassListOfFilesWindow.h"
+#include "..\ClassMainWindow\ClassMainWindow.h"
 
 namespace explorer {
 
@@ -42,7 +43,9 @@ namespace explorer {
 		int amountOfLines = _thisCatalog.size() * LISTBOX_LINE_HEIGHT;
 		int HeightOfRectangleForFill = max(amountOfLines, this->getHieght());
 		Gdiplus::SolidBrush background(LISTBOX_COLOR_BACKGROUND);
-		graphics.FillRectangle(&background, 0, 0, getWidth(), HeightOfRectangleForFill);
+
+		graphics.Clear(LISTBOX_COLOR_BACKGROUND);
+		//graphics.FillRectangle(&background, 0, 0, getWidth(), HeightOfRectangleForFill);
 
 		Gdiplus::Font font(&Gdiplus::FontFamily(L"Arial"), 10);
 		Gdiplus::SolidBrush textBrush(Gdiplus::Color::White);
@@ -156,6 +159,9 @@ namespace explorer {
 		if (mouseEventClick.Click == MOUSE_CLICK_ONE 
 			&& mouseEventClick.Button == MOUSE_LEFT
 			&& mouseEventClick.Status == KEY_PRESSED) {
+			if (((MainWindow*)getParent())->windowOptionsIsShow()) {
+				((MainWindow*)getParent())->showWindowOptions(false);
+			}
 			calcOneLeftClick(mouseEventClick);
 		}
 		else if (mouseEventClick.Click == MOUSE_CLICK_DOUBLE

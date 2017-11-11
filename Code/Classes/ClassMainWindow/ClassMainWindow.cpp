@@ -60,11 +60,11 @@ namespace explorer {
 		if (major == 6 && minor <= 1) {
 			DWM_BLURBEHIND lol;
 			//HRGN rgn = CreateRectRgn(0, 0, GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN));
-			HRGN rgn = CreateRectRgn(-1, -1, -1, -1);
-			lol.dwFlags = DWM_BB_BLURREGION | DWM_BB_ENABLE | DWM_BB_TRANSITIONONMAXIMIZED;
+			HRGN rgn = CreateRectRgn(-1, -1, 0, 0);
+			lol.dwFlags = DWM_BB_BLURREGION | DWM_BB_ENABLE;
 			lol.hRgnBlur = rgn;
 			lol.fEnable = true;
-			lol.fTransitionOnMaximized = true;
+			lol.fTransitionOnMaximized = false;
 
 			DWORD color = 0xFF123456;
 			BOOL blend = true;
@@ -166,6 +166,15 @@ namespace explorer {
 			MAIN_WINDOW_BUTTON_BACKWARD_HEIGHT,
 			true
 		);
+		windowOptions.create(
+			std::wstring(L"windowoptions"),
+			*this,
+			0,
+			MAIN_WINDOW_HEADER_HEIGHT+1,
+			350,
+			getHieght() - MAIN_WINDOW_HEADER_HEIGHT - 1
+		);
+		windowOptions.show(false);
 		//MessageBox(nullptr, (L"IT'S WORK!!! " + getWindowName()).c_str(), L"TEST", MB_OK);
 	}
 
@@ -174,6 +183,9 @@ namespace explorer {
 		// вычлинить двойной клик!
 
 		if (mouseEventClick.Button == MOUSE_LEFT && mouseEventClick.Status == KEY_PRESSED && !buttonMaximize.isMaximized()) {
+			if (windowOptions.isShow()) {
+				windowOptions.show(false);
+			}
 		}
 		else if (mouseEventClick.Button == MOUSE_LEFT && mouseEventClick.Status == KEY_RELEASED) {
 		}
@@ -193,5 +205,15 @@ namespace explorer {
 
 	void MainWindow::mouseMoveHandler(MouseEvent& mouseEvent)
 	{
+	}
+
+
+	bool MainWindow::windowOptionsIsShow()
+	{
+		return windowOptions.isShow();
+	}
+	void MainWindow::showWindowOptions(bool show)
+	{
+		windowOptions.show(show);
 	}
 }
