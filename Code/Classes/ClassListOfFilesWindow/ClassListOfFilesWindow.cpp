@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "ClassListOfFilesWindow.h"
+#include "..\ClassMainWindow\ClassMainWindow.h"
 
 namespace explorer {
 
@@ -42,7 +43,9 @@ namespace explorer {
 		int amountOfLines = _thisCatalog.size() * LISTBOX_LINE_HEIGHT;
 		int HeightOfRectangleForFill = max(amountOfLines, this->getHieght());
 		Gdiplus::SolidBrush background(LISTBOX_COLOR_BACKGROUND);
-		graphics.FillRectangle(&background, 0, 0, getWidth(), HeightOfRectangleForFill);
+
+		graphics.Clear(LISTBOX_COLOR_BACKGROUND);
+		//graphics.FillRectangle(&background, 0, 0, getWidth(), HeightOfRectangleForFill);
 
 		Gdiplus::Font font(&Gdiplus::FontFamily(L"Arial"), 10);
 		Gdiplus::SolidBrush textBrush(Gdiplus::Color::White);
@@ -111,23 +114,43 @@ namespace explorer {
 
 		int y_offset = 0;
 		int textOffset = (LISTBOX_LINE_HEIGHT - font.GetSize()) / 4;
+		int scrollOffset = getVerticalSckrollStatus();
+		int firstLineToOut = int(scrollOffset / LISTBOX_LINE_HEIGHT);
+		int lastLineToOut = int((scrollOffset + getWidth()) / LISTBOX_LINE_HEIGHT);
 
+		int line = 0;
 		for (auto dir : _thisCatalog) {
-			if (dir.Icon) {
-				graphics.DrawImage(&(*(dir.Icon)),
-					3, y_offset + 2,
-					LISTBOX_LINE_HEIGHT - 4, LISTBOX_LINE_HEIGHT - 4
-				);
-			}
+			if (line >= firstLineToOut && line <= lastLineToOut) {
+				if (dir.Icon) {
+					graphics.DrawImage(&(*(dir.Icon)),
+						3, y_offset + 2,
+						LISTBOX_LINE_HEIGHT - 4, LISTBOX_LINE_HEIGHT - 4
+					);
+				}
 
-			graphics.DrawString(
-				dir.Name.c_str(),
-				-1,
-				&font,
-				Gdiplus::PointF(LISTBOX_TEXT_POS_X, y_offset + textOffset - 1),
-				&textBrush
-			);
+				/*
+				HDC hDC = graphics.GetHDC();
+				if (0 == TextOut(hDC, LISTBOX_TEXT_POS_X, y_offset + textOffset - 1, dir.Name.c_str(), dir.Name.size())) {
+					DWORD error = GetLastError();
+					_RPT1(0, "Bad textout... error: %d\n", error);
+				}
+				graphics.ReleaseHDC(hDC);
+				*/
+
+				graphics.DrawString(
+					dir.Name.c_str(),
+					-1,
+					&font,
+					Gdiplus::PointF(LISTBOX_TEXT_POS_X, y_offset + textOffset),
+					&textBrush
+				);
+				if (line == lastLineToOut) {
+					break;
+				}
+			}
+			
 			y_offset += LISTBOX_LINE_HEIGHT;
+			line++;
 		}
 	}
 
@@ -136,6 +159,9 @@ namespace explorer {
 		if (mouseEventClick.Click == MOUSE_CLICK_ONE 
 			&& mouseEventClick.Button == MOUSE_LEFT
 			&& mouseEventClick.Status == KEY_PRESSED) {
+			if (((MainWindow*)getParent())->windowOptionsIsShow()) {
+				((MainWindow*)getParent())->showWindowOptions(false);
+			}
 			calcOneLeftClick(mouseEventClick);
 		}
 		else if (mouseEventClick.Click == MOUSE_CLICK_DOUBLE

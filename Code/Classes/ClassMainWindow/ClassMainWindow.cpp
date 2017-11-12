@@ -59,13 +59,18 @@ namespace explorer {
 
 		if (major == 6 && minor <= 1) {
 			DWM_BLURBEHIND lol;
-			HRGN rgn = CreateRectRgn(0, 0, GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN));
-			lol.dwFlags = DWM_BB_BLURREGION | DWM_BB_ENABLE | DWM_BB_TRANSITIONONMAXIMIZED;
+			//HRGN rgn = CreateRectRgn(0, 0, GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN));
+			HRGN rgn = CreateRectRgn(-1, -1, 0, 0);
+			lol.dwFlags = DWM_BB_BLURREGION | DWM_BB_ENABLE;
 			lol.hRgnBlur = rgn;
 			lol.fEnable = true;
-			lol.fTransitionOnMaximized = true;
+			lol.fTransitionOnMaximized = false;
 
-			DwmEnableBlurBehindWindow(getHWND(), &lol);
+			DWORD color = 0xFF123456;
+			BOOL blend = true;
+			if (DwmGetColorizationColor(&color, &blend) == S_OK) {
+				DwmEnableBlurBehindWindow(getHWND(), &lol);
+			}
 			DeleteObject(rgn);
 		}
 		else if (major == 6 && minor > 1) {
@@ -77,7 +82,7 @@ namespace explorer {
 					AccentPolicy policy = { 0, 0, 0, 229 };
 					policy.AccentFlags = 2;
 					policy.AccentState = 3;
-					policy.GradientColor = 0xC4010101;
+					policy.GradientColor = 0x84ffffff;
 
 					data.attribute = 19;
 					data.pData = &policy;
@@ -161,6 +166,15 @@ namespace explorer {
 			MAIN_WINDOW_BUTTON_BACKWARD_HEIGHT,
 			true
 		);
+		windowOptions.create(
+			std::wstring(L"windowoptions"),
+			*this,
+			0,
+			MAIN_WINDOW_HEADER_HEIGHT+1,
+			350,
+			getHieght() - MAIN_WINDOW_HEADER_HEIGHT - 1
+		);
+		windowOptions.show(false);
 		//MessageBox(nullptr, (L"IT'S WORK!!! " + getWindowName()).c_str(), L"TEST", MB_OK);
 	}
 
@@ -169,6 +183,9 @@ namespace explorer {
 		// вычлинить двойной клик!
 
 		if (mouseEventClick.Button == MOUSE_LEFT && mouseEventClick.Status == KEY_PRESSED && !buttonMaximize.isMaximized()) {
+			if (windowOptions.isShow()) {
+				windowOptions.show(false);
+			}
 		}
 		else if (mouseEventClick.Button == MOUSE_LEFT && mouseEventClick.Status == KEY_RELEASED) {
 		}
@@ -188,5 +205,15 @@ namespace explorer {
 
 	void MainWindow::mouseMoveHandler(MouseEvent& mouseEvent)
 	{
+	}
+
+
+	bool MainWindow::windowOptionsIsShow()
+	{
+		return windowOptions.isShow();
+	}
+	void MainWindow::showWindowOptions(bool show)
+	{
+		windowOptions.show(show);
 	}
 }

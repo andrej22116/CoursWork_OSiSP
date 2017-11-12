@@ -752,7 +752,6 @@ namespace explorer {
 		PAINTSTRUCT ps;
 		HDC hDC = BeginPaint(wnd->_hWnd, &ps);
 		HDC hDC_Buffer = wnd->_renderBuffer->getDC();
-		RenderBuffer scrollBuffer(wnd->_hWnd, wnd->_width, wnd->_hieght);
 
 		Gdiplus::Graphics graphics(hDC_Buffer);
 
@@ -761,12 +760,11 @@ namespace explorer {
 		}
 
 		wnd->_renderBuffer->copyTo(
-			scrollBuffer,
+			hDC,
 			wnd->_scrollbarHorizontalStatus, wnd->_scrollbarVerticalStatus,
 			0, 0,
 			wnd->_width, wnd->_hieght
 		);
-		scrollBuffer.swap(hDC);
 
 		EndPaint(wnd->_hWnd, &ps);
 	}
