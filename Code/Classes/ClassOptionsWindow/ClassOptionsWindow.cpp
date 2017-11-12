@@ -28,6 +28,7 @@ namespace explorer {
 			redrawWindow(false);
 		}
 		else {
+			showWindow(false);
 			moveWindowPos(-getWidth(), MAIN_WINDOW_HEADER_HEIGHT + 1, false);
 		}
 	}

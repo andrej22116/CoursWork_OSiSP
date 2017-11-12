@@ -6,7 +6,7 @@
 #include "..\Buttons\ClassMinimizeWindow\ClassMinimizeWindow.h"
 #include "..\ClassListOfFilesWindow\ClassListOfFilesWindow.h"
 #include "..\ClassOptionsWindow\ClassOptionsWindow.h"
-#include "..\Buttons\ClassOptionsWindow\ClassOptionsButton.h"
+#include "..\Buttons\ClassOptionsButton\ClassOptionsButton.h"
 #include "..\Buttons\ClassReturnWindow\ClassReturnWindow.h"
 
 #ifndef _CLASS_MAIN_WINDOW_H_
