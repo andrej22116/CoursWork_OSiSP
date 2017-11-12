@@ -82,7 +82,7 @@ namespace explorer {
 					AccentPolicy policy = { 0, 0, 0, 229 };
 					policy.AccentFlags = 2;
 					policy.AccentState = 3;
-					policy.GradientColor = 0x84ffffff;
+					policy.GradientColor = 0x44ffffff;
 
 					data.attribute = 19;
 					data.pData = &policy;
