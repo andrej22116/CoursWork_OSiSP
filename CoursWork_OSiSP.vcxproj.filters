@@ -92,6 +92,9 @@
     <Filter Include="Interface\Windows\Buttons\ClassOptionsButton">
       <UniqueIdentifier>{da081928-45fb-486d-82c1-b5f2e162eeea}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Interface\Windows\Buttons\ClassCheckButton">
+      <UniqueIdentifier>{ae872c57-27b2-4fa1-9213-2cb8e130a82d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Code\WinMain.cpp" />
@@ -145,6 +148,9 @@
     </ClCompile>
     <ClCompile Include="Code\Classes\Buttons\ClassOptionsButton\ClassOptionsButton.cpp">
       <Filter>Interface\Windows\Buttons\ClassOptionsButton</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Classes\Buttons\ClassCheckButton\ClassCheckButton.cpp">
+      <Filter>Interface\Windows\Buttons\ClassCheckButton</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -204,6 +210,9 @@
     </ClInclude>
     <ClInclude Include="Code\Classes\Buttons\ClassOptionsButton\ClassOptionsButton.h">
       <Filter>Interface\Windows\Buttons\ClassOptionsButton</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Classes\Buttons\ClassCheckButton\ClassCheckButton.h">
+      <Filter>Interface\Windows\Buttons\ClassCheckButton</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
