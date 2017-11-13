@@ -28,29 +28,16 @@ namespace explorer {
 
 	void ButtonMaximize::paintHandler(Gdiplus::Graphics& graphics)
 	{
-		Gdiplus::Pen pen(Gdiplus::Color::White, 1.6);
+		Gdiplus::Pen pen(Gdiplus::Color::White, 1);
 		Gdiplus::SolidBrush brush((isHover()) ?
 			(MAIN_WINDOW_COLOR_HEADER_BUTTON_SELECTED) :
 			(MAIN_WINDOW_COLOR_HEADER));
 		graphics.FillRectangle(&brush, -1, -1, getWidth() + 1, getHieght() + 1);
 
 
-		Gdiplus::Rect rect_0(2, 2, 11, 11);
-		Gdiplus::Rect rect_1(6, 2, 6, 6);
-		Gdiplus::Rect rect_2(2, 6, 6, 6);
+		Gdiplus::Rect rect_0(4, 4, getWidth() - 9, getHieght() - 9);
 
-		if (_maximized) {
-			graphics.DrawRectangle(&pen, rect_1);
-			graphics.DrawLine(&pen, 6, 3, 13, 3);
-
-			graphics.FillRectangle(&brush, rect_2);
-			graphics.DrawRectangle(&pen, rect_2);
-			graphics.DrawLine(&pen, 2, 7, 9, 7);
-		}
-		else {
-			graphics.DrawRectangle(&pen, rect_0);
-			graphics.DrawLine(&pen, 2, 3, 13, 3);
-		}
+		graphics.DrawRectangle(&pen, rect_0);
 	}
 
 	void ButtonMaximize::maximizeHandler(const MouseEventClick& mouseEventClick)

@@ -9,6 +9,19 @@ namespace explorer {
 		setResizeWhenParentResizeing(false, true);
 	}
 
+	void OptionsWindow::eventCreateWindow()
+	{
+		_test.create(
+			std::wstring(L"_test"),
+			*this,
+			20,
+			20,
+			17,
+			17,
+			true
+		);
+	}
+
 	void OptionsWindow::paintHandler(Gdiplus::Graphics& graphics)
 	{
 		graphics.SetCompositingMode(Gdiplus::CompositingMode::CompositingModeSourceCopy);

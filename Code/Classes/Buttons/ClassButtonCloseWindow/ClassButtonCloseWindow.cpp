@@ -17,12 +17,20 @@ namespace explorer {
 	{		
 		graphics.SetSmoothingMode(Gdiplus::SmoothingMode::SmoothingModeAntiAlias);
 
-		Gdiplus::Pen pen(Gdiplus::Color::White, 1.55);
-		Gdiplus::SolidBrush brush((isHover()) ? (Gdiplus::Color::Red) : (MAIN_WINDOW_COLOR_HEADER));
+		Gdiplus::Pen pen(Gdiplus::Color::White, 1);
+		Gdiplus::SolidBrush brush((isHover()) ? (Gdiplus::Color(254, 255, 0, 55)) : (MAIN_WINDOW_COLOR_HEADER));
 		graphics.FillRectangle(&brush, -1, -1, getWidth()+1, getHieght()+1);
 
-		Gdiplus::Point pos_1(2, 2), pos_2(getWidth()-3, getHieght()-3);
-		Gdiplus::Point pos_3(getWidth() - 3, 2), pos_4(2, getHieght()-3);
+		int width = getWidth();
+		int height = getHieght();
+
+		int verticalOffset = 4;
+		int horizontalOffset = (width - (height - (verticalOffset * 2))) / 2;
+
+		Gdiplus::Point	pos_1(horizontalOffset, verticalOffset),
+						pos_2(width - horizontalOffset - 1, height - verticalOffset - 1);
+		Gdiplus::Point	pos_3(width - horizontalOffset - 1, verticalOffset),
+						pos_4(horizontalOffset, height - verticalOffset - 1);
 
 		graphics.DrawLine(&pen, pos_2, pos_1);
 		graphics.DrawLine(&pen, pos_3, pos_4);
