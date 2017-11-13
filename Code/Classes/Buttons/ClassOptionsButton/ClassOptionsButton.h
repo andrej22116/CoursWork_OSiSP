@@ -14,8 +14,11 @@ namespace explorer {
 	private:
 		ListOfFiles* _listOfFiles;
 
+		Gdiplus::Image* _image;
+
 	public:
 		ButtonOptions(ListOfFiles* listOfFiles);
+		~ButtonOptions();
 
 		void paintHandler(Gdiplus::Graphics& graphics);
 

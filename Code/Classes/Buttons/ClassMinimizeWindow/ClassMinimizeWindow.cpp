@@ -14,13 +14,19 @@ namespace explorer {
 
 	void ButtonMinimize::paintHandler(Gdiplus::Graphics& graphics)
 	{
-		Gdiplus::Pen pen(Gdiplus::Color::White, 1.6);
+		Gdiplus::Pen pen(Gdiplus::Color(254, 200, 200, 200), 1);
 		Gdiplus::SolidBrush brush((isHover()) ? 
 			(MAIN_WINDOW_COLOR_HEADER_BUTTON_SELECTED) :
 			(MAIN_WINDOW_COLOR_HEADER));
 		graphics.FillRectangle(&brush, -1, -1, getWidth() + 1, getHieght() + 1);
 
-		graphics.DrawRectangle(&pen, 4, getHieght() / 2, getWidth()-9, 1);
+
+		int width = getWidth();
+		int height = getHieght();
+
+		int verticalOffset = 5;
+		int horizontalOffset = (width - (height - (verticalOffset * 2))) / 2;
+		graphics.DrawLine(&pen, horizontalOffset, height / 2, width - horizontalOffset - 1, height / 2);
 	}
 
 	void ButtonMinimize::minimizeHandler(const MouseEventClick& mouseEventClick)

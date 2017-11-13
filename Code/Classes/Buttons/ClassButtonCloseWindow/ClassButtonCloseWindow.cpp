@@ -24,7 +24,7 @@ namespace explorer {
 		int width = getWidth();
 		int height = getHieght();
 
-		int verticalOffset = 4;
+		int verticalOffset = 5;
 		int horizontalOffset = (width - (height - (verticalOffset * 2))) / 2;
 
 		Gdiplus::Point	pos_1(horizontalOffset, verticalOffset),

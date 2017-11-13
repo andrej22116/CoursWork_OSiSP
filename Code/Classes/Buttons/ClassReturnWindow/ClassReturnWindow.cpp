@@ -42,7 +42,7 @@ namespace explorer {
 		Gdiplus::SolidBrush brush((isHover() && !isLocked()) ? (MAIN_WINDOW_COLOR_HEADER_BUTTON_SELECTED) : (MAIN_WINDOW_COLOR_HEADER));
 		graphics.FillRectangle(&brush, -1, -1, getWidth() + 1, getHieght() + 1);
 
-		graphics.DrawImage(&(*_image), 2, 2, 12, 12);
+		graphics.DrawImage(_image, 4, 4, getWidth() - 8, getHieght() - 8);
 		if (this->isLocked()) {
 			Gdiplus::SolidBrush lockBrush(MAIN_WINDOW_COLOR_HEADER_BUTTON_LOCK);
 			graphics.FillRectangle(&lockBrush, -1, -1, getWidth() + 1, getHieght() + 1);
@@ -54,7 +54,7 @@ namespace explorer {
 		Gdiplus::SolidBrush brush((isHover() && !isLocked()) ? (MAIN_WINDOW_COLOR_HEADER_BUTTON_SELECTED) : (MAIN_WINDOW_COLOR_HEADER));
 		graphics.FillRectangle(&brush, -1, -1, getWidth() + 1, getHieght() + 1);
 
-		graphics.DrawImage(&(*_image), 2, 2, 12, 12);
+		graphics.DrawImage(_image, 4, 4, getWidth() - 8, getHieght() - 8);
 		if (this->isLocked()) {
 			Gdiplus::SolidBrush lockBrush(MAIN_WINDOW_COLOR_HEADER_BUTTON_LOCK);
 			graphics.FillRectangle(&lockBrush, -1, -1, getWidth() + 1, getHieght() + 1);
@@ -66,7 +66,7 @@ namespace explorer {
 		Gdiplus::SolidBrush brush((isHover() && !isLocked()) ? (MAIN_WINDOW_COLOR_HEADER_BUTTON_SELECTED) : (MAIN_WINDOW_COLOR_HEADER));
 		graphics.FillRectangle(&brush, -1, -1, getWidth() + 1, getHieght() + 1);
 
-		graphics.DrawImage(&(*_image), 2, 2, 12, 12);
+		graphics.DrawImage(_image, 4, 4, getWidth() - 8, getHieght() - 8);
 		if (this->isLocked()) {
 			Gdiplus::SolidBrush lockBrush(MAIN_WINDOW_COLOR_HEADER_BUTTON_LOCK);
 			graphics.FillRectangle(&lockBrush, -1, -1, getWidth() + 1, getHieght() + 1);

@@ -7,9 +7,15 @@ namespace explorer {
 	ButtonOptions::ButtonOptions(ListOfFiles* listOfFiles)
 	{
 		_listOfFiles = listOfFiles;
+		_image = Gdiplus::Image::FromFile(L".\\Icons\\Pinion.png", true);
 
 		m_registerHendler(METHOD(&ButtonOptions::mouseClickOptionsHandler));
 		m_registerHendler(METHOD(&ButtonOptions::paintHandler));
+	}
+
+	ButtonOptions::~ButtonOptions()
+	{
+		delete _image;
 	}
 
 	void ButtonOptions::paintHandler(Gdiplus::Graphics& graphics)
@@ -19,9 +25,9 @@ namespace explorer {
 		Gdiplus::SolidBrush brush((isHover() && !isLocked()) ? (MAIN_WINDOW_COLOR_HEADER_BUTTON_SELECTED) : (MAIN_WINDOW_COLOR_HEADER));
 		graphics.FillRectangle(&brush, -1, -1, getWidth() + 1, getHieght() + 1);
 
-		graphics.DrawLine(&pen, 2, 3, getWidth() - 4, 3);
-		graphics.DrawLine(&pen, 2, 7, getWidth() - 4, 7);
-		graphics.DrawLine(&pen, 2, 11, getWidth() - 4, 11);
+		graphics.SetInterpolationMode(Gdiplus::InterpolationModeBilinear);
+		graphics.DrawImage(_image, 3, 3, getWidth() - 8, getHieght() - 8);
+
 	}
 
 	void ButtonOptions::mouseClickOptionsHandler(const MouseEventClick& mouseEventClick)

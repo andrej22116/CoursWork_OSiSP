@@ -28,16 +28,48 @@ namespace explorer {
 
 	void ButtonMaximize::paintHandler(Gdiplus::Graphics& graphics)
 	{
-		Gdiplus::Pen pen(Gdiplus::Color::White, 1);
+		Gdiplus::Pen pen(Gdiplus::Color(254, 200, 200, 200), 1);
 		Gdiplus::SolidBrush brush((isHover()) ?
 			(MAIN_WINDOW_COLOR_HEADER_BUTTON_SELECTED) :
 			(MAIN_WINDOW_COLOR_HEADER));
 		graphics.FillRectangle(&brush, -1, -1, getWidth() + 1, getHieght() + 1);
 
 
-		Gdiplus::Rect rect_0(4, 4, getWidth() - 9, getHieght() - 9);
+		int width = getWidth();
+		int height = getHieght();
 
-		graphics.DrawRectangle(&pen, rect_0);
+		int verticalOffset = 5;
+		int horizontalOffset = (width - (height - (verticalOffset * 2))) / 2;
+
+		if (!_maximized) {
+			Gdiplus::Rect rect_0(
+				horizontalOffset,
+				verticalOffset,
+				(width - (horizontalOffset * 2) - 1),
+				(height - (verticalOffset * 2) - 1)
+			);
+
+			graphics.DrawRectangle(&pen, rect_0);
+		}
+		else {
+			Gdiplus::Rect rect_0(
+				horizontalOffset + 2,
+				verticalOffset,
+				(width - (horizontalOffset * 2) - 3),
+				(height - (verticalOffset * 2) - 3)
+			);
+			Gdiplus::Rect rect_1(
+				horizontalOffset,
+				verticalOffset + 2,
+				(width - (horizontalOffset * 2) - 3),
+				(height - (verticalOffset * 2) - 3)
+			);
+
+			graphics.DrawRectangle(&pen, rect_0);
+
+			graphics.FillRectangle(&brush, rect_1);
+			graphics.DrawRectangle(&pen, rect_1);
+		}
 	}
 
 	void ButtonMaximize::maximizeHandler(const MouseEventClick& mouseEventClick)
