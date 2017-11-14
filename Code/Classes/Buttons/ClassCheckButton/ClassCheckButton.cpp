@@ -5,8 +5,8 @@ namespace explorer {
 
 	void CheckButton::init()
 	{
-		m_registerHendler(METHOD(&CheckButton::paintHandler));
-		m_registerHendler(METHOD(&CheckButton::mouseClickHandler));
+		registerHendler(METHOD(&CheckButton::paintHandler));
+		registerHendler(METHOD(&CheckButton::mouseClickHandler));
 
 		setLock(false);
 	}

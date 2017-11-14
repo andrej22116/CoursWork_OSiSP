@@ -5,9 +5,9 @@ namespace explorer {
 
 	ButtonClose::ButtonClose()
 	{
-		m_registerHendler(METHOD(&ButtonClose::mouseClickCloseHandler));
-		m_registerHendler(METHOD(&ButtonClose::paintHandler));
-		m_registerHendler(METHOD(&ButtonClose::resizeParentHandler));
+		registerHendler(METHOD(&ButtonClose::mouseClickCloseHandler));
+		registerHendler(METHOD(&ButtonClose::paintHandler));
+		registerHendler(METHOD(&ButtonClose::resizeParentHandler));
 
 		setMoveWhenParentResizeing(true);
 	}

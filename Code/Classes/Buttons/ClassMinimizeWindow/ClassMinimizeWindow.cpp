@@ -5,10 +5,10 @@ namespace explorer {
 
 	ButtonMinimize::ButtonMinimize()
 	{
-		m_registerHendler(METHOD(&ButtonMinimize::paintHandler));
-		m_registerHendler(METHOD(&ButtonMinimize::resizeParentHandler));
+		registerHendler(METHOD(&ButtonMinimize::paintHandler));
+		registerHendler(METHOD(&ButtonMinimize::resizeParentHandler));
 
-		m_registerHendler(METHOD(&ButtonMinimize::minimizeHandler));
+		registerHendler(METHOD(&ButtonMinimize::minimizeHandler));
 		setMoveWhenParentResizeing(true);
 	}
 

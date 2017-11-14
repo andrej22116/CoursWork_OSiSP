@@ -4,7 +4,7 @@
 namespace explorer {
 	OptionsWindow::OptionsWindow()
 	{
-		m_registerHendler(METHOD(&OptionsWindow::paintHandler));
+		registerHendler(METHOD(&OptionsWindow::paintHandler));
 
 		setResizeWhenParentResizeing(false, true);
 

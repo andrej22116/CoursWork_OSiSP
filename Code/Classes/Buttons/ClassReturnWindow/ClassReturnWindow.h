@@ -20,20 +20,12 @@ namespace explorer {
 		ButtonReturnType _type;
 
 	public:
-		static std::vector<ButtonReturn*> buttons;
-
 		ButtonReturn(ButtonReturnType type);
 		~ButtonReturn();
 
 		void paintHandler_backward(Gdiplus::Graphics& graphics);
 		void paintHandler_forward(Gdiplus::Graphics& graphics);
 		void paintHandler_up(Gdiplus::Graphics& graphics);
-
-		void mouseClickHandler_backward(const MouseEventClick& mouseEventClick);
-		void mouseClickHandler_forward(const MouseEventClick& mouseEventClick);
-		void mouseClickHandler_up(const MouseEventClick& mouseEventClick);
-
-		static void nextDirrectory(std::wstring& oldDirrectory);
 	};
 
 }

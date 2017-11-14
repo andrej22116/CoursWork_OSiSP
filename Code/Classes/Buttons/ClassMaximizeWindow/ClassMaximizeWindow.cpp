@@ -5,16 +5,16 @@
 namespace explorer {
 	ButtonMaximize::ButtonMaximize()
 	{
-		m_registerHendler(METHOD(&ButtonMaximize::paintHandler));
+		registerHendler(METHOD(&ButtonMaximize::paintHandler));
 
-		m_registerHendler(METHOD(&ButtonMaximize::hoverHandler));
-		m_registerHendler(METHOD(&ButtonMaximize::resizeParentHandler));
+		registerHendler(METHOD(&ButtonMaximize::hoverHandler));
+		registerHendler(METHOD(&ButtonMaximize::resizeParentHandler));
 
-		m_registerHendler(METHOD(&ButtonMaximize::maximizeHandler));
+		registerHendler(METHOD(&ButtonMaximize::maximizeHandler));
 		setMoveWhenParentResizeing(true);
 
 #ifdef _DEBUGU
-		m_registerHendler(WM_RBUTTONDOWN, METHOD(&ButtonMaximize::testHandler));
+		registerHendler(WM_RBUTTONDOWN, METHOD(&ButtonMaximize::testHandler));
 #endif
 
 		_maximized = false;

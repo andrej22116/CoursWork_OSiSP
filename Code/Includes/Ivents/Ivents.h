@@ -229,32 +229,12 @@ namespace explorer {
 		PARENT_HIDE,
 		PARENT_SHOW
 	};
-	enum ChildEventCodes {
-		CHILD_RESIZE,
-		CHILD_MOVE,
-		CHILD_ACTIVE,
-		CHILD_NOTACTIVE,
-
-		CHILD_HIDE,
-		CHILD_SHOW,
-		CHILD_MOUSE_CLICK,
-	};
 
 	struct ParentEvent {
 		int Width, Height;
 		int Pos_X, Pos_Y;
 
 		ParentEventCodes Code;
-	};
-	struct ChildEvent {
-		Window* ChildWindow;
-		int Width, Height;
-		int Pos_X, Pos_Y;
-
-		int MousePos_X, MousePos_Y;
-		MouseKeyCodes MouseKey;
-
-		ChildEventCodes Code;
 	};
 }
 

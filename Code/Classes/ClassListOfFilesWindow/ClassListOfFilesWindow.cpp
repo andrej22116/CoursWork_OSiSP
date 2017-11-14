@@ -6,10 +6,10 @@ namespace explorer {
 
 	ListOfFiles::ListOfFiles() : _activeLine(-1), _selectedLine(-1)
 	{
-		m_registerHendler(METHOD(&ListOfFiles::paintHandler));
-		m_registerHendler(METHOD(&ListOfFiles::mouseClickHandler));
-		m_registerHendler(METHOD(&ListOfFiles::mouseMoveHandler));
-		m_registerHendler(METHOD(&ListOfFiles::resizeParentHandler));
+		registerHendler(METHOD(&ListOfFiles::paintHandler));
+		registerHendler(METHOD(&ListOfFiles::mouseClickHandler));
+		registerHendler(METHOD(&ListOfFiles::mouseMoveHandler));
+		registerHendler(METHOD(&ListOfFiles::resizeParentHandler));
 
 		_thisDirection = L"";
 		_inDrive = false;
@@ -21,7 +21,7 @@ namespace explorer {
 
 	void ListOfFiles::eventCreateWindow()
 	{
-		updateList();
+		//updateList();
 	}
 	void ListOfFiles::eventSizeWindow(int oldWidth, int oldHeight)
 	{
@@ -218,20 +218,15 @@ namespace explorer {
 		_thisDirection = directory;
 		updateList();
 	}
-/*
-	void ListOfFiles::updateButtonUP(bool lock)
-	{
-		ButtonReturn::buttons[ButtonReturn::BUTTON_RETURN_UP]->setLock(lock);
-		ButtonReturn::buttons[ButtonReturn::BUTTON_RETURN_UP]->redrawWindow(false);
-	}
-*/
+
 	void ListOfFiles::updateList()
 	{
 		if (!_thisDirection.empty()) {
 			File file(_thisDirection);
 			_thisCatalog = file.list(L"*");
 			_inDrive = true;
-			updateButtonUP(false);
+			_buttonUp->setLock(false);
+			_buttonUp->redrawWindow(false);
 		}
 		else {
 			_logicalDrives = File::getAllLogicalDrives();
@@ -241,7 +236,8 @@ namespace explorer {
 			for (auto drive : _logicalDrives) {
 				_thisCatalog.push_back(File::FileInfo(drive.first, false, true, nullptr));
 			}
-			updateButtonUP(true);
+			_buttonUp->setLock(true);
+			_buttonUp->redrawWindow(false);
 		}
 
 		_activeLine = -1;
@@ -252,6 +248,21 @@ namespace explorer {
 		setRenderBufferSize(getWidth(), _thisCatalog.size() * LISTBOX_LINE_HEIGHT);
 
 		redrawWindow(false);
+	}
+	void ListOfFiles::nextDirrectory(std::wstring& oldDirrectory)
+	{
+		while (!_forwardStack.empty()) {
+			_forwardStack.pop();
+		}
+
+		_buttonForward->setLock(true);
+		_buttonForward->redrawWindow(false);
+
+		_backwardStack.push(oldDirrectory);
+		if (_buttonBackward->isLocked()) {
+			_buttonBackward->setLock(false);
+			_buttonBackward->redrawWindow(false);
+		}
 	}
 
 	void ListOfFiles::calcOneLeftClick(const MouseEventClick& mouseEventClick)
@@ -319,12 +330,104 @@ namespace explorer {
 			std::wstring newDirection = _thisDirection + _thisCatalog[_selectedLine].Name;
 			File file(newDirection);
 			if (file.isDirectory()) {
-				ButtonReturn::nextDirrectory(_thisDirection);
+				nextDirrectory(_thisDirection);
 				setCurrentDirectory(newDirection);
 			}
 		}
 
 		//_thisDirection = _thisCatalog[_selectedLine];
 		//updateList();
+	}
+
+
+
+	void ListOfFiles::setButtonBackward(ButtonReturn* button)
+	{
+		_buttonBackward = button;
+		_buttonBackward->registerHendler(METHOD(&ListOfFiles::mouseClickButtonBackwardHandler));
+	}
+	void ListOfFiles::setButtonForward(ButtonReturn* button)
+	{
+		_buttonForward = button;
+		_buttonForward->registerHendler(METHOD(&ListOfFiles::mouseClickButtonForwardHandler));
+	}
+	void ListOfFiles::setButtonUp(ButtonReturn* button)
+	{
+		_buttonUp = button;
+		_buttonUp->registerHendler(METHOD(&ListOfFiles::mouseClickButtonUpHandler));
+	}
+
+	void ListOfFiles::mouseClickButtonBackwardHandler(const MouseEventClick& mouseEventClick)
+	{
+		if (mouseEventClick.Click == MOUSE_CLICK_ONE
+			&& mouseEventClick.Button == MOUSE_LEFT
+			&& mouseEventClick.Status == KEY_PRESSED
+			&& !_buttonBackward->isLocked()) {
+			if (!_backwardStack.empty()) {
+				_forwardStack.push(_thisDirection);
+				_thisDirection = _backwardStack.top();
+				_backwardStack.pop();
+				if (_backwardStack.empty()) {
+					_buttonBackward->setLock(true);
+					_buttonBackward->redrawWindow(false);
+				}
+
+				redrawWindow(false);
+				_buttonForward->setLock(false);
+				_buttonForward->redrawWindow(false);
+
+				updateList();
+			}
+		}
+	}
+	void ListOfFiles::mouseClickButtonForwardHandler(const MouseEventClick& mouseEventClick)
+	{
+		if (mouseEventClick.Click == MOUSE_CLICK_ONE
+			&& mouseEventClick.Button == MOUSE_LEFT
+			&& mouseEventClick.Status == KEY_PRESSED
+			&& !_buttonForward->isLocked()) {
+			if (!_forwardStack.empty()) {
+				_backwardStack.push(_thisDirection);
+				_thisDirection = _forwardStack.top();
+				_forwardStack.pop();
+
+				if (_forwardStack.empty()) {
+					_buttonForward->setLock(true);
+					_buttonForward->redrawWindow(false);
+				}
+
+				redrawWindow(false);
+				_buttonBackward->setLock(false);
+				_buttonBackward->redrawWindow(false);
+
+				updateList();
+			}
+		}
+	}
+	void ListOfFiles::mouseClickButtonUpHandler(const MouseEventClick& mouseEventClick)
+	{
+		if (mouseEventClick.Click == MOUSE_CLICK_ONE
+			&& mouseEventClick.Button == MOUSE_LEFT
+			&& mouseEventClick.Status == KEY_PRESSED
+			&& !_buttonUp->isLocked()) {
+			std::wstring currentDirection = _thisDirection;
+
+			if (!currentDirection.empty()) {
+				File file(currentDirection);
+				std::wstring backPath = file.getPrevDirection();
+				nextDirrectory(_thisDirection);
+				_thisDirection = backPath;
+				updateList();
+
+				if (backPath.empty()) {
+					setLock(true);
+				}
+				else {
+					setLock(false);
+				}
+
+				updateList();
+			}
+		}
 	}
 }

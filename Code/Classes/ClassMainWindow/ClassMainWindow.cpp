@@ -21,10 +21,10 @@ namespace explorer {
 		buttonForward(ButtonReturn::BUTTON_RETURN_FORWARD),
 		buttonBackward(ButtonReturn::BUTTON_RETURN_BACKWARD)
 	{
-		m_registerHendler(METHOD(&MainWindow::paintHandler));
-		m_registerHendler(METHOD(&MainWindow::mouseClickHandler));
-		m_registerHendler(METHOD(&MainWindow::mouseMoveHandler));
-		m_registerHendler(METHOD(&MainWindow::keyboardHandler));
+		registerHendler(METHOD(&MainWindow::paintHandler));
+		registerHendler(METHOD(&MainWindow::mouseClickHandler));
+		registerHendler(METHOD(&MainWindow::mouseMoveHandler));
+		registerHendler(METHOD(&MainWindow::keyboardHandler));
 		m_registerTimerHendler(METHOD(&MainWindow::updateBatteryStatusTimerHandler));
 
 		setHeader(true);
@@ -165,15 +165,15 @@ namespace explorer {
 			MAIN_WINDOW_BUTTON_MINIMIZE_WIDTH,
 			MAIN_WINDOW_BUTTON_MINIMIZE_HEIGHT,
 			true);
-		//listOfFiles.create(
-		//	std::wstring(L"ListOfFiles"),
-		//	*this,
-		//	LISTBOX_POS_X,
-		//	LISTBOX_POS_Y,
-		//	getWidth() - MAIN_WINDOW_BORDER_SIZE - LISTBOX_POS_X - 1,
-		//	getHieght() - MAIN_WINDOW_HEADER_HEIGHT - LISTBOX_POS_Y - 1,
-		//	true
-		//);
+		listOfFiles.create(
+			std::wstring(L"ListOfFiles"),
+			*this,
+			LISTBOX_POS_X,
+			LISTBOX_POS_Y,
+			getWidth() - MAIN_WINDOW_BORDER_SIZE - LISTBOX_POS_X - 1,
+			getHieght() - MAIN_WINDOW_HEADER_HEIGHT - LISTBOX_POS_Y - 1,
+			true
+		);
 		buttonOptions.create(
 			std::wstring(L"ButtonOptions"),
 			*this,
@@ -220,6 +220,11 @@ namespace explorer {
 			false
 		);
 
+
+		listOfFiles.setButtonBackward(&buttonBackward);
+		listOfFiles.setButtonForward(&buttonForward);
+		listOfFiles.setButtonUp(&buttonUp);
+		listOfFiles.updateList();
 		setTimer(100, 1000);
 		/*windowOptions.show(false);*/
 		//MessageBox(nullptr, (L"IT'S WORK!!! " + getWindowName()).c_str(), L"TEST", MB_OK);
@@ -251,15 +256,6 @@ namespace explorer {
 		}
 		*/
 	}
-	void MainWindow::childEventHandler(const ChildEvent& parentEvent)
-	{
-		if (parentEvent.Code == CHILD_MOUSE_CLICK
-			&& parentEvent.ChildWindow != &windowOptions
-			&& windowOptions.isShow()) {
-			windowOptions.show(false);
-		}
-	}
-
 
 	bool MainWindow::windowOptionsIsShow()
 	{

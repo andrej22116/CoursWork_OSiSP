@@ -8,8 +8,8 @@ namespace explorer {
 	{
 		_image = Gdiplus::Image::FromFile(L".\\Icons\\Pinion.png", true);
 
-		m_registerHendler(METHOD(&ButtonOptions::mouseClickOptionsHandler));
-		m_registerHendler(METHOD(&ButtonOptions::paintHandler));
+		registerHendler(METHOD(&ButtonOptions::mouseClickOptionsHandler));
+		registerHendler(METHOD(&ButtonOptions::paintHandler));
 	}
 
 	ButtonOptions::~ButtonOptions()

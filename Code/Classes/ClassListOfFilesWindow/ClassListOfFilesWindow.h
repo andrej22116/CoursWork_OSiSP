@@ -14,11 +14,13 @@ namespace explorer {
 
 	class ListOfFiles : public Window {
 	private:
-		ButtonReturn& _buttonBackward;
-		ButtonReturn& _buttonForward;
-		ButtonReturn& _buttonUp;
+		static bool _displayExtension;
+		static bool _displayHiddenFiles;
+		static bool _displayFileSize;
+		static bool _openDirectoriesInNewTab;
+		static bool _restoreLastTabs;
+		static bool _displayIcons;
 
-	private:
 		std::wstring _thisDirection;
 		std::vector<File::FileInfo> _thisCatalog;
 		std::vector<std::pair<std::wstring, int>> _logicalDrives;
@@ -43,21 +45,28 @@ namespace explorer {
 		void resizeParentHandler(const ParentEvent& parentEvent);
 
 		void updateList();
+		void nextDirrectory(std::wstring& oldDirrectory);
 
 		std::wstring getCurrentDirectory();
 		void setCurrentDirectory(std::wstring& directory);
 
-		void setButtonBackward(ButtonReturn& button);
-		void setButtonForward(ButtonReturn& button);
-		void setButtonUp(ButtonReturn& button);
+	private:
+		void calcOneLeftClick(const MouseEventClick& mouseEventClick);
+		void calcDoubleLeftClick(const MouseEventClick& mouseEventClick);
+
+	/// External elements
+	private:
+		ButtonReturn* _buttonBackward;
+		ButtonReturn* _buttonForward;
+		ButtonReturn* _buttonUp;
+	public:
+		void setButtonBackward(ButtonReturn* button);
+		void setButtonForward(ButtonReturn* button);
+		void setButtonUp(ButtonReturn* button);
 
 		void mouseClickButtonBackwardHandler(const MouseEventClick& mouseEventClick);
 		void mouseClickButtonForwardHandler(const MouseEventClick& mouseEventClick);
 		void mouseClickButtonUpHandler(const MouseEventClick& mouseEventClick);
-
-	private:
-		void calcOneLeftClick(const MouseEventClick& mouseEventClick);
-		void calcDoubleLeftClick(const MouseEventClick& mouseEventClick);
 	};
 
 }

@@ -5,7 +5,7 @@ namespace explorer {
 
 	Button::Button()
 	{
-		m_registerHendler(METHOD(&Button::hoverHandler));
+		registerHendler(METHOD(&Button::hoverHandler));
 		setLock(false);
 	}
 

@@ -28,7 +28,7 @@ namespace explorer {
 			Gdiplus::GdiplusStartupInput gdiplusStartupInput;
 			Gdiplus::GdiplusStartup(&_gdiplusToken, &gdiplusStartupInput, NULL);
 			m_registerTimerHendler(METHOD(&Window::timerCheckHoverWindow));
-			m_registerHendler(METHOD(&Window::abstratcWindowScrollIventHandler));
+			registerHendler(METHOD(&Window::abstratcWindowScrollIventHandler));
 	}
 	Window::~Window()
 	{
@@ -445,35 +445,31 @@ namespace explorer {
 		return std::pair<int, int>(version.dwMajorVersion, version.dwMinorVersion);
 	}
 
-	void Window::m_registerHendler(PaintHandler method)
+	void Window::registerHendler(PaintHandler method)
 	{
 		_paintHandlers.push_back(method);
 	}
-	void Window::m_registerHendler(MouseClickHandler method)
+	void Window::registerHendler(MouseClickHandler method)
 	{
 		_mouseClickHandlers.push_back(method);
 	}
-	void Window::m_registerHendler(MouseWheelHandler method)
+	void Window::registerHendler(MouseWheelHandler method)
 	{
 		_mouseWheelHandlers.push_back(method);
 	}
-	void Window::m_registerHendler(MouseMoveHandler method)
+	void Window::registerHendler(MouseMoveHandler method)
 	{
 		_mouseMoveHandlers.push_back(method);
 	}
-	void Window::m_registerHendler(KeyboardHandler method)
+	void Window::registerHendler(KeyboardHandler method)
 	{
 		_keyboardHandlers.push_back(method);
 	}
-	void Window::m_registerHendler(ParentHandler method)
+	void Window::registerHendler(ParentHandler method)
 	{
 		_parentHandlers.push_back(method);
 	}
-	void Window::m_registerHendler(ChildHandler method)
-	{
-		_childHandlers.push_back(method);
-	}
-	void Window::m_registerHendler(HoverHandler method)
+	void Window::registerHendler(HoverHandler method)
 	{
 		_hoverHandlers.push_back(method);
 	}
@@ -786,22 +782,6 @@ namespace explorer {
 				handler(parentEvent);
 			}
 		}
-		if (wnd->_parent) {
-			ChildEvent childEvent;
-			childEvent.ChildWindow = wnd;
-			childEvent.Code = CHILD_MOVE;
-			childEvent.Pos_X = wnd->_pos_x;
-			childEvent.Pos_Y = wnd->_pos_y;
-			childEvent.Width = wnd->_width;
-			childEvent.Height = wnd->_hieght;
-			childEvent.MousePos_X = -1;
-			childEvent.MousePos_Y = -1;
-			childEvent.MouseKey = MOUSE_NO_KEY;
-
-			for (auto handler : wnd->_parent->_childHandlers) {
-				handler(childEvent);
-			}
-		}
 	}
 	void Window::m_WndProcHandler_Size(Window* wnd, HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	{
@@ -817,23 +797,6 @@ namespace explorer {
 		for (auto child : wnd->_childList) {
 			for (auto handler : child->_parentHandlers) {
 				handler(parentEvent);
-			}
-		}
-
-		if (wnd->_parent) {
-			ChildEvent childEvent;
-			childEvent.ChildWindow = wnd;
-			childEvent.Code = CHILD_RESIZE;
-			childEvent.Pos_X = wnd->_pos_x;
-			childEvent.Pos_Y = wnd->_pos_y;
-			childEvent.Width = wnd->_width;
-			childEvent.Height = wnd->_hieght;
-			childEvent.MousePos_X = -1;
-			childEvent.MousePos_Y = -1;
-			childEvent.MouseKey = MOUSE_NO_KEY;
-
-			for (auto handler : wnd->_parent->_childHandlers) {
-				handler(childEvent);
 			}
 		}
 
@@ -895,23 +858,6 @@ namespace explorer {
 
 		for (auto handler : wnd->_mouseClickHandlers) {
 			handler(mouseEventClick);
-		}
-
-		if (wnd->_parent) {
-			ChildEvent childEvent;
-			childEvent.ChildWindow = wnd;
-			childEvent.Code = CHILD_MOUSE_CLICK;
-			childEvent.Pos_X = wnd->_pos_x;
-			childEvent.Pos_Y = wnd->_pos_y;
-			childEvent.Width = wnd->_width;
-			childEvent.Height = wnd->_hieght;
-			childEvent.MousePos_X = LOWORD(lParam);
-			childEvent.MousePos_Y = HIWORD(lParam);
-			childEvent.MouseKey = keyCode;
-
-			for (auto handler : wnd->_parent->_childHandlers) {
-				handler(childEvent);
-			}
 		}
 
 	}

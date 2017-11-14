@@ -24,7 +24,6 @@ namespace explorer {
 	typedef std::function<void(const MouseEventWheel& mouseEventWheel)> MouseWheelHandler;
 	typedef std::function<void(MouseEvent& mouseEvent)> MouseMoveHandler;
 	typedef std::function<void(const ParentEvent& parentEvent)> ParentHandler;
-	typedef std::function<void(const ChildEvent& childEvent)> ChildHandler;
 	typedef std::function<void(const KeyEvent& keyEvent)> KeyboardHandler;
 	typedef std::function<void(const int timer_ID)> TimerHandler;
 	typedef std::function<void(bool status)> HoverHandler;
@@ -45,7 +44,6 @@ namespace explorer {
 		std::list<MouseMoveHandler> _mouseMoveHandlers;
 		std::list<KeyboardHandler> _keyboardHandlers;
 		std::list<ParentHandler> _parentHandlers;
-		std::list<ChildHandler> _childHandlers;
 		std::list<PaintHandler> _paintHandlers;
 		std::list<TimerHandler> _timerHandlers;
 		std::list<HoverHandler> _hoverHandlers;
@@ -175,14 +173,13 @@ namespace explorer {
 		/*
 		 *	message, METHOD( & your_method );
 		 */
-		void m_registerHendler(PaintHandler method);
-		void m_registerHendler(MouseClickHandler method);
-		void m_registerHendler(MouseWheelHandler method);
-		void m_registerHendler(MouseMoveHandler method);
-		void m_registerHendler(KeyboardHandler method);
-		void m_registerHendler(ParentHandler method);
-		void m_registerHendler(ChildHandler method);
-		void m_registerHendler(HoverHandler method);
+		void registerHendler(PaintHandler method);
+		void registerHendler(MouseClickHandler method);
+		void registerHendler(MouseWheelHandler method);
+		void registerHendler(MouseMoveHandler method);
+		void registerHendler(KeyboardHandler method);
+		void registerHendler(ParentHandler method);
+		void registerHendler(HoverHandler method);
 		void m_registerTimerHendler(TimerHandler method);
 
 	protected:

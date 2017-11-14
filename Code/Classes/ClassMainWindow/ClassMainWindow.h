@@ -29,6 +29,7 @@ namespace explorer {
 		ButtonClose buttonClose;
 		ButtonMaximize buttonMaximize;
 		ButtonMinimize buttonMinimize;
+		ListOfFiles listOfFiles;
 		std::vector<ListOfFiles> _vectorOfListsOfFiles;
 		ButtonReturn buttonBackward;
 		ButtonReturn buttonForward;
@@ -49,7 +50,6 @@ namespace explorer {
 		void mouseClickHandler(const MouseEventClick& mouseEventClick);
 		void mouseMoveHandler(MouseEvent& mouseEvent);
 		void keyboardHandler(const KeyEvent& keyEvent);
-		void childEventHandler(const ChildEvent& parentEvent);
 
 		bool windowOptionsIsShow();
 		void showWindowOptions(bool show);
