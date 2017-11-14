@@ -14,7 +14,9 @@ namespace explorer {
 		bool _animation;
 		int _animationStatus;
 
-		CheckButton _test;
+		std::list<std::wstring> _listOfParams;
+
+		std::vector<CheckButton> _listOfcheckBoxes;
 
 	public:
 		OptionsWindow();

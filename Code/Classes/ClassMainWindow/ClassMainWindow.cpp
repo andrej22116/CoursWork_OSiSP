@@ -172,9 +172,10 @@ namespace explorer {
 			0,
 			MAIN_WINDOW_HEADER_HEIGHT+1,
 			350,
-			getHieght() - MAIN_WINDOW_HEADER_HEIGHT - 1
+			getHieght() - MAIN_WINDOW_HEADER_HEIGHT - 2,
+			false
 		);
-		windowOptions.show(false);
+		/*windowOptions.show(false);*/
 		//MessageBox(nullptr, (L"IT'S WORK!!! " + getWindowName()).c_str(), L"TEST", MB_OK);
 	}
 
