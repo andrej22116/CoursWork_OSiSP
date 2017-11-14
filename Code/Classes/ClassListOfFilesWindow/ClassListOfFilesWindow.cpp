@@ -218,14 +218,13 @@ namespace explorer {
 		_thisDirection = directory;
 		updateList();
 	}
-
+/*
 	void ListOfFiles::updateButtonUP(bool lock)
 	{
 		ButtonReturn::buttons[ButtonReturn::BUTTON_RETURN_UP]->setLock(lock);
 		ButtonReturn::buttons[ButtonReturn::BUTTON_RETURN_UP]->redrawWindow(false);
 	}
-
-
+*/
 	void ListOfFiles::updateList()
 	{
 		if (!_thisDirection.empty()) {

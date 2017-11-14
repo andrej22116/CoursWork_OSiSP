@@ -19,9 +19,6 @@ namespace explorer {
 		Gdiplus::Image* _image;
 		ButtonReturnType _type;
 
-		static std::stack<std::wstring> _forwardStack;
-		static std::stack<std::wstring> _backwardStack;
-
 	public:
 		static std::vector<ButtonReturn*> buttons;
 

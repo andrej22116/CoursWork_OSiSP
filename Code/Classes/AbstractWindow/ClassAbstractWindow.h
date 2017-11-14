@@ -16,7 +16,6 @@
 #define METHOD(method) (std::bind((method), this, std::placeholders::_1))
 
 namespace explorer {
-	class Window;
 
 	typedef std::function<void(HWND, WPARAM, LPARAM)> Hendler;
 
@@ -46,6 +45,7 @@ namespace explorer {
 		std::list<MouseMoveHandler> _mouseMoveHandlers;
 		std::list<KeyboardHandler> _keyboardHandlers;
 		std::list<ParentHandler> _parentHandlers;
+		std::list<ChildHandler> _childHandlers;
 		std::list<PaintHandler> _paintHandlers;
 		std::list<TimerHandler> _timerHandlers;
 		std::list<HoverHandler> _hoverHandlers;
@@ -172,7 +172,6 @@ namespace explorer {
 		// return system MAJOR and system MINOR versions 
 		static std::pair<int, int> getSystemVersion();
 
-	protected:
 		/*
 		 *	message, METHOD( & your_method );
 		 */
@@ -182,9 +181,12 @@ namespace explorer {
 		void m_registerHendler(MouseMoveHandler method);
 		void m_registerHendler(KeyboardHandler method);
 		void m_registerHendler(ParentHandler method);
+		void m_registerHendler(ChildHandler method);
 		void m_registerHendler(HoverHandler method);
 		void m_registerTimerHendler(TimerHandler method);
 
+	protected:
+		/* Obsolete methods */
 		void m_sendMessageForParent(UINT message, WPARAM wParam, LPARAM lParam);
 		void m_sendMessageForAllChildren(UINT message, WPARAM wParam, LPARAM lParam);
 		void m_sendMessageForChildren(std::wstring name, UINT message, WPARAM wParam, LPARAM lParam);

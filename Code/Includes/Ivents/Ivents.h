@@ -4,6 +4,7 @@
 #define _IVENTS_H_
 
 namespace explorer {
+	class Window;
 
 	enum HoverStatus {
 		HOVER_FALSE,
@@ -15,7 +16,8 @@ namespace explorer {
 		MOUSE_MIDDLE,
 		MOUSE_RIGHT,
 
-		MOUSE_MAX
+		MOUSE_MAX,
+		MOUSE_NO_KEY
 	};
 	enum MouseKeyClick {
 		MOUSE_CLICK_ONE,
@@ -225,13 +227,34 @@ namespace explorer {
 		PARENT_NOTACTIVE,
 
 		PARENT_HIDE,
-		PARENT_SHOW,
+		PARENT_SHOW
 	};
+	enum ChildEventCodes {
+		CHILD_RESIZE,
+		CHILD_MOVE,
+		CHILD_ACTIVE,
+		CHILD_NOTACTIVE,
+
+		CHILD_HIDE,
+		CHILD_SHOW,
+		CHILD_MOUSE_CLICK,
+	};
+
 	struct ParentEvent {
 		int Width, Height;
 		int Pos_X, Pos_Y;
 
 		ParentEventCodes Code;
+	};
+	struct ChildEvent {
+		Window* ChildWindow;
+		int Width, Height;
+		int Pos_X, Pos_Y;
+
+		int MousePos_X, MousePos_Y;
+		MouseKeyCodes MouseKey;
+
+		ChildEventCodes Code;
 	};
 }
 

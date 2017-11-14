@@ -47,9 +47,9 @@ namespace explorer {
 		void paintHandler(Gdiplus::Graphics& graphics);
 		
 		void mouseClickHandler(const MouseEventClick& mouseEventClick);
-		void keyboardHandler(const KeyEvent& keyEvent);
-		
 		void mouseMoveHandler(MouseEvent& mouseEvent);
+		void keyboardHandler(const KeyEvent& keyEvent);
+		void childEventHandler(const ChildEvent& parentEvent);
 
 		bool windowOptionsIsShow();
 		void showWindowOptions(bool show);

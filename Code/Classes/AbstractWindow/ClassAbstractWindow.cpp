@@ -469,6 +469,10 @@ namespace explorer {
 	{
 		_parentHandlers.push_back(method);
 	}
+	void Window::m_registerHendler(ChildHandler method)
+	{
+		_childHandlers.push_back(method);
+	}
 	void Window::m_registerHendler(HoverHandler method)
 	{
 		_hoverHandlers.push_back(method);
@@ -782,6 +786,22 @@ namespace explorer {
 				handler(parentEvent);
 			}
 		}
+		if (wnd->_parent) {
+			ChildEvent childEvent;
+			childEvent.ChildWindow = wnd;
+			childEvent.Code = CHILD_MOVE;
+			childEvent.Pos_X = wnd->_pos_x;
+			childEvent.Pos_Y = wnd->_pos_y;
+			childEvent.Width = wnd->_width;
+			childEvent.Height = wnd->_hieght;
+			childEvent.MousePos_X = -1;
+			childEvent.MousePos_Y = -1;
+			childEvent.MouseKey = MOUSE_NO_KEY;
+
+			for (auto handler : wnd->_parent->_childHandlers) {
+				handler(childEvent);
+			}
+		}
 	}
 	void Window::m_WndProcHandler_Size(Window* wnd, HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	{
@@ -797,6 +817,23 @@ namespace explorer {
 		for (auto child : wnd->_childList) {
 			for (auto handler : child->_parentHandlers) {
 				handler(parentEvent);
+			}
+		}
+
+		if (wnd->_parent) {
+			ChildEvent childEvent;
+			childEvent.ChildWindow = wnd;
+			childEvent.Code = CHILD_RESIZE;
+			childEvent.Pos_X = wnd->_pos_x;
+			childEvent.Pos_Y = wnd->_pos_y;
+			childEvent.Width = wnd->_width;
+			childEvent.Height = wnd->_hieght;
+			childEvent.MousePos_X = -1;
+			childEvent.MousePos_Y = -1;
+			childEvent.MouseKey = MOUSE_NO_KEY;
+
+			for (auto handler : wnd->_parent->_childHandlers) {
+				handler(childEvent);
 			}
 		}
 
@@ -858,6 +895,23 @@ namespace explorer {
 
 		for (auto handler : wnd->_mouseClickHandlers) {
 			handler(mouseEventClick);
+		}
+
+		if (wnd->_parent) {
+			ChildEvent childEvent;
+			childEvent.ChildWindow = wnd;
+			childEvent.Code = CHILD_MOUSE_CLICK;
+			childEvent.Pos_X = wnd->_pos_x;
+			childEvent.Pos_Y = wnd->_pos_y;
+			childEvent.Width = wnd->_width;
+			childEvent.Height = wnd->_hieght;
+			childEvent.MousePos_X = LOWORD(lParam);
+			childEvent.MousePos_Y = HIWORD(lParam);
+			childEvent.MouseKey = keyCode;
+
+			for (auto handler : wnd->_parent->_childHandlers) {
+				handler(childEvent);
+			}
 		}
 
 	}

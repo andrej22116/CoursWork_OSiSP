@@ -5,6 +5,7 @@
 
 #include "..\AbstractWindow\ClassAbstractWindow.h"
 #include "..\FileSystem\ClassFile\ClassFile.h"
+
 #include "..\Buttons\ClassReturnWindow\ClassReturnWindow.h"
 
 namespace explorer {
@@ -13,11 +14,17 @@ namespace explorer {
 
 	class ListOfFiles : public Window {
 	private:
-		std::mutex _mutexForContainer;
+		ButtonReturn& _buttonBackward;
+		ButtonReturn& _buttonForward;
+		ButtonReturn& _buttonUp;
 
+	private:
 		std::wstring _thisDirection;
 		std::vector<File::FileInfo> _thisCatalog;
 		std::vector<std::pair<std::wstring, int>> _logicalDrives;
+
+		std::stack<std::wstring> _forwardStack;
+		std::stack<std::wstring> _backwardStack;
 
 		int _activeLine;
 		int _selectedLine;
@@ -31,19 +38,22 @@ namespace explorer {
 		virtual void eventSizeWindow(int oldWidth, int oldHeight) override;
 
 		void paintHandler(Gdiplus::Graphics& graphics);
-
 		void mouseClickHandler(const MouseEventClick& mouseEventClick);
-
 		void mouseMoveHandler(MouseEvent& mouseEvent);
-
-
 		void resizeParentHandler(const ParentEvent& parentEvent);
 
 		void updateList();
+
 		std::wstring getCurrentDirectory();
 		void setCurrentDirectory(std::wstring& directory);
 
-		void updateButtonUP(bool lock);
+		void setButtonBackward(ButtonReturn& button);
+		void setButtonForward(ButtonReturn& button);
+		void setButtonUp(ButtonReturn& button);
+
+		void mouseClickButtonBackwardHandler(const MouseEventClick& mouseEventClick);
+		void mouseClickButtonForwardHandler(const MouseEventClick& mouseEventClick);
+		void mouseClickButtonUpHandler(const MouseEventClick& mouseEventClick);
 
 	private:
 		void calcOneLeftClick(const MouseEventClick& mouseEventClick);

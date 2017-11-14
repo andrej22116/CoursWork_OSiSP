@@ -2,8 +2,6 @@
 #include "ClassReturnWindow.h"
 
 namespace explorer {
-	std::stack<std::wstring> ButtonReturn::_forwardStack = std::stack<std::wstring>();
-	std::stack<std::wstring> ButtonReturn::_backwardStack = std::stack<std::wstring>();
 	std::vector<ButtonReturn*> ButtonReturn::buttons = std::vector<ButtonReturn*>(BUTTON_RETURN_TYPES_COUNT);
 
 	ButtonReturn::ButtonReturn(ButtonReturnType type)

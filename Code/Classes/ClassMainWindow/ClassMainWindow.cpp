@@ -1,10 +1,6 @@
 #include "stdafx.h"
 #include "ClassMainWindow.h"
 
-#include <dwmapi.h>
-#pragma comment(lib, "Dwmapi.lib")
-#include <stdio.h>
-
 struct WINCOMPATTRDATA {
 	DWORD attribute;
 	PVOID pData;
@@ -23,8 +19,7 @@ namespace explorer {
 	MainWindow::MainWindow() : 
 		buttonUp(ButtonReturn::BUTTON_RETURN_UP),
 		buttonForward(ButtonReturn::BUTTON_RETURN_FORWARD),
-		buttonBackward(ButtonReturn::BUTTON_RETURN_BACKWARD),
-		buttonOptions()
+		buttonBackward(ButtonReturn::BUTTON_RETURN_BACKWARD)
 	{
 		m_registerHendler(METHOD(&MainWindow::paintHandler));
 		m_registerHendler(METHOD(&MainWindow::mouseClickHandler));
@@ -37,6 +32,7 @@ namespace explorer {
 		setMinSize(20 * 4 + 3 * 24 + 2, MAIN_WINDOW_BORDER_SIZE * 2 + MAIN_WINDOW_HEADER_HEIGHT * 2 - 3);
 
 		_batteryStatus = -1;
+		_batteryFound = false;
 		//setBorderSize(3);
 	}
 
@@ -169,15 +165,15 @@ namespace explorer {
 			MAIN_WINDOW_BUTTON_MINIMIZE_WIDTH,
 			MAIN_WINDOW_BUTTON_MINIMIZE_HEIGHT,
 			true);
-		listOfFiles.create(
-			std::wstring(L"ListOfFiles"),
-			*this,
-			LISTBOX_POS_X,
-			LISTBOX_POS_Y,
-			getWidth() - MAIN_WINDOW_BORDER_SIZE - LISTBOX_POS_X - 1,
-			getHieght() - MAIN_WINDOW_HEADER_HEIGHT - LISTBOX_POS_Y - 1,
-			true
-		);
+		//listOfFiles.create(
+		//	std::wstring(L"ListOfFiles"),
+		//	*this,
+		//	LISTBOX_POS_X,
+		//	LISTBOX_POS_Y,
+		//	getWidth() - MAIN_WINDOW_BORDER_SIZE - LISTBOX_POS_X - 1,
+		//	getHieght() - MAIN_WINDOW_HEADER_HEIGHT - LISTBOX_POS_Y - 1,
+		//	true
+		//);
 		buttonOptions.create(
 			std::wstring(L"ButtonOptions"),
 			*this,
@@ -241,7 +237,9 @@ namespace explorer {
 		else if (mouseEventClick.Button == MOUSE_LEFT && mouseEventClick.Status == KEY_RELEASED) {
 		}
 	}
-
+	void MainWindow::mouseMoveHandler(MouseEvent& mouseEvent)
+	{
+	}
 	void MainWindow::keyboardHandler(const KeyEvent& keyEvent)
 	{
 		//SendMessage(getHWND(), WM_VSCROLL, )
@@ -253,9 +251,13 @@ namespace explorer {
 		}
 		*/
 	}
-
-	void MainWindow::mouseMoveHandler(MouseEvent& mouseEvent)
+	void MainWindow::childEventHandler(const ChildEvent& parentEvent)
 	{
+		if (parentEvent.Code == CHILD_MOUSE_CLICK
+			&& parentEvent.ChildWindow != &windowOptions
+			&& windowOptions.isShow()) {
+			windowOptions.show(false);
+		}
 	}
 
 

@@ -20,6 +20,8 @@
 #include <regex>
 
 #include <gdiplus.h>
+#include <dwmapi.h>
 #pragma comment(lib, "gdiplus.lib")
+#pragma comment(lib, "Dwmapi.lib")
 
 namespace filesystem = std::experimental::filesystem;
