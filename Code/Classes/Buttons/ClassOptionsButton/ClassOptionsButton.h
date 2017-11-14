@@ -1,7 +1,6 @@
 #pragma once
 
 #include "..\ClassAbstractButton\ClassAbstractButton.h"
-#include "..\..\ClassListOfFilesWindow\ClassListOfFilesWindow.h"
 
 #ifndef _CLASS_OPTIONS_BUTTON_H_
 #define _CLASS_OPTIONS_BUTTON_H_
@@ -17,7 +16,7 @@ namespace explorer {
 		Gdiplus::Image* _image;
 
 	public:
-		ButtonOptions(ListOfFiles* listOfFiles);
+		ButtonOptions();
 		~ButtonOptions();
 
 		void paintHandler(Gdiplus::Graphics& graphics);

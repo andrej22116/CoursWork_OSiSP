@@ -6,10 +6,9 @@ namespace explorer {
 	std::stack<std::wstring> ButtonReturn::_backwardStack = std::stack<std::wstring>();
 	std::vector<ButtonReturn*> ButtonReturn::buttons = std::vector<ButtonReturn*>(BUTTON_RETURN_TYPES_COUNT);
 
-	ButtonReturn::ButtonReturn(ListOfFiles* listOfFiles, ButtonReturnType type)
+	ButtonReturn::ButtonReturn(ButtonReturnType type)
 	{
 		_image = Gdiplus::Image::FromFile(L".\\Icons\\Pointer.png", true);
-		_listOfFiles = listOfFiles;
 		_type = type;
 
 		buttons[type] = this;

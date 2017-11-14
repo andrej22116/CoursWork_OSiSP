@@ -1,15 +1,11 @@
 #pragma once
 
 #include "..\ClassAbstractButton\ClassAbstractButton.h"
-#include "..\..\ClassListOfFilesWindow\ClassListOfFilesWindow.h"
 
 #ifndef _CLASS_RETURN_WINDOW_H_
 #define _CLASS_RETURN_WINDOW_H_
 
 namespace explorer {
-
-	class ListOfFiles;
-
 	class ButtonReturn : public Button {
 	public:
 		enum ButtonReturnType {
@@ -21,7 +17,6 @@ namespace explorer {
 
 	private:
 		Gdiplus::Image* _image;
-		ListOfFiles* _listOfFiles;
 		ButtonReturnType _type;
 
 		static std::stack<std::wstring> _forwardStack;
@@ -30,7 +25,7 @@ namespace explorer {
 	public:
 		static std::vector<ButtonReturn*> buttons;
 
-		ButtonReturn(ListOfFiles* listOfFiles, ButtonReturnType type);
+		ButtonReturn(ButtonReturnType type);
 		~ButtonReturn();
 
 		void paintHandler_backward(Gdiplus::Graphics& graphics);

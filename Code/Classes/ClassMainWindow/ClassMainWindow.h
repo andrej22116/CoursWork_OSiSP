@@ -29,7 +29,7 @@ namespace explorer {
 		ButtonClose buttonClose;
 		ButtonMaximize buttonMaximize;
 		ButtonMinimize buttonMinimize;
-		ListOfFiles listOfFiles;
+		std::vector<ListOfFiles> _vectorOfListsOfFiles;
 		ButtonReturn buttonBackward;
 		ButtonReturn buttonForward;
 		ButtonReturn buttonUp;

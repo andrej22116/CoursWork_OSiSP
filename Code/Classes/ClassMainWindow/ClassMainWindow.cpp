@@ -21,10 +21,10 @@ typedef BOOL (WINAPI *SWCA)(HWND, WINCOMPATTRDATA*);
 
 namespace explorer {
 	MainWindow::MainWindow() : 
-		buttonUp(&listOfFiles, ButtonReturn::BUTTON_RETURN_UP),
-		buttonForward(&listOfFiles, ButtonReturn::BUTTON_RETURN_FORWARD),
-		buttonBackward(&listOfFiles, ButtonReturn::BUTTON_RETURN_BACKWARD),
-		buttonOptions(&listOfFiles)
+		buttonUp(ButtonReturn::BUTTON_RETURN_UP),
+		buttonForward(ButtonReturn::BUTTON_RETURN_FORWARD),
+		buttonBackward(ButtonReturn::BUTTON_RETURN_BACKWARD),
+		buttonOptions()
 	{
 		m_registerHendler(METHOD(&MainWindow::paintHandler));
 		m_registerHendler(METHOD(&MainWindow::mouseClickHandler));

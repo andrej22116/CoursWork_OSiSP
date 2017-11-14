@@ -4,9 +4,8 @@
 
 namespace explorer {
 
-	ButtonOptions::ButtonOptions(ListOfFiles* listOfFiles)
+	ButtonOptions::ButtonOptions()
 	{
-		_listOfFiles = listOfFiles;
 		_image = Gdiplus::Image::FromFile(L".\\Icons\\Pinion.png", true);
 
 		m_registerHendler(METHOD(&ButtonOptions::mouseClickOptionsHandler));
