@@ -36,6 +36,10 @@ namespace explorer {
 		ButtonOptions buttonOptions;
 		OptionsWindow windowOptions;
 
+		bool _batteryFound;
+		bool _isCharging;
+		int  _batteryStatus;
+
 	public:
 		MainWindow();
 
@@ -49,6 +53,8 @@ namespace explorer {
 
 		bool windowOptionsIsShow();
 		void showWindowOptions(bool show);
+
+		void updateBatteryStatusTimerHandler(int timerID);
 
 	private:
 	};

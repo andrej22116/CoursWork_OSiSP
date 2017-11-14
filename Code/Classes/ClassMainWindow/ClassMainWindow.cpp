@@ -30,6 +30,7 @@ namespace explorer {
 		m_registerHendler(METHOD(&MainWindow::mouseClickHandler));
 		m_registerHendler(METHOD(&MainWindow::mouseMoveHandler));
 		m_registerHendler(METHOD(&MainWindow::keyboardHandler));
+		m_registerTimerHendler(METHOD(&MainWindow::updateBatteryStatusTimerHandler));
 
 		setHeader(true);
 		setResizebleAll(true, true, true, true);
@@ -43,6 +44,58 @@ namespace explorer {
 		Gdiplus::SolidBrush brush_2(MAIN_WINDOW_COLOR_BACKGROUND);
 		Gdiplus::Rect region_2(0, 0, this->getWidth(), this->getHieght());
 		graphics.FillRectangle(&brush_2, region_2);
+
+		if (_batteryFound) {
+			Gdiplus::Pen batteryBorderPen(Gdiplus::Color(254, 200, 200, 200));
+			Gdiplus::SolidBrush batteryStatus(
+				_batteryStatus > 15 ?
+				Gdiplus::Color(254, 200, 200, 200) :
+				Gdiplus::Color(254, 255, 61, 0)
+			);
+			Gdiplus::SolidBrush battaryStatusNum(Gdiplus::Color(254, 156, 0, 0));
+			Gdiplus::Font font(&Gdiplus::FontFamily(L"Arial"), 8, Gdiplus::FontStyleBold);
+			Gdiplus::StringFormat stringFormat(Gdiplus::StringFormatFlags::StringFormatFlagsNoClip);
+			stringFormat.SetLineAlignment(Gdiplus::StringAlignmentCenter);
+			stringFormat.SetAlignment(Gdiplus::StringAlignmentCenter);
+
+			int width = getWidth();
+			int height = getHieght();
+
+			Gdiplus::RectF rect;
+			rect.X = width - 40;
+			rect.Y = height - MAIN_WINDOW_HEADER_HEIGHT + 2;
+			rect.Width = 40 - MAIN_WINDOW_BORDER_SIZE - 2;
+			rect.Height = MAIN_WINDOW_HEADER_HEIGHT - 6;
+
+			graphics.DrawRectangle(&batteryBorderPen, rect);
+			graphics.DrawLine(&batteryBorderPen,
+				rect.X - 1, rect.Y + 3,
+				rect.X - 1, rect.Y + rect.Height - 3
+			);
+
+			rect.X += 2;
+			rect.Y += 2;
+			rect.Width -= 3;
+			rect.Height -= 3;
+
+			Gdiplus::RectF rectText(rect);
+			rectText.Y--;;
+			float procent = rect.Width * float(_batteryStatus) / 100.0f;
+			rect.X += rect.Width - procent;
+			rect.Width = procent;
+
+			graphics.FillRectangle(&batteryStatus, rect);
+			graphics.DrawString(
+				(std::to_wstring(_batteryStatus)).c_str(),
+				-1,
+				&font,
+				rectText,
+				&stringFormat,
+				&battaryStatusNum
+			);
+		}
+
+
 		/*
 		Gdiplus::SolidBrush brush(MAIN_WINDOW_COLOR_HEADER);
 		Gdiplus::Rect region(0, 0, this->getWidth(), 17);
@@ -175,6 +228,8 @@ namespace explorer {
 			getHieght() - MAIN_WINDOW_HEADER_HEIGHT - 2,
 			false
 		);
+
+		setTimer(100, 1000);
 		/*windowOptions.show(false);*/
 		//MessageBox(nullptr, (L"IT'S WORK!!! " + getWindowName()).c_str(), L"TEST", MB_OK);
 	}
@@ -216,5 +271,38 @@ namespace explorer {
 	void MainWindow::showWindowOptions(bool show)
 	{
 		windowOptions.show(show);
+	}
+
+	void MainWindow::updateBatteryStatusTimerHandler(int timerID)
+	{
+		SYSTEM_POWER_STATUS sps;
+		if (GetSystemPowerStatus(&sps)) {
+			_batteryFound = true;
+			if (sps.BatteryFlag == 255 || sps.BatteryFlag == 128) {
+				killTimer(timerID);
+				_batteryFound = false;
+				return;
+			}
+			if (_batteryStatus == (int)sps.BatteryLifePercent) {
+				return;
+			}
+
+			_isCharging = (bool)sps.ACLineStatus;
+			_batteryStatus = (int)sps.BatteryLifePercent;
+
+			int width = getWidth();
+			int height = getHieght();
+
+			RECT rect;
+			rect.left = width - 50;
+			rect.top = height - MAIN_WINDOW_HEADER_HEIGHT;
+			rect.right = width;
+			rect.bottom = height;
+
+			InvalidateRect(getHWND(), &rect, false);
+		}
+		else {
+			_batteryFound = false;
+		}
 	}
 }
