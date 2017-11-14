@@ -43,7 +43,7 @@ namespace explorer {
 
 		Gdiplus::StringFormat stringFormat(Gdiplus::StringFormatFlags::StringFormatFlagsNoClip);
 		stringFormat.SetLineAlignment(Gdiplus::StringAlignmentCenter);
-		stringFormat.SetAlignment(Gdiplus::StringAlignmentFar);
+		stringFormat.SetAlignment(Gdiplus::StringAlignmentNear);
 
 		Gdiplus::Font font(&Gdiplus::FontFamily(L"Arial"), 12);
 		Gdiplus::SolidBrush brush(Gdiplus::Color(254, 0, 0, 0));
@@ -57,8 +57,8 @@ namespace explorer {
 		int lineOffset = rectForDraw.GetBottom();
 		
 		penBottomLine.SetBrush(&Gdiplus::LinearGradientBrush(
-			Gdiplus::Point(10, 0),
 			Gdiplus::Point(10 + widthLine, 0),
+			Gdiplus::Point(10, 0),
 			Gdiplus::Color(0, 0, 0, 0),
 			Gdiplus::Color(20, 0, 0, 0)
 		));

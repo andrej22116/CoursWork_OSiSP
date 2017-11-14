@@ -34,8 +34,9 @@ namespace explorer {
 
 		setHeader(true);
 		setResizebleAll(true, true, true, true);
-		setMinSize(16 * 7 + 2, MAIN_WINDOW_BORDER_SIZE * 2 - 1 + MAIN_WINDOW_HEADER_HEIGHT);
+		setMinSize(20 * 4 + 3 * 24 + 2, MAIN_WINDOW_BORDER_SIZE * 2 + MAIN_WINDOW_HEADER_HEIGHT * 2 - 3);
 
+		_batteryStatus = -1;
 		//setBorderSize(3);
 	}
 
@@ -52,20 +53,20 @@ namespace explorer {
 				Gdiplus::Color(254, 200, 200, 200) :
 				Gdiplus::Color(254, 255, 61, 0)
 			);
-			Gdiplus::SolidBrush battaryStatusNum(Gdiplus::Color(254, 156, 0, 0));
+			Gdiplus::SolidBrush battaryStatusNum(Gdiplus::Color(254, 200, 200, 200));
 			Gdiplus::Font font(&Gdiplus::FontFamily(L"Arial"), 8, Gdiplus::FontStyleBold);
 			Gdiplus::StringFormat stringFormat(Gdiplus::StringFormatFlags::StringFormatFlagsNoClip);
 			stringFormat.SetLineAlignment(Gdiplus::StringAlignmentCenter);
-			stringFormat.SetAlignment(Gdiplus::StringAlignmentCenter);
+			stringFormat.SetAlignment(Gdiplus::StringAlignmentFar);
 
 			int width = getWidth();
 			int height = getHieght();
 
 			Gdiplus::RectF rect;
-			rect.X = width - 40;
-			rect.Y = height - MAIN_WINDOW_HEADER_HEIGHT + 2;
-			rect.Width = 40 - MAIN_WINDOW_BORDER_SIZE - 2;
-			rect.Height = MAIN_WINDOW_HEADER_HEIGHT - 6;
+			rect.X = width - 20;
+			rect.Y = height - MAIN_WINDOW_HEADER_HEIGHT + 4;
+			rect.Width = 20 - MAIN_WINDOW_BORDER_SIZE - 2;
+			rect.Height = MAIN_WINDOW_HEADER_HEIGHT - 10;
 
 			graphics.DrawRectangle(&batteryBorderPen, rect);
 			graphics.DrawLine(&batteryBorderPen,
@@ -79,29 +80,23 @@ namespace explorer {
 			rect.Height -= 3;
 
 			Gdiplus::RectF rectText(rect);
-			rectText.Y--;;
+			rectText.Y--;
+			rectText.Width += 20;
+			rectText.X -= rectText.Width + 4;
 			float procent = rect.Width * float(_batteryStatus) / 100.0f;
 			rect.X += rect.Width - procent;
 			rect.Width = procent;
 
 			graphics.FillRectangle(&batteryStatus, rect);
 			graphics.DrawString(
-				(std::to_wstring(_batteryStatus)).c_str(),
+				(std::to_wstring(_batteryStatus)+L" %").c_str(),
 				-1,
 				&font,
 				rectText,
 				&stringFormat,
 				&battaryStatusNum
 			);
-		}
-
-
-		/*
-		Gdiplus::SolidBrush brush(MAIN_WINDOW_COLOR_HEADER);
-		Gdiplus::Rect region(0, 0, this->getWidth(), 17);
-		graphics.FillRectangle(&brush, region);
-		*/
-	
+		}	
 	}
 
 	void MainWindow::eventCreateWindow()
@@ -296,12 +291,13 @@ namespace explorer {
 			RECT rect;
 			rect.left = width - 50;
 			rect.top = height - MAIN_WINDOW_HEADER_HEIGHT;
-			rect.right = width;
+			rect.right = width - MAIN_WINDOW_BORDER_SIZE;
 			rect.bottom = height;
 
 			InvalidateRect(getHWND(), &rect, false);
 		}
 		else {
+			killTimer(timerID);
 			_batteryFound = false;
 		}
 	}
