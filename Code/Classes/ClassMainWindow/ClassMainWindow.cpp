@@ -29,7 +29,7 @@ namespace explorer {
 
 		setHeader(true);
 		setResizebleAll(true, true, true, true);
-		setMinSize(20 * 4 + 3 * 24 + 2, MAIN_WINDOW_BORDER_SIZE * 2 + MAIN_WINDOW_HEADER_HEIGHT * 2 - 3);
+		setMinSize(20 * 5 + 52 + 3 * 24, MAIN_WINDOW_BORDER_SIZE * 2 + MAIN_WINDOW_HEADER_HEIGHT * 2 - 3);
 
 		_batteryStatus = -1;
 		_batteryFound = false;
@@ -222,7 +222,7 @@ namespace explorer {
 		newTubButton.create(
 			std::wstring(L"ButtonBackward"),
 			*this,
-			MAIN_WINDOW_BUTTON_FORWARD_POS_X + 20,
+			MAIN_WINDOW_BUTTON_FORWARD_POS_X + 70,
 			MAIN_WINDOW_BUTTON_FORWARD_POS_Y,
 			MAIN_WINDOW_BUTTON_FORWARD_WIDTH,
 			MAIN_WINDOW_BUTTON_FORWARD_HEIGHT,
@@ -237,6 +237,15 @@ namespace explorer {
 			getHieght() - MAIN_WINDOW_HEADER_HEIGHT - 2,
 			false
 		);
+		tabsButton.create(
+			std::wstring(L"ButtonBackward"),
+			*this,
+			MAIN_WINDOW_BUTTON_FORWARD_POS_X + 20,
+			MAIN_WINDOW_BUTTON_FORWARD_POS_Y,
+			MAIN_WINDOW_BUTTON_FORWARD_WIDTH + 30,
+			MAIN_WINDOW_BUTTON_FORWARD_HEIGHT,
+			true
+		);
 
 		listOfFiles.setButtonBackward(&buttonBackward);
 		listOfFiles.setButtonForward(&buttonForward);
@@ -247,6 +256,7 @@ namespace explorer {
 		//MessageBox(nullptr, (L"IT'S WORK!!! " + getWindowName()).c_str(), L"TEST", MB_OK);
 
 		buttonOptions.registerHendler(METHOD(&MainWindow::mouseClickButtonOptionsHandler));
+		tabsButton.registerHendler(METHOD(&MainWindow::mouseClickButtonAllTabsHandler));
 	}
 
 	void MainWindow::mouseClickHandler(const MouseEventClick& mouseEventClick)
@@ -323,13 +333,35 @@ namespace explorer {
 			}
 			else {
 				windowOptions.show(true);
-				m_moveListOfFilesIfShowLeftWindow(widthOptions, true);
+				if (!tabbedWindow.isShow()) {
+					m_moveListOfFilesIfShowLeftWindow(widthOptions, true);
+				}
+				else {
+					tabbedWindow.show(false);
+				}
 			}
 		}
 	}
 	void MainWindow::mouseClickButtonAllTabsHandler(const MouseEventClick& mouseEventClick)
 	{
+		if (mouseEventClick.Button == MOUSE_LEFT && mouseEventClick.Status == KEY_PRESSED) {
+			int widthTabs = tabbedWindow.getWidth();
+			int widthList = listOfFiles.getWidth();
 
+			if (tabbedWindow.isShow()) {
+				tabbedWindow.show(false);
+				m_moveListOfFilesIfShowLeftWindow(widthTabs, false);
+			}
+			else {
+				tabbedWindow.show(true);
+				if (!windowOptions.isShow()) {
+					m_moveListOfFilesIfShowLeftWindow(widthTabs, true);
+				}
+				else {
+					windowOptions.show(false);
+				}
+			}
+		}
 	}
 	void MainWindow::mouseClickButtonNewTabHandler(const MouseEventClick& mouseEventClick)
 	{

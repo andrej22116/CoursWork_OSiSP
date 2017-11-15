@@ -10,6 +10,7 @@
 #include "..\Buttons\ClassReturnWindow\ClassReturnWindow.h"
 #include "..\Buttons\ClassNewTabButton\ClassNewTabButton.h"
 #include "..\ClassListOfTabsWindow\ClassListOfTabsWindow.h"
+#include "..\Buttons\ClassTabsButton\ClassTabsButton.h"
 
 #ifndef _CLASS_MAIN_WINDOW_H_
 #define _CLASS_MAIN_WINDOW_H_
@@ -29,6 +30,7 @@ namespace explorer {
 		OptionsWindow windowOptions;
 		NewTubButton newTubButton;
 		TabbedWindow tabbedWindow;
+		TabsButton tabsButton;
 
 		bool _batteryFound;
 		bool _isCharging;

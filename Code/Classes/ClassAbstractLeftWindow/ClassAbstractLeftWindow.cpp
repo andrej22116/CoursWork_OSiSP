@@ -5,6 +5,8 @@ namespace explorer {
 	LeftWindow::LeftWindow()
 	{
 		registerHendler(METHOD(&LeftWindow::paintHandler));
+
+		setResizeWhenParentResizeing(false, true);
 		_show = false;
 	}
 

@@ -6,8 +6,6 @@ namespace explorer {
 	{
 		registerHendler(METHOD(&OptionsWindow::paintHandler));
 
-		setResizeWhenParentResizeing(false, true);
-
 		_listOfParams.push_back(L"Отображать расширения файлов");
 		_listOfParams.push_back(L"Отображать скрытые файлы и папки");
 		_listOfParams.push_back(L"Отображать размер файла");
