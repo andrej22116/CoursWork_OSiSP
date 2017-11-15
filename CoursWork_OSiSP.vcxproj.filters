@@ -95,6 +95,18 @@
     <Filter Include="Interface\Windows\Buttons\ClassCheckButton">
       <UniqueIdentifier>{ae872c57-27b2-4fa1-9213-2cb8e130a82d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Interface\Windows\Buttons\ClassNewTabButton">
+      <UniqueIdentifier>{68a0362a-20cf-44d1-9588-e1c14a828303}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Interface\Windows\ClassListOfTabsWindow">
+      <UniqueIdentifier>{16a21281-0ff8-49ad-bf25-71a63efbfb8f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Interface\Windows\Buttons\ClassTabsButton">
+      <UniqueIdentifier>{4e338827-7bae-4d09-b2d6-faf8043d7450}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Interface\Windows\ClassAbstractLeftWindow">
+      <UniqueIdentifier>{ba8a66d9-d981-4320-a1e9-b79c186eaa23}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Code\WinMain.cpp" />
@@ -151,6 +163,15 @@
     </ClCompile>
     <ClCompile Include="Code\Classes\Buttons\ClassCheckButton\ClassCheckButton.cpp">
       <Filter>Interface\Windows\Buttons\ClassCheckButton</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Classes\Buttons\ClassNewTabButton\ClassNewTabButton.cpp">
+      <Filter>Interface\Windows\Buttons\ClassNewTabButton</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Classes\ClassAbstractLeftWindow\ClassAbstractLeftWindow.cpp">
+      <Filter>Interface\Windows\ClassAbstractLeftWindow</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Classes\ClassListOfTabsWindow\ClassListOfTabsWindow.cpp">
+      <Filter>Interface\Windows\ClassListOfTabsWindow</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -213,6 +234,15 @@
     </ClInclude>
     <ClInclude Include="Code\Classes\Buttons\ClassCheckButton\ClassCheckButton.h">
       <Filter>Interface\Windows\Buttons\ClassCheckButton</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Classes\Buttons\ClassNewTabButton\ClassNewTabButton.h">
+      <Filter>Interface\Windows\Buttons\ClassNewTabButton</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Classes\ClassAbstractLeftWindow\ClassAbstractLeftWindow.h">
+      <Filter>Interface\Windows\ClassAbstractLeftWindow</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Classes\ClassListOfTabsWindow\ClassListOfTabsWindow.h">
+      <Filter>Interface\Windows\ClassListOfTabsWindow</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -215,9 +215,12 @@
     <ClCompile Include="Code\Classes\Buttons\ClassCheckButton\ClassCheckButton.cpp" />
     <ClCompile Include="Code\Classes\Buttons\ClassMaximizeWindow\ClassMaximizeWindow.cpp" />
     <ClCompile Include="Code\Classes\Buttons\ClassMinimizeWindow\ClassMinimizeWindow.cpp" />
+    <ClCompile Include="Code\Classes\Buttons\ClassNewTabButton\ClassNewTabButton.cpp" />
     <ClCompile Include="Code\Classes\Buttons\ClassOptionsButton\ClassOptionsButton.cpp" />
     <ClCompile Include="Code\Classes\Buttons\ClassReturnWindow\ClassReturnWindow.cpp" />
+    <ClCompile Include="Code\Classes\ClassAbstractLeftWindow\ClassAbstractLeftWindow.cpp" />
     <ClCompile Include="Code\Classes\ClassListOfFilesWindow\ClassListOfFilesWindow.cpp" />
+    <ClCompile Include="Code\Classes\ClassListOfTabsWindow\ClassListOfTabsWindow.cpp" />
     <ClCompile Include="Code\Classes\ClassMainWindow\ClassMainWindow.cpp" />
     <ClCompile Include="Code\Classes\ClassOptionsWindow\ClassOptionsWindow.cpp" />
     <ClCompile Include="Code\Classes\Exceptions\ClassException\ClassException.cpp" />
@@ -236,9 +239,12 @@
     <ClInclude Include="Code\Classes\Buttons\ClassCheckButton\ClassCheckButton.h" />
     <ClInclude Include="Code\Classes\Buttons\ClassMaximizeWindow\ClassMaximizeWindow.h" />
     <ClInclude Include="Code\Classes\Buttons\ClassMinimizeWindow\ClassMinimizeWindow.h" />
+    <ClInclude Include="Code\Classes\Buttons\ClassNewTabButton\ClassNewTabButton.h" />
     <ClInclude Include="Code\Classes\Buttons\ClassOptionsButton\ClassOptionsButton.h" />
     <ClInclude Include="Code\Classes\Buttons\ClassReturnWindow\ClassReturnWindow.h" />
+    <ClInclude Include="Code\Classes\ClassAbstractLeftWindow\ClassAbstractLeftWindow.h" />
     <ClInclude Include="Code\Classes\ClassListOfFilesWindow\ClassListOfFilesWindow.h" />
+    <ClInclude Include="Code\Classes\ClassListOfTabsWindow\ClassListOfTabsWindow.h" />
     <ClInclude Include="Code\Classes\ClassMainWindow\ClassMainWindow.h" />
     <ClInclude Include="Code\Classes\ClassOptionsWindow\ClassOptionsWindow.h" />
     <ClInclude Include="Code\Classes\Exceptions\ClassException\ClassException.h" />
