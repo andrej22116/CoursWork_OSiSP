@@ -211,15 +211,32 @@ namespace explorer {
 			true
 		);
 		windowOptions.create(
-			std::wstring(L"windowoptions"),
+			std::wstring(L"Õ¿—“–Œ… »"),
 			*this,
-			0,
-			MAIN_WINDOW_HEADER_HEIGHT+1,
+			-350,
+			MAIN_WINDOW_HEADER_HEIGHT + 1,
 			350,
 			getHieght() - MAIN_WINDOW_HEADER_HEIGHT - 2,
 			false
 		);
-
+		newTubButton.create(
+			std::wstring(L"ButtonBackward"),
+			*this,
+			MAIN_WINDOW_BUTTON_FORWARD_POS_X + 20,
+			MAIN_WINDOW_BUTTON_FORWARD_POS_Y,
+			MAIN_WINDOW_BUTTON_FORWARD_WIDTH,
+			MAIN_WINDOW_BUTTON_FORWARD_HEIGHT,
+			true
+		);
+		tabbedWindow.create(
+			std::wstring(L"¬ À¿ƒ »"),
+			*this,
+			-350,
+			MAIN_WINDOW_HEADER_HEIGHT + 1,
+			350,
+			getHieght() - MAIN_WINDOW_HEADER_HEIGHT - 2,
+			false
+		);
 
 		listOfFiles.setButtonBackward(&buttonBackward);
 		listOfFiles.setButtonForward(&buttonForward);
@@ -228,13 +245,15 @@ namespace explorer {
 		setTimer(100, 1000);
 		/*windowOptions.show(false);*/
 		//MessageBox(nullptr, (L"IT'S WORK!!! " + getWindowName()).c_str(), L"TEST", MB_OK);
+
+		buttonOptions.registerHendler(METHOD(&MainWindow::mouseClickButtonOptionsHandler));
 	}
 
 	void MainWindow::mouseClickHandler(const MouseEventClick& mouseEventClick)
 	{
 		// ‚˚˜ÎËÌËÚ¸ ‰‚ÓÈÌÓÈ ÍÎËÍ!
 
-		if (mouseEventClick.Button == MOUSE_LEFT && mouseEventClick.Status == KEY_PRESSED && !buttonMaximize.isMaximized()) {
+		if (mouseEventClick.Button == MOUSE_LEFT && mouseEventClick.Status == KEY_PRESSED) {
 			if (windowOptions.isShow()) {
 				windowOptions.show(false);
 			}
@@ -255,15 +274,6 @@ namespace explorer {
 			MessageBox(getHWND(), str.c_str(), L"Test", MB_OK);
 		}
 		*/
-	}
-
-	bool MainWindow::windowOptionsIsShow()
-	{
-		return windowOptions.isShow();
-	}
-	void MainWindow::showWindowOptions(bool show)
-	{
-		windowOptions.show(show);
 	}
 
 	void MainWindow::updateBatteryStatusTimerHandler(int timerID)
@@ -297,6 +307,56 @@ namespace explorer {
 		else {
 			killTimer(timerID);
 			_batteryFound = false;
+		}
+	}
+
+
+	void MainWindow::mouseClickButtonOptionsHandler(const MouseEventClick& mouseEventClick)
+	{
+		if (mouseEventClick.Button == MOUSE_LEFT && mouseEventClick.Status == KEY_PRESSED) {
+			int widthOptions = windowOptions.getWidth();
+			int widthList = listOfFiles.getWidth();
+
+			if (windowOptions.isShow()) {
+				windowOptions.show(false);
+				m_moveListOfFilesIfShowLeftWindow(widthOptions, false);
+			}
+			else {
+				windowOptions.show(true);
+				m_moveListOfFilesIfShowLeftWindow(widthOptions, true);
+			}
+		}
+	}
+	void MainWindow::mouseClickButtonAllTabsHandler(const MouseEventClick& mouseEventClick)
+	{
+
+	}
+	void MainWindow::mouseClickButtonNewTabHandler(const MouseEventClick& mouseEventClick)
+	{
+
+	}
+
+
+	void MainWindow::m_moveListOfFilesIfShowLeftWindow(int leftWindowWidth, bool leftWindowIsShow)
+	{
+		int widthList = listOfFiles.getWidth();
+		if (leftWindowIsShow) {
+			listOfFiles.resizeWindow(
+				leftWindowWidth + 2,
+				LISTBOX_POS_Y,
+				widthList - leftWindowWidth + 2,
+				listOfFiles.getHieght(),
+				true
+			);
+		}
+		else {
+			listOfFiles.resizeWindow(
+				LISTBOX_POS_X,
+				LISTBOX_POS_Y,
+				widthList + leftWindowWidth - 2,
+				listOfFiles.getHieght(),
+				true
+			);
 		}
 	}
 }

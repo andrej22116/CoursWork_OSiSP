@@ -27,7 +27,7 @@ namespace explorer {
 				std::wstring(L"option checkbox ") + std::to_wstring(i),
 				*this,
 				horizontalOffset,
-				16 + i * 30,
+				46 + i * 30,
 				17,
 				17,
 				true
@@ -39,7 +39,7 @@ namespace explorer {
 	void OptionsWindow::paintHandler(Gdiplus::Graphics& graphics)
 	{
 		//graphics.SetCompositingMode(Gdiplus::CompositingMode::CompositingModeSourceCopy);
-		graphics.Clear(Gdiplus::Color(200, 255, 255, 255));
+		//graphics.Clear(Gdiplus::Color(200, 255, 255, 255));
 
 		Gdiplus::StringFormat stringFormat(Gdiplus::StringFormatFlags::StringFormatFlagsNoClip);
 		stringFormat.SetLineAlignment(Gdiplus::StringAlignmentCenter);
@@ -48,10 +48,9 @@ namespace explorer {
 		Gdiplus::Font font(&Gdiplus::FontFamily(L"Arial"), 12);
 		Gdiplus::SolidBrush brush(Gdiplus::Color(254, 0, 0, 0));
 		Gdiplus::Pen penBottomLine(Gdiplus::Color(50, 0, 0, 0));
-		
 
 		int width = getWidth() - 52;
-		Gdiplus::RectF rectForDraw(10, 10, width, 30);
+		Gdiplus::RectF rectForDraw(10, 40, width, 30);
 
 		int widthLine = getWidth() - 20;
 		int lineOffset = rectForDraw.GetBottom();
@@ -80,27 +79,4 @@ namespace explorer {
 			lineOffset = rectForDraw.GetBottom();
 		}
 	}
-
-	bool OptionsWindow::isShow()
-	{
-		return _show;
-	}
-	void OptionsWindow::show(bool show)
-	{
-		_show = show;
-		if (_show) {
-			moveWindowPos(1, MAIN_WINDOW_HEADER_HEIGHT + 1, false);
-			showWindow(true);
-			redrawWindow(false);
-		}
-		else {
-			showWindow(false);
-			moveWindowPos(-getWidth(), MAIN_WINDOW_HEADER_HEIGHT + 1, false);
-		}
-	}
-
-	void OptionsWindow::timerHandler(const int timer_ID)
-	{
-	}
-
 }

@@ -34,7 +34,6 @@ namespace explorer {
 		if (mouseEventClick.Click == MOUSE_CLICK_ONE
 			&& mouseEventClick.Button == MOUSE_LEFT
 			&& mouseEventClick.Status == KEY_PRESSED) {
-			((MainWindow*)getParent())->showWindowOptions(true);
 		}
 	}
 

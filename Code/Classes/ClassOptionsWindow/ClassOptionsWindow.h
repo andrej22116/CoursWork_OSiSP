@@ -2,18 +2,15 @@
 
 #include "..\AbstractWindow\ClassAbstractWindow.h"
 #include "..\Buttons\ClassCheckButton\ClassCheckButton.h"
+#include "..\ClassAbstractLeftWindow\ClassAbstractLeftWindow.h"
 
 #ifndef _CLASS_OPTIONS_WINDOW_H_
 #define _CLASS_OPTIONS_WINDOW_H_
 
 namespace explorer {
 
-	class OptionsWindow : public Window {
+	class OptionsWindow : public LeftWindow {
 	private:
-		bool _show;
-		bool _animation;
-		int _animationStatus;
-
 		std::list<std::wstring> _listOfParams;
 
 		std::vector<CheckButton> _listOfcheckBoxes;
@@ -23,11 +20,6 @@ namespace explorer {
 
 		virtual void eventCreateWindow() override;
 		void paintHandler(Gdiplus::Graphics& graphics);
-
-		bool isShow();
-		void show(bool show);
-
-		void timerHandler(const int timer_ID);
 	};
 
 }

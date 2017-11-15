@@ -8,22 +8,13 @@
 #include "..\ClassOptionsWindow\ClassOptionsWindow.h"
 #include "..\Buttons\ClassOptionsButton\ClassOptionsButton.h"
 #include "..\Buttons\ClassReturnWindow\ClassReturnWindow.h"
+#include "..\Buttons\ClassNewTabButton\ClassNewTabButton.h"
+#include "..\ClassListOfTabsWindow\ClassListOfTabsWindow.h"
 
 #ifndef _CLASS_MAIN_WINDOW_H_
 #define _CLASS_MAIN_WINDOW_H_
 
 namespace explorer {
-
-	class ButtonClose;
-	class ButtonMaximize;
-	class ButtonMinimize;
-	class ListOfFiles;
-	class ButtonReturn;
-	class ButtonReturn;
-	class ButtonReturn;
-	class ButtonOptions;
-	class OptionsWindow;
-
 	class MainWindow : public Window {
 	private:
 		ButtonClose buttonClose;
@@ -36,6 +27,8 @@ namespace explorer {
 		ButtonReturn buttonUp;
 		ButtonOptions buttonOptions;
 		OptionsWindow windowOptions;
+		NewTubButton newTubButton;
+		TabbedWindow tabbedWindow;
 
 		bool _batteryFound;
 		bool _isCharging;
@@ -51,12 +44,14 @@ namespace explorer {
 		void mouseMoveHandler(MouseEvent& mouseEvent);
 		void keyboardHandler(const KeyEvent& keyEvent);
 
-		bool windowOptionsIsShow();
-		void showWindowOptions(bool show);
-
 		void updateBatteryStatusTimerHandler(int timerID);
 
+		void mouseClickButtonOptionsHandler(const MouseEventClick& mouseEventClick);
+		void mouseClickButtonAllTabsHandler(const MouseEventClick& mouseEventClick);
+		void mouseClickButtonNewTabHandler(const MouseEventClick& mouseEventClick);
+
 	private:
+		void m_moveListOfFilesIfShowLeftWindow(int leftWindowWidth, bool leftWindowIsShow);
 	};
 }
 

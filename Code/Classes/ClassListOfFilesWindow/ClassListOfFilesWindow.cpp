@@ -116,7 +116,7 @@ namespace explorer {
 		int textOffset = (LISTBOX_LINE_HEIGHT - font.GetSize()) / 4;
 		int scrollOffset = getVerticalSckrollStatus();
 		int firstLineToOut = int(scrollOffset / LISTBOX_LINE_HEIGHT);
-		int lastLineToOut = int((scrollOffset + getWidth()) / LISTBOX_LINE_HEIGHT);
+		int lastLineToOut = int((scrollOffset + getHieght()) / LISTBOX_LINE_HEIGHT);
 
 		int line = 0;
 		for (auto dir : _thisCatalog) {
@@ -159,9 +159,6 @@ namespace explorer {
 		if (mouseEventClick.Click == MOUSE_CLICK_ONE 
 			&& mouseEventClick.Button == MOUSE_LEFT
 			&& mouseEventClick.Status == KEY_PRESSED) {
-			if (((MainWindow*)getParent())->windowOptionsIsShow()) {
-				((MainWindow*)getParent())->showWindowOptions(false);
-			}
 			calcOneLeftClick(mouseEventClick);
 		}
 		else if (mouseEventClick.Click == MOUSE_CLICK_DOUBLE
