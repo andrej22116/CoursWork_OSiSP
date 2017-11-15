@@ -173,6 +173,9 @@
     <ClCompile Include="Code\Classes\ClassListOfTabsWindow\ClassListOfTabsWindow.cpp">
       <Filter>Interface\Windows\ClassListOfTabsWindow</Filter>
     </ClCompile>
+    <ClCompile Include="Code\Classes\Buttons\ClassTabsButton\ClassTabsButton.cpp">
+      <Filter>Interface\Windows\Buttons\ClassTabsButton</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Code\Classes\ClassMainWindow\ClassMainWindow.h">
@@ -243,6 +246,9 @@
     </ClInclude>
     <ClInclude Include="Code\Classes\ClassListOfTabsWindow\ClassListOfTabsWindow.h">
       <Filter>Interface\Windows\ClassListOfTabsWindow</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Classes\Buttons\ClassTabsButton\ClassTabsButton.h">
+      <Filter>Interface\Windows\Buttons\ClassTabsButton</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
