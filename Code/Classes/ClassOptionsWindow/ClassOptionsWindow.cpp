@@ -57,7 +57,7 @@ namespace explorer {
 			Gdiplus::Point(10 + widthLine, 0),
 			Gdiplus::Point(10, 0),
 			Gdiplus::Color(0, 0, 0, 0),
-			Gdiplus::Color(20, 0, 0, 0)
+			Gdiplus::Color(32, 0, 0, 0)
 		));
 		for (auto item : _listOfParams) {
 			graphics.DrawLine(&penBottomLine,

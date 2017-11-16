@@ -47,7 +47,7 @@ namespace explorer {
 		graphics.Clear(LISTBOX_COLOR_BACKGROUND);
 		//graphics.FillRectangle(&background, 0, 0, getWidth(), HeightOfRectangleForFill);
 
-		Gdiplus::Font font(&Gdiplus::FontFamily(L"Arial"), 10);
+		Gdiplus::Font font(&Gdiplus::FontFamily(L"Arial"), 10, Gdiplus::FontStyleBold);
 		Gdiplus::SolidBrush textBrush(Gdiplus::Color(254, 255, 255, 255));
 
 		Gdiplus::Pen borderPen(LISTBOX_COLOR_BORDER_LINE);
