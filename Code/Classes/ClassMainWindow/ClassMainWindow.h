@@ -28,7 +28,6 @@ namespace explorer {
 		ButtonReturn buttonUp;
 		ButtonOptions buttonOptions;
 		OptionsWindow windowOptions;
-		NewTubButton newTubButton;
 		TabbedWindow tabbedWindow;
 		TabsButton tabsButton;
 

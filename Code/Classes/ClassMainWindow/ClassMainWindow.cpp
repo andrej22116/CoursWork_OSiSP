@@ -219,15 +219,6 @@ namespace explorer {
 			getHieght() - MAIN_WINDOW_HEADER_HEIGHT - 2,
 			false
 		);
-		newTubButton.create(
-			std::wstring(L"ButtonBackward"),
-			*this,
-			MAIN_WINDOW_BUTTON_FORWARD_POS_X + 70,
-			MAIN_WINDOW_BUTTON_FORWARD_POS_Y,
-			MAIN_WINDOW_BUTTON_FORWARD_WIDTH,
-			MAIN_WINDOW_BUTTON_FORWARD_HEIGHT,
-			true
-		);
 		tabbedWindow.create(
 			std::wstring(L"¬ À¿ƒ »"),
 			*this,
@@ -252,8 +243,6 @@ namespace explorer {
 		listOfFiles.setButtonUp(&buttonUp);
 		listOfFiles.updateList();
 		setTimer(100, 1000);
-		/*windowOptions.show(false);*/
-		//MessageBox(nullptr, (L"IT'S WORK!!! " + getWindowName()).c_str(), L"TEST", MB_OK);
 
 		buttonOptions.registerHendler(METHOD(&MainWindow::mouseClickButtonOptionsHandler));
 		tabsButton.registerHendler(METHOD(&MainWindow::mouseClickButtonAllTabsHandler));

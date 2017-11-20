@@ -128,15 +128,6 @@ namespace explorer {
 					);
 				}
 
-				/*
-				HDC hDC = graphics.GetHDC();
-				if (0 == TextOut(hDC, LISTBOX_TEXT_POS_X, y_offset + textOffset - 1, dir.Name.c_str(), dir.Name.size())) {
-					DWORD error = GetLastError();
-					_RPT1(0, "Bad textout... error: %d\n", error);
-				}
-				graphics.ReleaseHDC(hDC);
-				*/
-
 				graphics.DrawString(
 					dir.Name.c_str(),
 					-1,
