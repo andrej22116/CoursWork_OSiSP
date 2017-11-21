@@ -18,6 +18,9 @@ namespace explorer {
 		_canBeResize_top(false), _canBeResize_bottom(false),
 		_canBeResize_left(false), _canBeResize_right(false),
 
+		_resizing(false),
+		_redrawWhereResizing(true),
+
 		_scrollbarHorizontalStatus(0),
 		_scrollbarVerticalStatus(0),
 		_scrollbarHorizontalStepSize(0),
@@ -366,6 +369,14 @@ namespace explorer {
 			} break;
 			case WM_NCHITTEST: {
 				return m_WndProcHandler_NcHitTest(window, hWnd, msg, wParam, lParam);
+			} break;
+			case WM_NCLBUTTONDOWN: {
+				window->_resizing = true;
+				return DefWindowProc(hWnd, msg, wParam, lParam);
+			} break;
+			case WM_NCLBUTTONUP: {
+				window->_resizing = false;
+				return DefWindowProc(hWnd, msg, wParam, lParam);
 			} break;
 
 			case WM_VSCROLL: {
@@ -801,7 +812,9 @@ namespace explorer {
 		}
 
 		wnd->eventSizeWindow(wnd->_oldWidth, wnd->_oldHieght);
-		RedrawWindow(hWnd, NULL, NULL, RDW_INVALIDATE | RDW_NOERASE | RDW_INTERNALPAINT | RDW_UPDATENOW | RDW_ALLCHILDREN);
+		if (wnd->_redrawWhereResizing || !wnd->_resizing) {
+			RedrawWindow(hWnd, NULL, NULL, RDW_INVALIDATE | RDW_NOERASE | RDW_INTERNALPAINT | RDW_UPDATENOW | RDW_ALLCHILDREN);
+		}
 		//RedrawWindow(hWnd, NULL, NULL, RDW_INVALIDATE | RDW_NOERASE | RDW_INTERNALPAINT);
 	}
 	void Window::m_WndProcHandler_MouseMove(Window* wnd, HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)

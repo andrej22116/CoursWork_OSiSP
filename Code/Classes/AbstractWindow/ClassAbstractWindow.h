@@ -60,6 +60,9 @@ namespace explorer {
 		WNDCLASSEX _WndClass;
 		std::wstring _windowName;
 
+		bool _resizing;
+		bool _redrawWhereResizing;
+
 		bool _thisWindowIsCreated;
 		bool _hoverStatus;
 		bool _moveWhenParentResiz_X, _moveWhenParentResiz_Y;

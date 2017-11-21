@@ -72,6 +72,10 @@ namespace explorer {
 		}
 	}
 
+	void TabbedWindow::mouseMoveHandler(MouseEvent mouseEvent)
+	{
+
+	}
 
 	void TabbedWindow::updateList(std::list <std::wstring> list)
 	{

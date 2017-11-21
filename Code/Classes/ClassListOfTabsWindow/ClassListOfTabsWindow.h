@@ -20,6 +20,7 @@ namespace explorer {
 
 		void paintHandler(Gdiplus::Graphics& graphics);
 
+		void mouseMoveHandler(MouseEvent mouseEvent);
 
 		void updateList(std::list <std::wstring> list);
 
