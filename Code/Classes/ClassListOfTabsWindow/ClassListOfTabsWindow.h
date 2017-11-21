@@ -11,6 +11,7 @@ namespace explorer {
 	class TabbedWindow : public LeftWindow {
 	private:
 		NewTubButton newTubButton;
+		std::vector<std::wstring> _listOfDirs;
 
 	public:
 		TabbedWindow();
@@ -18,6 +19,9 @@ namespace explorer {
 		virtual void eventCreateWindow() override;
 
 		void paintHandler(Gdiplus::Graphics& graphics);
+
+
+		void updateList(std::vector<std::wstring> list);
 
 	};
 

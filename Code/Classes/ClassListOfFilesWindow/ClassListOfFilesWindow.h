@@ -9,11 +9,14 @@
 #include "..\Buttons\ClassReturnWindow\ClassReturnWindow.h"
 
 namespace explorer {
+	class ListOfFiles;
 
-	class ButtonReturn;
+	typedef std::function<void(const ListOfFiles& listOfFiles)> UpdateListHandler;
 
 	class ListOfFiles : public Window {
 	private:
+		std::list<UpdateListHandler> _handlers;
+
 		static bool _displayExtension;
 		static bool _displayHiddenFiles;
 		static bool _displayFileSize;
@@ -50,9 +53,13 @@ namespace explorer {
 		std::wstring getCurrentDirectory();
 		void setCurrentDirectory(std::wstring& directory);
 
+
+		void registerUpdateListHandler(UpdateListHandler handler);
+
 	private:
 		void calcOneLeftClick(const MouseEventClick& mouseEventClick);
 		void calcDoubleLeftClick(const MouseEventClick& mouseEventClick);
+		void sendUpdateMessages();
 
 	/// External elements
 	private:

@@ -21,7 +21,6 @@ namespace explorer {
 
 	void ListOfFiles::eventCreateWindow()
 	{
-		//updateList();
 	}
 	void ListOfFiles::eventSizeWindow(int oldWidth, int oldHeight)
 	{
@@ -320,6 +319,7 @@ namespace explorer {
 			if (file.isDirectory()) {
 				nextDirrectory(_thisDirection);
 				setCurrentDirectory(newDirection);
+				sendUpdateMessages();
 			}
 		}
 
@@ -416,6 +416,18 @@ namespace explorer {
 
 				updateList();
 			}
+		}
+	}
+
+
+	void ListOfFiles::registerUpdateListHandler(UpdateListHandler handler)
+	{
+		_handlers.push_back(handler);
+	}
+	void ListOfFiles::sendUpdateMessages()
+	{
+		for (auto handler : _handlers) {
+			handler(*this);
 		}
 	}
 }
