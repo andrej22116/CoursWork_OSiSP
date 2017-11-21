@@ -50,7 +50,7 @@ namespace explorer {
 		graphics.FillRectangle(&brushBackground, 0, 0, width - gradientWidth, getHieght());
 		graphics.FillRectangle(&gradientBorderBrush, width - gradientWidth, 0, gradientWidth, getHieght());
 
-		graphics.FillRectangle(&brushHeadBackground, 0, 0, getWidth(), 40);
+		graphics.FillRectangle(&brushHeadBackground, 0, 0, getWidth(), headHeight);
 		graphics.DrawString(getWindowName().c_str(), -1, &fontHead, Gdiplus::PointF(10, 10), &stringBrush);
 	}
 	void LeftWindow::timerHandler(const int timer_ID)

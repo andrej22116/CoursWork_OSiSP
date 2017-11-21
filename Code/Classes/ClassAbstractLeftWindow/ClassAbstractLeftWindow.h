@@ -13,6 +13,9 @@ namespace explorer {
 		bool _animation;
 		int _animationStatus;
 
+	protected:
+		const int headHeight = 40;
+
 	public:
 		LeftWindow();
 
