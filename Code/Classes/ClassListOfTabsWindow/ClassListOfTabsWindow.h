@@ -13,6 +13,10 @@ namespace explorer {
 		NewTubButton newTubButton;
 		std::list<std::wstring> _listOfDirs;
 
+		int _lineHeight;
+		int _hoveredLine;
+		int _selectedLine;
+
 	public:
 		TabbedWindow();
 
@@ -20,7 +24,8 @@ namespace explorer {
 
 		void paintHandler(Gdiplus::Graphics& graphics);
 
-		void mouseMoveHandler(MouseEvent mouseEvent);
+		void mouseMoveHandler(MouseEvent& mouseEvent);
+		void mouseClickHandler(const MouseEventClick& mouseEventClick);
 
 		void updateList(std::list <std::wstring> list);
 
