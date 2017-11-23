@@ -246,6 +246,7 @@ namespace explorer {
 
 		buttonOptions.registerHendler(METHOD(&MainWindow::mouseClickButtonOptionsHandler));
 		tabsButton.registerHendler(METHOD(&MainWindow::mouseClickButtonAllTabsHandler));
+		tabbedWindow.newTubButton.registerHendler(METHOD(&MainWindow::mouseClickButtonNewTabHandler));
 	}
 
 	void MainWindow::mouseClickHandler(const MouseEventClick& mouseEventClick)
@@ -354,7 +355,7 @@ namespace explorer {
 	}
 	void MainWindow::mouseClickButtonNewTabHandler(const MouseEventClick& mouseEventClick)
 	{
-
+		// Писать тут!
 	}
 
 

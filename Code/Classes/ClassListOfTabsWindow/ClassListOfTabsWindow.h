@@ -8,6 +8,8 @@
 
 namespace explorer {
 
+	class MainWindow;
+
 	class TabbedWindow : public LeftWindow {
 	private:
 		NewTubButton newTubButton;
@@ -18,6 +20,8 @@ namespace explorer {
 		int _selectedLine;
 
 	public:
+		friend MainWindow;
+
 		TabbedWindow();
 
 		virtual void eventCreateWindow() override;
@@ -26,7 +30,7 @@ namespace explorer {
 
 		void mouseMoveHandler(MouseEvent& mouseEvent);
 		void mouseClickHandler(const MouseEventClick& mouseEventClick);
-
+		
 		void updateList(std::list <std::wstring> list);
 
 	};

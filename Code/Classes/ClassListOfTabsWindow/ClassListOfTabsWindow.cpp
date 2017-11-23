@@ -157,6 +157,7 @@ namespace explorer {
 
 	void TabbedWindow::updateList(std::list <std::wstring> list)
 	{
-
+		_listOfDirs = list;
+		redrawWindow(false);
 	}
 }

@@ -321,6 +321,9 @@ namespace explorer {
 				setCurrentDirectory(newDirection);
 				sendUpdateMessages();
 			}
+			else {
+				ShellExecute(0, nullptr, newDirection.c_str(), nullptr, nullptr, SW_RESTORE);
+			}
 		}
 
 		//_thisDirection = _thisCatalog[_selectedLine];
