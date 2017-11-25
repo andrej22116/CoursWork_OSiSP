@@ -123,6 +123,13 @@ namespace explorer {
 
 	void MainWindow::eventCreateWindow()
 	{
+		Gdiplus::Color sysColor(getSystemColor());
+		SetClassLong(
+			getHWND(),
+			GCL_HBRBACKGROUND,
+			(LONG)CreateSolidBrush(RGB(sysColor.GetR(), sysColor.GetG(), sysColor.GetB()))
+		);
+
 		auto version = getSystemVersion();
 		int major = version.first;
 		int minor = version.second;
