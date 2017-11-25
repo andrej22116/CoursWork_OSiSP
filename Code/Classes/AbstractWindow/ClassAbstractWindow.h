@@ -84,6 +84,9 @@ namespace explorer {
 		bool _scrollbarHorizontal_IsEnable;
 		bool _scrollbarVertical_IsEnable;
 
+
+		static Gdiplus::Color _systemColor;
+
 	public:
 		Window();
 		~Window();
@@ -92,6 +95,8 @@ namespace explorer {
 		bool create(Window& parent, int pos_x, int pos_y, int width, int hieght, bool show = true);
 		bool create(std::wstring& name, int pos_x, int pos_y, int width, int hieght, bool show = true);
 		bool create(std::wstring& name, Window& parent, int pos_x, int pos_y, int width, int hieght, bool show = true);
+
+		void destroy();
 
 		int getWidth() const;
 		int getHieght() const;
@@ -145,6 +150,8 @@ namespace explorer {
 		int getHorizontalSckrollStatus();
 		int getVerticalSckrollStatus();
 		
+
+		static const Gdiplus::Color& getSystemColor();
 
 
 		/* Handlers */

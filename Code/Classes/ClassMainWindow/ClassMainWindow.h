@@ -18,6 +18,8 @@
 namespace explorer {
 	class MainWindow : public Window {
 	private:
+		Gdiplus::Color _systemColor;
+
 		ButtonClose buttonClose;
 		ButtonMaximize buttonMaximize;
 		ButtonMinimize buttonMinimize;
@@ -53,6 +55,9 @@ namespace explorer {
 
 	private:
 		void m_moveListOfFilesIfShowLeftWindow(int leftWindowWidth, bool leftWindowIsShow);
+
+		void m_createChildWindows();
+		void m_registerHandlers();
 	};
 }
 

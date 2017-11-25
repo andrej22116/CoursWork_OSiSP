@@ -10,7 +10,6 @@ namespace explorer {
 
 	void NewTubButton::paintHandler(Gdiplus::Graphics& graphics)
 	{
-		Gdiplus::SolidBrush brushHeadBackgroundHover(Gdiplus::Color(200, 255, 255, 255));
 		Gdiplus::SolidBrush brushHeadBackground(Gdiplus::Color(20, 0, 0, 0));
 		Gdiplus::Pen pen(Gdiplus::Color(254, 0, 0, 0), 1);
 

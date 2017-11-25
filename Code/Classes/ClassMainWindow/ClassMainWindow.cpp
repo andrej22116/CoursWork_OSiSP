@@ -16,6 +16,29 @@ struct AccentPolicy {
 typedef BOOL (WINAPI *SWCA)(HWND, WINCOMPATTRDATA*);
 
 namespace explorer {
+	Gdiplus::Color& mix(const Gdiplus::Color& color, float strong, int alpha = -1)
+	{
+		int newAlpha = color.GetA() * strong;
+		int newRed = color.GetR() * strong;
+		int newGreen = color.GetG() * strong;
+		int newBlue = color.GetB() * strong;
+
+		auto test = [](int var) -> int {
+			return var > 255 ? 255 : var;
+		};
+
+		if (alpha >= 0) {
+			newAlpha = alpha;
+		}
+
+		return Gdiplus::Color(
+			test(newAlpha),
+			test(newRed),
+			test(newGreen),
+			test(newBlue)
+		);
+	}
+
 	MainWindow::MainWindow() : 
 		buttonUp(ButtonReturn::BUTTON_RETURN_UP),
 		buttonForward(ButtonReturn::BUTTON_RETURN_FORWARD),
@@ -38,8 +61,11 @@ namespace explorer {
 
 	void MainWindow::paintHandler(Gdiplus::Graphics& graphics)
 	{
+		//Gdiplus::SolidBrush brush_2(MAIN_WINDOW_COLOR_BACKGROUND);
+		graphics.Clear(Gdiplus::Color(mix(getSystemColor(), 1.0, 254)));
+
 		Gdiplus::SolidBrush brush_2(MAIN_WINDOW_COLOR_BACKGROUND);
-		Gdiplus::Rect region_2(0, 0, this->getWidth(), this->getHieght());
+		Gdiplus::Rect region_2(1, 1, this->getWidth() - 2, this->getHieght() - 2);
 		graphics.FillRectangle(&brush_2, region_2);
 
 		if (_batteryFound) {
@@ -139,114 +165,14 @@ namespace explorer {
 		}
 		redrawWindow(false);
 
-		buttonClose.create(
-			std::wstring(L"exit"),
-			*this,
-			MAIN_WINDOW_BUTTON_EXIT_POS_X(this->getWidth()),
-			MAIN_WINDOW_BUTTON_EXIT_POS_Y(1),
-			MAIN_WINDOW_BUTTON_EXIT_WIDTH,
-			MAIN_WINDOW_BUTTON_EXIT_HEIGHT,
-			true);
-
-		buttonMaximize.create(
-			std::wstring(L"maximize"),
-			*this,
-			MAIN_WINDOW_BUTTON_MAXIMIZE_POS_X(this->getWidth()),
-			MAIN_WINDOW_BUTTON_MAXIMIZE_POS_Y(1),
-			MAIN_WINDOW_BUTTON_MAXIMIZE_WIDTH,
-			MAIN_WINDOW_BUTTON_MAXIMIZE_HEIGHT,
-			true);
-
-		buttonMinimize.create(
-			std::wstring(L"minimize"),
-			*this,
-			MAIN_WINDOW_BUTTON_MINIMIZE_POS_X(this->getWidth()),
-			MAIN_WINDOW_BUTTON_MINIMIZE_POS_Y(1),
-			MAIN_WINDOW_BUTTON_MINIMIZE_WIDTH,
-			MAIN_WINDOW_BUTTON_MINIMIZE_HEIGHT,
-			true);
-		listOfFiles.create(
-			std::wstring(L"ListOfFiles"),
-			*this,
-			LISTBOX_POS_X,
-			LISTBOX_POS_Y,
-			getWidth() - MAIN_WINDOW_BORDER_SIZE - LISTBOX_POS_X - 1,
-			getHieght() - MAIN_WINDOW_HEADER_HEIGHT - LISTBOX_POS_Y - 1,
-			true
-		);
-		buttonOptions.create(
-			std::wstring(L"ButtonOptions"),
-			*this,
-			MAIN_WINDOW_BUTTON_OPTIONS_POS_X,
-			MAIN_WINDOW_BUTTON_OPTIONS_POS_Y,
-			MAIN_WINDOW_BUTTON_OPTIONS_WIDTH,
-			MAIN_WINDOW_BUTTON_OPTIONS_HEIGHT,
-			true
-		);
-		buttonUp.create(
-			std::wstring(L"ButtonUp"),
-			*this,
-			MAIN_WINDOW_BUTTON_UP_POS_X,
-			MAIN_WINDOW_BUTTON_UP_POS_Y,
-			MAIN_WINDOW_BUTTON_UP_WIDTH,
-			MAIN_WINDOW_BUTTON_UP_HEIGHT,
-			true
-		);
-		buttonForward.create(
-			std::wstring(L"ButtonForward"),
-			*this,
-			MAIN_WINDOW_BUTTON_FORWARD_POS_X,
-			MAIN_WINDOW_BUTTON_FORWARD_POS_Y,
-			MAIN_WINDOW_BUTTON_FORWARD_WIDTH,
-			MAIN_WINDOW_BUTTON_FORWARD_HEIGHT,
-			true
-		);
-		buttonBackward.create(
-			std::wstring(L"ButtonBackward"),
-			*this,
-			MAIN_WINDOW_BUTTON_BACKWARD_POS_X,
-			MAIN_WINDOW_BUTTON_BACKWARD_POS_Y,
-			MAIN_WINDOW_BUTTON_BACKWARD_WIDTH,
-			MAIN_WINDOW_BUTTON_BACKWARD_HEIGHT,
-			true
-		);
-		windowOptions.create(
-			std::wstring(L"Õ¿—“–Œ… »"),
-			*this,
-			-350,
-			MAIN_WINDOW_HEADER_HEIGHT + 1,
-			350,
-			getHieght() - MAIN_WINDOW_HEADER_HEIGHT - 2,
-			false
-		);
-		tabbedWindow.create(
-			std::wstring(L"¬ À¿ƒ »"),
-			*this,
-			-350,
-			MAIN_WINDOW_HEADER_HEIGHT + 1,
-			350,
-			getHieght() - MAIN_WINDOW_HEADER_HEIGHT - 2,
-			false
-		);
-		tabsButton.create(
-			std::wstring(L"ButtonBackward"),
-			*this,
-			MAIN_WINDOW_BUTTON_FORWARD_POS_X + 20,
-			MAIN_WINDOW_BUTTON_FORWARD_POS_Y,
-			MAIN_WINDOW_BUTTON_FORWARD_WIDTH + 30,
-			MAIN_WINDOW_BUTTON_FORWARD_HEIGHT,
-			true
-		);
+		m_createChildWindows();
+		m_registerHandlers();
 
 		listOfFiles.setButtonBackward(&buttonBackward);
 		listOfFiles.setButtonForward(&buttonForward);
 		listOfFiles.setButtonUp(&buttonUp);
 		listOfFiles.updateList();
 		setTimer(100, 1000);
-
-		buttonOptions.registerHendler(METHOD(&MainWindow::mouseClickButtonOptionsHandler));
-		tabsButton.registerHendler(METHOD(&MainWindow::mouseClickButtonAllTabsHandler));
-		tabbedWindow.newTubButton.registerHendler(METHOD(&MainWindow::mouseClickButtonNewTabHandler));
 	}
 
 	void MainWindow::mouseClickHandler(const MouseEventClick& mouseEventClick)
@@ -380,5 +306,112 @@ namespace explorer {
 				true
 			);
 		}
+	}
+	void MainWindow::m_createChildWindows()
+	{
+		buttonClose.create(
+			std::wstring(L"exit"),
+			*this,
+			MAIN_WINDOW_BUTTON_EXIT_POS_X(this->getWidth()),
+			MAIN_WINDOW_BUTTON_EXIT_POS_Y(1),
+			MAIN_WINDOW_BUTTON_EXIT_WIDTH,
+			MAIN_WINDOW_BUTTON_EXIT_HEIGHT,
+			true);
+
+		buttonMaximize.create(
+			std::wstring(L"maximize"),
+			*this,
+			MAIN_WINDOW_BUTTON_MAXIMIZE_POS_X(this->getWidth()),
+			MAIN_WINDOW_BUTTON_MAXIMIZE_POS_Y(1),
+			MAIN_WINDOW_BUTTON_MAXIMIZE_WIDTH,
+			MAIN_WINDOW_BUTTON_MAXIMIZE_HEIGHT,
+			true);
+
+		buttonMinimize.create(
+			std::wstring(L"minimize"),
+			*this,
+			MAIN_WINDOW_BUTTON_MINIMIZE_POS_X(this->getWidth()),
+			MAIN_WINDOW_BUTTON_MINIMIZE_POS_Y(1),
+			MAIN_WINDOW_BUTTON_MINIMIZE_WIDTH,
+			MAIN_WINDOW_BUTTON_MINIMIZE_HEIGHT,
+			true);
+		listOfFiles.create(
+			std::wstring(L"ListOfFiles"),
+			*this,
+			LISTBOX_POS_X,
+			LISTBOX_POS_Y,
+			getWidth() - MAIN_WINDOW_BORDER_SIZE - LISTBOX_POS_X - 1,
+			getHieght() - MAIN_WINDOW_HEADER_HEIGHT - LISTBOX_POS_Y - 1,
+			true
+		);
+		buttonOptions.create(
+			std::wstring(L"ButtonOptions"),
+			*this,
+			MAIN_WINDOW_BUTTON_OPTIONS_POS_X,
+			MAIN_WINDOW_BUTTON_OPTIONS_POS_Y,
+			MAIN_WINDOW_BUTTON_OPTIONS_WIDTH,
+			MAIN_WINDOW_BUTTON_OPTIONS_HEIGHT,
+			true
+		);
+		buttonUp.create(
+			std::wstring(L"ButtonUp"),
+			*this,
+			MAIN_WINDOW_BUTTON_UP_POS_X,
+			MAIN_WINDOW_BUTTON_UP_POS_Y,
+			MAIN_WINDOW_BUTTON_UP_WIDTH,
+			MAIN_WINDOW_BUTTON_UP_HEIGHT,
+			true
+		);
+		buttonForward.create(
+			std::wstring(L"ButtonForward"),
+			*this,
+			MAIN_WINDOW_BUTTON_FORWARD_POS_X,
+			MAIN_WINDOW_BUTTON_FORWARD_POS_Y,
+			MAIN_WINDOW_BUTTON_FORWARD_WIDTH,
+			MAIN_WINDOW_BUTTON_FORWARD_HEIGHT,
+			true
+		);
+		buttonBackward.create(
+			std::wstring(L"ButtonBackward"),
+			*this,
+			MAIN_WINDOW_BUTTON_BACKWARD_POS_X,
+			MAIN_WINDOW_BUTTON_BACKWARD_POS_Y,
+			MAIN_WINDOW_BUTTON_BACKWARD_WIDTH,
+			MAIN_WINDOW_BUTTON_BACKWARD_HEIGHT,
+			true
+		);
+		windowOptions.create(
+			std::wstring(L"Õ¿—“–Œ… »"),
+			*this,
+			-350,
+			MAIN_WINDOW_HEADER_HEIGHT + 1,
+			350,
+			getHieght() - MAIN_WINDOW_HEADER_HEIGHT - 2,
+			false
+		);
+		tabbedWindow.create(
+			std::wstring(L"¬ À¿ƒ »"),
+			*this,
+			-350,
+			MAIN_WINDOW_HEADER_HEIGHT + 1,
+			350,
+			getHieght() - MAIN_WINDOW_HEADER_HEIGHT - 2,
+			false
+		);
+		tabsButton.create(
+			std::wstring(L"ButtonBackward"),
+			*this,
+			MAIN_WINDOW_BUTTON_FORWARD_POS_X + 20,
+			MAIN_WINDOW_BUTTON_FORWARD_POS_Y,
+			MAIN_WINDOW_BUTTON_FORWARD_WIDTH + 30,
+			MAIN_WINDOW_BUTTON_FORWARD_HEIGHT,
+			true
+		);
+	}
+	void MainWindow::m_registerHandlers()
+	{
+		buttonOptions.registerHendler(METHOD(&MainWindow::mouseClickButtonOptionsHandler));
+		tabsButton.registerHendler(METHOD(&MainWindow::mouseClickButtonAllTabsHandler));
+		tabbedWindow.newTubButton.registerHendler(METHOD(&MainWindow::mouseClickButtonNewTabHandler));
 	}
 }

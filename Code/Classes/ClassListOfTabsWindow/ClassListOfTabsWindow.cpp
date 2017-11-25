@@ -30,7 +30,11 @@ namespace explorer {
 			true
 		);
 
-
+		std::map<int, std::wstring> map;
+		map.insert(std::pair<int, std::wstring>(0, std::wstring(L"AzZAZaszas")));
+		map.insert(std::pair<int, std::wstring>(1, std::wstring(L"Krkrkkekekek")));
+		map.insert(std::pair<int, std::wstring>(2, std::wstring(L"")));
+		updateTabsMap(map);
 	}
 
 	void TabbedWindow::paintHandler(Gdiplus::Graphics& graphics)
@@ -70,7 +74,7 @@ namespace explorer {
 		));
 
 		int line = 0;
-		for (auto& str : _listOfDirs) {
+		for (auto&& tab : _listOfTabs) {
 			if (line == _selectedLine) {
 				graphics.FillRectangle(&selectedBrush, selectedRect);
 			}
@@ -82,11 +86,8 @@ namespace explorer {
 				Gdiplus::Point(10 + widthLine, rect.Y + rect.Height - 1)
 			);
 
-			if (str.empty()) {
-				str = L"Компьютер";
-			}
 			graphics.DrawString(
-				str.c_str(),
+				tab.second.first.c_str(),
 				-1,
 				&textFont,
 				rect,
@@ -128,7 +129,8 @@ namespace explorer {
 	void TabbedWindow::mouseClickHandler(const MouseEventClick& mouseEventClick)
 	{
 		if (mouseEventClick.Click == MouseKeyClick::MOUSE_CLICK_ONE
-			&& mouseEventClick.Button == MouseKeyCodes::MOUSE_LEFT) {
+			&& mouseEventClick.Button == MouseKeyCodes::MOUSE_LEFT
+			&& mouseEventClick.Status == KeyStatus::KEY_PRESSED) {
 			int oldLine = _selectedLine;
 
 			if (mouseEventClick.y < headHeight) {
@@ -150,14 +152,63 @@ namespace explorer {
 			}
 
 			if (oldLine != _selectedLine) {
+
 				redrawWindow(false);
 			}
 		}
 	}
 
-	void TabbedWindow::updateList(std::list <std::wstring> list)
+	void TabbedWindow::updateTabsMap(std::map<int, std::wstring> mapOfTabs)
 	{
-		_listOfDirs = list;
+		typedef std::pair<int, std::pair<std::wstring, std::shared_ptr<CloseTabButton>>> LineInfo;
+		_listOfTabs.erase(_listOfTabs.begin(), _listOfTabs.end());
+
+		for (auto&& pair : mapOfTabs) {
+			LineInfo info;
+			info.first = pair.first;
+			info.second.first = pair.second;
+			if (info.second.first.empty()) {
+				info.second.first = L"Компьютер";
+			}
+			info.second.second = std::make_shared<CloseTabButton>();
+			_listOfTabs.insert(info);
+		}
+
+		int pos_x = getWidth() - 33;
+		int pos_y = headHeight + int(_lineHeight / 2) - 10;
+		for (auto&& pair : _listOfTabs) {
+			pair.second.second->create(*this, pos_x, pos_y, 20, 20, true);
+			pos_y += _lineHeight;
+		}
 		redrawWindow(false);
+	}
+	void TabbedWindow::updateOneTab(int tabKey, std::wstring newString)
+	{
+		if (_listOfTabs.find(tabKey) != _listOfTabs.end()) {
+			_listOfTabs[tabKey].first = newString;
+		}
+		redrawWindow(false);
+	}
+	void TabbedWindow::deleteOneTab(int tabKey)
+	{
+		if (_listOfTabs.find(tabKey) != _listOfTabs.end()) {
+			_listOfTabs[tabKey].second->destroy();
+		}
+	}
+
+	void TabbedWindow::update()
+	{
+		redrawWindow(false);
+		moveButtons();
+	}
+
+	void TabbedWindow::moveButtons()
+	{
+		int y = headHeight + int(_lineHeight / 2) - 10 - getVerticalSckrollStatus();
+		for (auto&& tab : _listOfTabs) {
+			int x = tab.second.second->getPosX();
+			tab.second.second->moveWindowPos(x, y, false);
+			y += _lineHeight;
+		}
 	}
 }

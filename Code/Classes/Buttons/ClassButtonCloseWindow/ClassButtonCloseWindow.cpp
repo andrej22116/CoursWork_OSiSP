@@ -38,7 +38,7 @@ namespace explorer {
 
 	void ButtonClose::mouseClickCloseHandler(const MouseEventClick& mouseEventClick)
 	{
-		m_sendMessageForParent(WM_CLOSE, 0, 0);
+		getParent()->destroy();
 	}
 
 	void ButtonClose::resizeParentHandler(const ParentEvent& parentEvent)
