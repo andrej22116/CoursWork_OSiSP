@@ -17,6 +17,7 @@ namespace explorer {
 
 		CheckButton();
 		CheckButton(bool checked);
+		CheckButton(const CheckButton& rabotaiSuka);
 
 		void paintHandler(Gdiplus::Graphics& graphics);
 		void mouseClickHandler(const MouseEventClick& mouseEventClick);

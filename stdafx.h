@@ -18,6 +18,7 @@
 #include <condition_variable>
 #include <tuple>
 #include <regex>
+#include <future>
 
 #include <gdiplus.h>
 #include <dwmapi.h>

@@ -15,9 +15,13 @@ namespace explorer {
 	{
 		init();
 	}
-	CheckButton::CheckButton(bool checked) : _isChecked(false)
+	CheckButton::CheckButton(bool checked) : _isChecked(checked)
 	{
 		init();
+	}
+	CheckButton::CheckButton(const CheckButton& rabotaiSuka)
+	{
+
 	}
 
 	void CheckButton::paintHandler(Gdiplus::Graphics& graphics)

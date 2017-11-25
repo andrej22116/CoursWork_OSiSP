@@ -59,6 +59,7 @@ namespace explorer {
 
 		WNDCLASSEX _WndClass;
 		std::wstring _windowName;
+		std::mutex _drawMutex;
 
 		bool _resizing;
 		bool _redrawWhereResizing;

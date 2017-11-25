@@ -340,15 +340,6 @@ namespace explorer {
 			switch (msg) {
 			case WM_CREATE: { 
 				window->eventCreateWindow();
-
-				DWORD color = 0;
-				BOOL opaque = FALSE;
-
-				HRESULT hr = DwmGetColorizationColor(&color, &opaque);
-				if (SUCCEEDED(hr)) {
-					_systemColor.SetValue(Gdiplus::ARGB(color));
-					//_systemColor = Gdiplus::Color(254, _systemColor.GetRed(), _systemColor.GetGreen(), _systemColor.GetBlue());
-				}
 			} break;
 			case WM_GETMINMAXINFO: {
 				m_WndProcHandler_GetMinMaxInfo(window, hWnd, msg, wParam, lParam);
@@ -357,9 +348,12 @@ namespace explorer {
 				m_WndProcHandler_Sizing(window, hWnd, msg, wParam, lParam);
 				return DefWindowProc(hWnd, msg, wParam, lParam);
 			} break;
-			case WM_ERASEBKGND: {} break;
+			case WM_ERASEBKGND: { return true; } break;
 			case WM_PAINT: {
 				m_WndProcHandler_Paint(window, hWnd, msg, wParam, lParam);
+				//std::thread thread(m_WndProcHandler_Paint, window, hWnd, msg, wParam, lParam);
+				//thread.detach();
+				//std::async(std::launch::async, m_WndProcHandler_Paint, std::ref(window), hWnd, msg, wParam, lParam);
 			} break;
 			case WM_MOVE: {
 				m_WndProcHandler_Move(window, hWnd, msg, wParam, lParam);
@@ -475,6 +469,14 @@ namespace explorer {
 	}
 	UINT Window::workWidthMessages()
 	{
+		DWORD color = 0;
+		BOOL opaque = FALSE;
+
+		HRESULT hr = DwmGetColorizationColor(&color, &opaque);
+		if (SUCCEEDED(hr)) {
+			_systemColor.SetValue(Gdiplus::ARGB(color));
+		}
+
 		MSG msg;
 		while (GetMessage(&msg, NULL, 0, 0)) {
 			TranslateMessage(&msg);
@@ -611,7 +613,7 @@ namespace explorer {
 			GetModuleHandle(0),
 			nullptr
 		);
-
+		//paintThread = std::thread(workWidthDrawMessages);
 		if (!_hWnd) {
 			throw WindowException(L"Create Window " + _windowName + L" error!");
 		}
@@ -798,24 +800,28 @@ namespace explorer {
 	}
 	void Window::m_WndProcHandler_Paint(Window* wnd, HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	{
-		PAINTSTRUCT ps;
-		HDC hDC = BeginPaint(wnd->_hWnd, &ps);
-		HDC hDC_Buffer = wnd->_renderBuffer->getDC();
+		//std::lock_guard<std::mutex> locker(wnd->_drawMutex);
+		//if (wnd->_drawMutex.try_lock()) {
+			PAINTSTRUCT ps;
+			HDC hDC = BeginPaint(wnd->_hWnd, &ps);
+			HDC hDC_Buffer = wnd->_renderBuffer->getDC();
 
-		Gdiplus::Graphics graphics(hDC_Buffer);
+			Gdiplus::Graphics graphics(hDC_Buffer);
 
-		for (auto handler : wnd->_paintHandlers) {
-			handler(graphics);
-		}
+			for (auto handler : wnd->_paintHandlers) {
+				handler(graphics);
+			}
 
-		wnd->_renderBuffer->copyTo(
-			hDC,
-			wnd->_scrollbarHorizontalStatus, wnd->_scrollbarVerticalStatus,
-			0, 0,
-			wnd->_width, wnd->_hieght
-		);
+			wnd->_renderBuffer->copyTo(
+				hDC,
+				wnd->_scrollbarHorizontalStatus, wnd->_scrollbarVerticalStatus,
+				0, 0,
+				wnd->_width, wnd->_hieght
+			);
 
-		EndPaint(wnd->_hWnd, &ps);
+			EndPaint(wnd->_hWnd, &ps);
+			//wnd->_drawMutex.unlock();
+		//}
 	}
 	void Window::m_WndProcHandler_Move(Window* wnd, HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	{
