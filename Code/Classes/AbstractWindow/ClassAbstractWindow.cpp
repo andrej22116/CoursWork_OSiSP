@@ -802,6 +802,8 @@ namespace explorer {
 		HDC hDC = BeginPaint(wnd->_hWnd, &ps);
 		HDC hDC_Buffer = wnd->_renderBuffer->getDC();
 
+		_RPTF4(0, "Drawing rect: ? - %d, ? - %d, ? - %d, ? - %d\n", ps.rcPaint.top, ps.rcPaint.bottom, ps.rcPaint.right, ps.rcPaint.left);
+
 		Gdiplus::Graphics graphics(hDC_Buffer);
 
 		for (auto handler : wnd->_paintHandlers) {
@@ -922,10 +924,14 @@ namespace explorer {
 		if (msg == WM_KEYUP || msg == WM_CHAR) {
 			static wchar_t symbol;
 
-			if (msg == WM_CHAR) {
+			if (GetAsyncKeyState(VK_LCONTROL)) {
+				symbol = KEY_LCONTROL;
+			} else if (GetAsyncKeyState(VK_RCONTROL)) {
+				symbol = KEY_RCONTROL;
+			} else if (msg == WM_CHAR) {
 				symbol = wParam;
 			}
-
+			
 			KeyEvent keyEvent(symbol, (KeyCodes)wParam, keyStatus);
 			for (auto handler : wnd->_keyboardHandlers) {
 				handler(keyEvent);

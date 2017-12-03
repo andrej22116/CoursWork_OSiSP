@@ -3,14 +3,14 @@
 
 namespace explorer {
 
-	CloseTabButton::CloseTabButton()
+	CloseTabButton::CloseTabButton() : _selected(false)
 	{
 		registerHendler(METHOD(&CloseTabButton::paintHandler));
 	}
 
 	void CloseTabButton::paintHandler(Gdiplus::Graphics& graphics)
 	{
-		Gdiplus::SolidBrush brushBackground(Gdiplus::Color(20, 0, 0, 0));
+		Gdiplus::SolidBrush brushBackground(Gdiplus::Color(32, 0, 0, 0));
 		Gdiplus::Pen pen(Gdiplus::Color(254, 0, 0, 0), 1);
 
 		graphics.Clear(Gdiplus::Color(200, 255, 255, 255));
@@ -27,12 +27,21 @@ namespace explorer {
 		Gdiplus::Point	pos_3(width - horizontalOffset - 1, verticalOffset),
 			pos_4(horizontalOffset, height - verticalOffset - 1);
 
+		if (_selected) {
+			graphics.FillRectangle(&brushBackground, 0, 0, width, height);
+		}
 		if (!isLocked() && isHover()) {
 			graphics.FillRectangle(&brushBackground, 0, 0, width, height);
 		}
 
 		graphics.DrawLine(&pen, pos_2, pos_1);
 		graphics.DrawLine(&pen, pos_3, pos_4);
+	}
+
+	void CloseTabButton::setSelect(bool select)
+	{
+		_selected = select;
+		redrawWindow(false);
 	}
 
 }

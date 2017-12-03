@@ -3,8 +3,30 @@
 #include "..\ClassMainWindow\ClassMainWindow.h"
 
 namespace explorer {
+	static Gdiplus::Color& mix(const Gdiplus::Color& color, float strong, int alpha = -1)
+	{
+		int newAlpha = color.GetA() * strong;
+		int newRed = color.GetR() * strong;
+		int newGreen = color.GetG() * strong;
+		int newBlue = color.GetB() * strong;
 
-	ListOfFiles::ListOfFiles() : _activeLine(-1), _selectedLine(-1)
+		auto test = [](int var) -> int {
+			return var > 255 ? 255 : var;
+		};
+
+		if (alpha >= 0) {
+			newAlpha = alpha;
+		}
+
+		return Gdiplus::Color(
+			test(newAlpha),
+			test(newRed),
+			test(newGreen),
+			test(newBlue)
+		);
+	}
+
+	ListOfFiles::ListOfFiles() : _activeLine(-1), _selectedLine(-1), _selectedLineRange(-1, -1)
 	{
 		registerHendler(METHOD(&ListOfFiles::paintHandler));
 		registerHendler(METHOD(&ListOfFiles::mouseClickHandler));
@@ -17,6 +39,11 @@ namespace explorer {
 		activateVerticalScrollbarIfRenderBufferHeightMoreThanHeightWindow(true);
 
 		setVerticalSckrollStepSize(30);
+		_startMouseVerticalOffset = 0;
+		_stopMouseVerticalOffset = 0;
+		_selecting = false;
+		_leftClick = false;
+		_ctrlStatus = false;
 	}
 
 	void ListOfFiles::eventCreateWindow()
@@ -51,11 +78,11 @@ namespace explorer {
 
 		Gdiplus::Pen borderPen(LISTBOX_COLOR_BORDER_LINE);
 		Gdiplus::Pen borderHoverPen(LISTBOX_COLOR_BORDER_HOVER_LINE);
-		Gdiplus::SolidBrush selectBackground(LISTBOX_COLOR_BACKGROUND_SELECT);
+		Gdiplus::SolidBrush selectBackground(Gdiplus::Color(mix(getSystemColor(), 1.0, 128)));
 		Gdiplus::SolidBrush hoverBackground(LISTBOX_COLOR_BACKGROUND_HOVER);
 
 		graphics.DrawLine(&borderPen, 0, 0, 0, LISTBOX_LINE_HEIGHT * _thisCatalog.size() - 1);
-
+		/*
 		if (_selectedLine >= 0) {
 			graphics.FillRectangle(&selectBackground,
 				0, LISTBOX_LINE_HEIGHT * _selectedLine,
@@ -69,7 +96,7 @@ namespace explorer {
 				0, LISTBOX_LINE_HEIGHT * _selectedLine + LISTBOX_LINE_HEIGHT - 1,
 				getWidth() - 1, LISTBOX_LINE_HEIGHT * _selectedLine + LISTBOX_LINE_HEIGHT - 1);
 			
-			/*
+			
 			graphics.FillRectangle(&selectBackground,
 				0, LISTBOX_LINE_HEIGHT * _selectedLine,
 				getWidth() - 1, LISTBOX_LINE_HEIGHT - 1
@@ -78,10 +105,11 @@ namespace explorer {
 				0, LISTBOX_LINE_HEIGHT * _selectedLine,
 				getWidth() - 1, LISTBOX_LINE_HEIGHT - 1
 			);
-			*/
+			
 		}
 
 		//graphics.SetSmoothingMode(Gdiplus::SmoothingMode::SmoothingModeAntiAlias);
+		*/
 		if (_activeLine >= 0) {
 			if (_selectedLine != _activeLine) {
 				graphics.DrawLine(&borderHoverPen,
@@ -93,20 +121,8 @@ namespace explorer {
 				getWidth() - 1, LISTBOX_LINE_HEIGHT * _activeLine);
 			graphics.DrawLine(&borderHoverPen,
 				0, LISTBOX_LINE_HEIGHT * _activeLine + LISTBOX_LINE_HEIGHT - 1,
-				getWidth() - 1, LISTBOX_LINE_HEIGHT * _activeLine + LISTBOX_LINE_HEIGHT - 1);
-			/*
-			graphics.FillRectangle(&hoverBackground,
-			0, LISTBOX_LINE_HEIGHT * _activeLine,
-			getWidth() - 1, LISTBOX_LINE_HEIGHT - 1
-			);
-			graphics.DrawRectangle(&borderPen,
-			0, LISTBOX_LINE_HEIGHT * _activeLine,
-			getWidth() - 1, LISTBOX_LINE_HEIGHT - 1
-			);
-			*/
+				getWidth() - 1, LISTBOX_LINE_HEIGHT * _activeLine + LISTBOX_LINE_HEIGHT - 1);			
 		}
-		/*Тест выделения*/
-
 		//graphics.SetSmoothingMode(Gdiplus::SmoothingMode::SmoothingModeAntiAlias);
 		graphics.SetSmoothingMode(Gdiplus::SmoothingModeAntiAlias);
 		//graphics.SetInterpolationMode(Gdiplus::InterpolationMode::InterpolationModeHighQualityBicubic);
@@ -124,6 +140,13 @@ namespace explorer {
 					graphics.DrawImage(&(*(dir.Icon)),
 						3, y_offset + 2,
 						LISTBOX_LINE_HEIGHT - 4, LISTBOX_LINE_HEIGHT - 4
+					);
+				}
+
+				if (_setOfSelectedLines.find(line) != _setOfSelectedLines.end()) {
+					graphics.FillRectangle(&selectBackground,
+						0, LISTBOX_LINE_HEIGHT * line - 1,
+						getWidth(), LISTBOX_LINE_HEIGHT
 					);
 				}
 
@@ -149,45 +172,48 @@ namespace explorer {
 		if (mouseEventClick.Click == MOUSE_CLICK_ONE 
 			&& mouseEventClick.Button == MOUSE_LEFT
 			&& mouseEventClick.Status == KEY_PRESSED) {
-			calcOneLeftClick(mouseEventClick);
+			_leftClick = true;
+			_startMouseVerticalOffset = mouseEventClick.y + getVerticalSckrollStatus();
+			_stopMouseVerticalOffset = _startMouseVerticalOffset;
+			//calcOneLeftClick(mouseEventClick);
+
+			if (!_ctrlStatus) {
+				calcSelectedLines(mouseEventClick);
+			} else {
+				calcSelectedOneLine(mouseEventClick);
+			}
+
+			redrawWindow(false);
+		}
+		else if (mouseEventClick.Click == MOUSE_CLICK_ONE
+			&& mouseEventClick.Button == MOUSE_LEFT
+			&& mouseEventClick.Status == KEY_RELEASED) {
+
+			_leftClick = false;
+			_selecting = false;
+
+			//redrawWindow(false);
 		}
 		else if (mouseEventClick.Click == MOUSE_CLICK_DOUBLE
 			&& mouseEventClick.Button == MOUSE_LEFT) {
+			_selectedLineRange = std::move(std::pair<int,int>(-1, -1));
 			calcDoubleLeftClick(mouseEventClick);
 		}
 	}
 
 	void ListOfFiles::mouseMoveHandler(MouseEvent& mouseEvent)
 	{
-		int filesCount = _thisCatalog.size();
-		int oldLine = _activeLine;
+		if (_leftClick) {
+			_selecting = true;
+			_stopMouseVerticalOffset = mouseEvent.y;
 
-		int absolutPosY = mouseEvent.y + getVerticalSckrollStatus();
+			if (_selecting && _inDrive) {
+				calcSelectedLines(mouseEvent);
+			}
 
-		if (absolutPosY <= (filesCount * LISTBOX_LINE_HEIGHT) - 1) {
-			_activeLine = int(absolutPosY / LISTBOX_LINE_HEIGHT);
-		}
-		else {
-			_activeLine = -1;
-		}
-
-		if (oldLine != _activeLine) {
-			RECT oldLineRect;
-			RECT newLineRect;
-			oldLineRect.left = newLineRect.left = 0;
-			oldLineRect.right = newLineRect.right = getWidth();
-
-			oldLineRect.top = oldLine * LISTBOX_LINE_HEIGHT;
-			oldLineRect.bottom = oldLineRect.top + LISTBOX_LINE_HEIGHT;
-
-			newLineRect.top = _activeLine * LISTBOX_LINE_HEIGHT;
-			newLineRect.bottom = newLineRect.top + LISTBOX_LINE_HEIGHT;
-
-			//InvalidateRect(getHWND(), &oldLineRect, false);
-			//if (_activeLine >= 0) {
-			//	InvalidateRect(getHWND(), &newLineRect, false);
-			//}
 			redrawWindow(false);
+		} else {
+			calcHoveredLine(mouseEvent);
 		}
 	}
 
@@ -422,6 +448,10 @@ namespace explorer {
 		}
 	}
 
+	void ListOfFiles::setCtrlStatus(bool status)
+	{
+		_ctrlStatus = status;
+	}
 
 	void ListOfFiles::registerUpdateListHandler(UpdateListHandler handler)
 	{
@@ -431,6 +461,90 @@ namespace explorer {
 	{
 		for (auto handler : _handlers) {
 			handler(*this);
+		}
+	}
+	
+	void ListOfFiles::calcHoveredLine(MouseEvent& mouseEvent)
+	{
+		int filesCount = _thisCatalog.size();
+		int oldLine = _activeLine;
+
+		int absolutPosY = mouseEvent.y + getVerticalSckrollStatus();
+
+		if (absolutPosY <= (filesCount * LISTBOX_LINE_HEIGHT) - 1) {
+			_activeLine = int(absolutPosY / LISTBOX_LINE_HEIGHT);
+		}
+		else {
+			_activeLine = -1;
+		}
+
+		if (oldLine != _activeLine) {
+			RECT oldLineRect;
+			RECT newLineRect;
+			oldLineRect.left = newLineRect.left = 0;
+			oldLineRect.right = newLineRect.right = getWidth();
+
+			oldLineRect.top = oldLine * LISTBOX_LINE_HEIGHT;
+			oldLineRect.bottom = oldLineRect.top + LISTBOX_LINE_HEIGHT;
+
+			newLineRect.top = _activeLine * LISTBOX_LINE_HEIGHT;
+			newLineRect.bottom = newLineRect.top + LISTBOX_LINE_HEIGHT;
+
+			//InvalidateRect(getHWND(), &oldLineRect, false);
+			//if (_activeLine >= 0) {
+			//	InvalidateRect(getHWND(), &newLineRect, false);
+			//}
+			redrawWindow(false);
+		}
+	}
+
+	void ListOfFiles::calcSelectedLines(const MouseEvent& mouseEvent)
+	{
+		int y = mouseEvent.y + getVerticalSckrollStatus();
+
+		int firstLine = int(y / LISTBOX_LINE_HEIGHT);
+		int lastLine = int(_startMouseVerticalOffset / LISTBOX_LINE_HEIGHT);
+
+		if (firstLine > lastLine) {
+			std::swap(firstLine, lastLine);
+		}
+
+		if (lastLine >= _thisCatalog.size()) {
+			lastLine = _thisCatalog.size() - 1;
+		}
+
+		_selectedLineRange.first = firstLine;
+		_selectedLineRange.second = lastLine;
+
+		updateSetOfSelectedLines();
+		redrawWindow(false);
+		//MessageBox(getHWND(), (std::to_wstring(firstLine) + L" " + std::to_wstring(lastLine)).c_str(), L"Test", MB_OK);
+	}
+	void ListOfFiles::calcSelectedOneLine(const MouseEvent& mouseEvent)
+	{
+		int y = mouseEvent.y + getVerticalSckrollStatus();
+
+		int line = y / LISTBOX_LINE_HEIGHT;
+
+		updateSetOfSelectedLines(line);
+		redrawWindow(false);
+		//MessageBox(getHWND(), (std::to_wstring(firstLine) + L" " + std::to_wstring(lastLine)).c_str(), L"Test", MB_OK);
+	}
+	void ListOfFiles::updateSetOfSelectedLines()
+	{
+		_setOfSelectedLines.erase(_setOfSelectedLines.begin(), _setOfSelectedLines.end());
+
+		for (int i = _selectedLineRange.first; i <= _selectedLineRange.second; i++) {
+			_setOfSelectedLines.insert(i);
+		}
+	}
+
+	void ListOfFiles::updateSetOfSelectedLines(int line)
+	{
+		if (_setOfSelectedLines.find(line) == _setOfSelectedLines.end()) {
+			_setOfSelectedLines.insert(line);
+		} else {
+			_setOfSelectedLines.erase(line);
 		}
 	}
 }

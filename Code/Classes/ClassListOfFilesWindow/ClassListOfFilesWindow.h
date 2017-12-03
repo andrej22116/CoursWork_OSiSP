@@ -34,6 +34,15 @@ namespace explorer {
 		int _activeLine;
 		int _selectedLine;
 
+		bool _ctrlStatus;
+
+		bool _selecting;
+		bool _leftClick;
+		int _startMouseVerticalOffset;
+		int _stopMouseVerticalOffset;
+		std::pair<int, int> _selectedLineRange;
+		std::set<int> _setOfSelectedLines;
+
 		bool _inDrive;
 
 	public:
@@ -74,6 +83,20 @@ namespace explorer {
 		void mouseClickButtonBackwardHandler(const MouseEventClick& mouseEventClick);
 		void mouseClickButtonForwardHandler(const MouseEventClick& mouseEventClick);
 		void mouseClickButtonUpHandler(const MouseEventClick& mouseEventClick);
+
+		void setCtrlStatus(bool status);
+
+	private:
+		// Default
+		void calcHoveredLine(MouseEvent& mouseEvent);
+
+		// Selecting
+		void calcSelectedLines(const MouseEvent& mouseEvent);
+		void calcSelectedOneLine(const MouseEvent& mouseEvent);
+		void updateSetOfSelectedLines();
+		void updateSetOfSelectedLines(int line);
+
+				
 	};
 
 }

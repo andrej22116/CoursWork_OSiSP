@@ -219,6 +219,7 @@
     <ClCompile Include="Code\Classes\Buttons\ClassNewTabButton\ClassNewTabButton.cpp" />
     <ClCompile Include="Code\Classes\Buttons\ClassOptionsButton\ClassOptionsButton.cpp" />
     <ClCompile Include="Code\Classes\Buttons\ClassReturnWindow\ClassReturnWindow.cpp" />
+    <ClCompile Include="Code\Classes\Buttons\ClassTabLineButton\ClassTabLineButton.cpp" />
     <ClCompile Include="Code\Classes\Buttons\ClassTabsButton\ClassTabsButton.cpp" />
     <ClCompile Include="Code\Classes\ClassAbstractLeftWindow\ClassAbstractLeftWindow.cpp" />
     <ClCompile Include="Code\Classes\ClassListOfFilesWindow\ClassListOfFilesWindow.cpp" />
@@ -245,6 +246,7 @@
     <ClInclude Include="Code\Classes\Buttons\ClassNewTabButton\ClassNewTabButton.h" />
     <ClInclude Include="Code\Classes\Buttons\ClassOptionsButton\ClassOptionsButton.h" />
     <ClInclude Include="Code\Classes\Buttons\ClassReturnWindow\ClassReturnWindow.h" />
+    <ClInclude Include="Code\Classes\Buttons\ClassTabLineButton\ClassTabLineButton.h" />
     <ClInclude Include="Code\Classes\Buttons\ClassTabsButton\ClassTabsButton.h" />
     <ClInclude Include="Code\Classes\ClassAbstractLeftWindow\ClassAbstractLeftWindow.h" />
     <ClInclude Include="Code\Classes\ClassListOfFilesWindow\ClassListOfFilesWindow.h" />

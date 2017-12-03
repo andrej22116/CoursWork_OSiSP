@@ -110,6 +110,9 @@
     <Filter Include="Interface\Windows\Buttons\ClassButtonCloseTab">
       <UniqueIdentifier>{103c0e2e-14f6-48a9-80ff-4cf511cba8b8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Interface\Windows\Buttons\ClassTabLineButton">
+      <UniqueIdentifier>{0d1e99b3-789f-4dc4-8d4b-ff5c91a48970}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Code\WinMain.cpp" />
@@ -181,6 +184,9 @@
     </ClCompile>
     <ClCompile Include="Code\Classes\Buttons\ClassButtonCloseTab\ClassButtonCloseTab.cpp">
       <Filter>Interface\Windows\Buttons\ClassButtonCloseTab</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Classes\Buttons\ClassTabLineButton\ClassTabLineButton.cpp">
+      <Filter>Interface\Windows\Buttons\ClassTabLineButton</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -258,6 +264,9 @@
     </ClInclude>
     <ClInclude Include="Code\Classes\Buttons\ClassButtonCloseTab\ClassButtonCloseTab.h">
       <Filter>Interface\Windows\Buttons\ClassButtonCloseTab</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Classes\Buttons\ClassTabLineButton\ClassTabLineButton.h">
+      <Filter>Interface\Windows\Buttons\ClassTabLineButton</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

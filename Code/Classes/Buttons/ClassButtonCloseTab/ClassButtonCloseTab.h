@@ -8,10 +8,15 @@
 namespace explorer {
 
 	class CloseTabButton : public Button {
+	private:
+		bool _selected;
+
 	public:
 		CloseTabButton();
 
 		void paintHandler(Gdiplus::Graphics& graphics);
+
+		void setSelect(bool select);
 	};
 
 }

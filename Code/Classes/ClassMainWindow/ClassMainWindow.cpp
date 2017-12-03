@@ -200,13 +200,13 @@ namespace explorer {
 	void MainWindow::keyboardHandler(const KeyEvent& keyEvent)
 	{
 		//SendMessage(getHWND(), WM_VSCROLL, )
-		/*
-		if (keyEvent.Status == KEY_RELEASED) {
-			std::wstring str = L"This symbol: ";
-			str += keyEvent.Sumbol;
-			MessageBox(getHWND(), str.c_str(), L"Test", MB_OK);
+		
+		if (keyEvent.Status == KEY_PRESSED && (keyEvent.Code == KEY_LCONTROL || keyEvent.Code == KEY_RCONTROL)) {
+			MessageBox(getHWND(), L"TEST", L"jgfjwg", MB_OK);
+			listOfFiles.setCtrlStatus(true);
+		} else if (keyEvent.Status == KEY_RELEASED && (keyEvent.Code == KEY_LCONTROL || keyEvent.Code == KEY_RCONTROL)) {
+			listOfFiles.setCtrlStatus(false);
 		}
-		*/
 	}
 
 	void MainWindow::updateBatteryStatusTimerHandler(int timerID)

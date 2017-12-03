@@ -155,8 +155,32 @@ namespace explorer {
 
 				redrawWindow(false);
 			}
+
+			int i = 0;
+			for (auto button : _listOfTabs) {
+				if (i == oldLine) {
+					button.second.second->setSelect(false);
+				}
+				if (i == _hoveredLine) {
+					button.second.second->setSelect(true);
+				}
+				i++;
+			}
 		}
 	}
+
+
+	void TabbedWindow::registerUpdateHandler(UpdateTabsListHandler handler)
+	{
+		_listOfHandlers.push_back(handler);
+	}
+	void TabbedWindow::callAllHandlers(int tabKey, TabEvent tabEvent)
+	{
+		for (auto handler : _listOfHandlers) {
+			handler(tabKey, tabEvent);
+		}
+	}
+
 
 	void TabbedWindow::updateTabsMap(std::map<int, std::wstring> mapOfTabs)
 	{

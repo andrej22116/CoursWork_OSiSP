@@ -24,6 +24,7 @@ namespace explorer {
 		std::list<Button> _listOfCloseButtons;
 
 		std::map<int, std::pair<std::wstring, std::shared_ptr<CloseTabButton>>> _listOfTabs;
+		std::list<UpdateTabsListHandler> _listOfHandlers;
 
 		int _lineHeight;
 		int _hoveredLine;
@@ -40,6 +41,10 @@ namespace explorer {
 
 		void mouseMoveHandler(MouseEvent& mouseEvent);
 		void mouseClickHandler(const MouseEventClick& mouseEventClick);
+
+
+		void registerUpdateHandler(UpdateTabsListHandler handler);
+
 		
 		void updateTabsMap(std::map<int, std::wstring> mapOfTabs);
 		void updateOneTab(int tabKey, std::wstring newString);
@@ -48,6 +53,12 @@ namespace explorer {
 		void moveButtons();
 
 		void update();
+
+
+		void mouseClickButtonCloseHandler(MouseEventClick mouseEventClick);
+
+	private:
+		void callAllHandlers(int tabKey, TabEvent tabEvent);
 
 	};
 
