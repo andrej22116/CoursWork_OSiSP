@@ -203,7 +203,7 @@ namespace explorer {
 
 	void ListOfFiles::mouseMoveHandler(MouseEvent& mouseEvent)
 	{
-		if (_leftClick) {
+		if (_leftClick && !_ctrlStatus) {
 			_selecting = true;
 			_stopMouseVerticalOffset = mouseEvent.y;
 

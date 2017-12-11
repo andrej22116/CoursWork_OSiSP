@@ -920,17 +920,38 @@ namespace explorer {
 		if (msg == WM_KEYDOWN || msg == WM_KEYUP) {
 			if (msg == WM_KEYDOWN) { keyStatus = KEY_PRESSED; }
 			else if (msg == WM_KEYUP) { keyStatus = KEY_RELEASED; }
+
+			if (GetAsyncKeyState(VK_CONTROL)) {
+				static wchar_t symbol;
+
+				if (GetAsyncKeyState(VK_LCONTROL)) {
+					symbol = KEY_LCONTROL;
+				}
+				if (GetAsyncKeyState(VK_RCONTROL)) {
+					symbol = KEY_RCONTROL;
+				}
+
+				KeyEvent keyEvent(symbol, (KeyCodes)wParam, keyStatus);
+				for (auto handler : wnd->_keyboardHandlers) {
+					handler(keyEvent);
+				}
+			}
 		}
 		if (msg == WM_KEYUP || msg == WM_CHAR) {
 			static wchar_t symbol;
 
-			if (GetAsyncKeyState(VK_LCONTROL)) {
-				symbol = KEY_LCONTROL;
-			} else if (GetAsyncKeyState(VK_RCONTROL)) {
-				symbol = KEY_RCONTROL;
+			if (GetAsyncKeyState(VK_CONTROL)) {
+				if (GetAsyncKeyState(VK_LCONTROL)) {
+					symbol = KEY_LCONTROL;
+				}
+				if (GetAsyncKeyState(VK_RCONTROL)) {
+					symbol = KEY_RCONTROL;
+				}
 			} else if (msg == WM_CHAR) {
 				symbol = wParam;
 			}
+
+			_RPTF1(0, "Symbol: %d\n", symbol);
 			
 			KeyEvent keyEvent(symbol, (KeyCodes)wParam, keyStatus);
 			for (auto handler : wnd->_keyboardHandlers) {
