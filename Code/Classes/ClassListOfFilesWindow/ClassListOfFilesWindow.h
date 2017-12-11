@@ -43,6 +43,8 @@ namespace explorer {
 		std::pair<int, int> _selectedLineRange;
 		std::set<int> _setOfSelectedLines;
 
+		std::list<std::wstring> _listOfCopyFiles;
+
 		bool _inDrive;
 
 	public:
@@ -85,6 +87,10 @@ namespace explorer {
 		void mouseClickButtonUpHandler(const MouseEventClick& mouseEventClick);
 
 		void setCtrlStatus(bool status);
+		bool getCtrlStatus();
+		void selecetAllLines();
+		void copySelectedLines();
+		void pasteSelectedLines();
 
 	private:
 		// Default

@@ -936,6 +936,21 @@ namespace explorer {
 					handler(keyEvent);
 				}
 			}
+			if (GetAsyncKeyState(VK_SHIFT)) {
+				static wchar_t symbol;
+
+				if (GetAsyncKeyState(VK_LSHIFT)) {
+					symbol = KEY_LSHIFT;
+				}
+				if (GetAsyncKeyState(VK_RSHIFT)) {
+					symbol = KEY_RSHIFT;
+				}
+
+				KeyEvent keyEvent(symbol, (KeyCodes)wParam, keyStatus);
+				for (auto handler : wnd->_keyboardHandlers) {
+					handler(keyEvent);
+				}
+			}
 		}
 		if (msg == WM_KEYUP || msg == WM_CHAR) {
 			static wchar_t symbol;

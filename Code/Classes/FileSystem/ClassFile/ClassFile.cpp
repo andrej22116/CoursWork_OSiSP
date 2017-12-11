@@ -106,6 +106,12 @@ namespace explorer {
 		for (auto file : filelist) {
 			bool isDir = false;
 
+			if ((file.size() == 1 && file[0] == '.') 
+				|| (file.size() == 2 && file[0] == '.' && file[1] == '.')
+				|| (file.size() > 0 && file[0] == '$')) {
+				continue;
+			}
+
 			std::wstring full_path = _path + file;
 			std::unique_ptr<FileInfo> fInfo;
 

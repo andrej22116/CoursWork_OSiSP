@@ -235,11 +235,26 @@ namespace explorer {
 	void ListOfFiles::updateList()
 	{
 		if (!_thisDirection.empty()) {
-			File file(_thisDirection);
-			_thisCatalog = file.list(L"*");
-			_inDrive = true;
-			_buttonUp->setLock(false);
-			_buttonUp->redrawWindow(false);
+			try {
+				File file(_thisDirection);
+				_thisCatalog = file.list(L"*");
+				_inDrive = true;
+				_buttonUp->setLock(false);
+				_buttonUp->redrawWindow(false);
+			}
+			catch (...) {
+				mouseClickButtonBackwardHandler(MouseEventClick(
+					MouseKeyCodes(0),
+					MouseKeyClick(0),
+					KeyStatus(0),
+					0, 0, 0, 0)
+				);
+				_forwardStack.pop();
+				if (_forwardStack.empty()) {
+					_buttonForward->setLock(true);
+					_buttonForward->redrawWindow(false);
+				}
+			}
 		}
 		else {
 			_logicalDrives = File::getAllLogicalDrives();
@@ -451,6 +466,48 @@ namespace explorer {
 	void ListOfFiles::setCtrlStatus(bool status)
 	{
 		_ctrlStatus = status;
+	}
+	bool ListOfFiles::getCtrlStatus()
+	{
+		return _ctrlStatus;
+	}
+
+	void ListOfFiles::selecetAllLines()
+	{
+		if (!_inDrive) {
+			return;
+		}
+		for (int i = 0, count = _thisCatalog.size(); i < count; i++) {
+			_setOfSelectedLines.insert(i);
+		}
+		redrawWindow(false);
+	}
+	void ListOfFiles::copySelectedLines()
+	{
+		_listOfCopyFiles.erase(_listOfCopyFiles.begin(), _listOfCopyFiles.end());
+		std::wstring path = _thisDirection;
+		if (path[path.size() - 1] != '\\') {
+			path += '\\';
+		}
+		for (auto&& line : _setOfSelectedLines) {		
+			_listOfCopyFiles.push_back(path + _thisCatalog[line].Name);
+		}
+	}
+	void ListOfFiles::pasteSelectedLines()
+	{
+		for (auto&& file : _listOfCopyFiles) {
+			try {
+				std::experimental::filesystem::copy(
+					std::experimental::filesystem::path(file),
+					std::experimental::filesystem::path(_thisDirection),
+					std::experimental::filesystem::copy_options::recursive
+				);
+			}
+			catch (...) {
+				MessageBox(getHWND(), L"Не удалось скопировать данные", L"Ошибка", MB_OK | MB_ICONERROR);
+			}
+		}
+		updateList();
 	}
 
 	void ListOfFiles::registerUpdateListHandler(UpdateListHandler handler)

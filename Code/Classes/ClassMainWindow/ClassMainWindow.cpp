@@ -199,8 +199,34 @@ namespace explorer {
 	}
 	void MainWindow::keyboardHandler(const KeyEvent& keyEvent)
 	{		
-		if (keyEvent.Status == KEY_PRESSED && keyEvent.Code == KEY_CONTROL) {
-			listOfFiles.setCtrlStatus(true);
+		if (keyEvent.Status == KEY_PRESSED) {
+			switch (keyEvent.Code) {
+			case KEY_CONTROL: { 
+				listOfFiles.setCtrlStatus(true);
+			} break;
+			case KEY_A: {
+				if (listOfFiles.getCtrlStatus()) {
+					listOfFiles.selecetAllLines();
+				}
+			}
+			case KEY_C: {
+				if (listOfFiles.getCtrlStatus()) {
+					listOfFiles.copySelectedLines();
+				}
+			} break;
+			case KEY_V: {
+				if (listOfFiles.getCtrlStatus()) {
+					listOfFiles.pasteSelectedLines();
+				}
+			} break;
+			case KEY_DELETE: {
+
+			} break;
+			case KEY_SHIFT: {
+
+			} break;
+			}
+			
 		} else if (keyEvent.Status == KEY_RELEASED && keyEvent.Code == KEY_CONTROL) {
 			listOfFiles.setCtrlStatus(false);
 		}
@@ -348,15 +374,15 @@ namespace explorer {
 			getHieght() - MAIN_WINDOW_HEADER_HEIGHT - LISTBOX_POS_Y - 1,
 			true
 		);
-		buttonOptions.create(
-			std::wstring(L"ButtonOptions"),
-			*this,
-			MAIN_WINDOW_BUTTON_OPTIONS_POS_X,
-			MAIN_WINDOW_BUTTON_OPTIONS_POS_Y,
-			MAIN_WINDOW_BUTTON_OPTIONS_WIDTH,
-			MAIN_WINDOW_BUTTON_OPTIONS_HEIGHT,
-			true
-		);
+		//buttonOptions.create(
+		//	std::wstring(L"ButtonOptions"),
+		//	*this,
+		//	MAIN_WINDOW_BUTTON_OPTIONS_POS_X,
+		//	MAIN_WINDOW_BUTTON_OPTIONS_POS_Y,
+		//	MAIN_WINDOW_BUTTON_OPTIONS_WIDTH,
+		//	MAIN_WINDOW_BUTTON_OPTIONS_HEIGHT,
+		//	true
+		//);
 		buttonUp.create(
 			std::wstring(L"ButtonUp"),
 			*this,
@@ -384,33 +410,33 @@ namespace explorer {
 			MAIN_WINDOW_BUTTON_BACKWARD_HEIGHT,
 			true
 		);
-		windowOptions.create(
-			std::wstring(L"Õ¿—“–Œ… »"),
-			*this,
-			-350,
-			MAIN_WINDOW_HEADER_HEIGHT + 1,
-			350,
-			getHieght() - MAIN_WINDOW_HEADER_HEIGHT - 2,
-			false
-		);
-		tabbedWindow.create(
-			std::wstring(L"¬ À¿ƒ »"),
-			*this,
-			-350,
-			MAIN_WINDOW_HEADER_HEIGHT + 1,
-			350,
-			getHieght() - MAIN_WINDOW_HEADER_HEIGHT - 2,
-			false
-		);
-		tabsButton.create(
-			std::wstring(L"ButtonBackward"),
-			*this,
-			MAIN_WINDOW_BUTTON_FORWARD_POS_X + 20,
-			MAIN_WINDOW_BUTTON_FORWARD_POS_Y,
-			MAIN_WINDOW_BUTTON_FORWARD_WIDTH + 30,
-			MAIN_WINDOW_BUTTON_FORWARD_HEIGHT,
-			true
-		);
+		//windowOptions.create(
+		//	std::wstring(L"Õ¿—“–Œ… »"),
+		//	*this,
+		//	-350,
+		//	MAIN_WINDOW_HEADER_HEIGHT + 1,
+		//	350,
+		//	getHieght() - MAIN_WINDOW_HEADER_HEIGHT - 2,
+		//	false
+		//);
+		//tabbedWindow.create(
+		//	std::wstring(L"¬ À¿ƒ »"),
+		//	*this,
+		//	-350,
+		//	MAIN_WINDOW_HEADER_HEIGHT + 1,
+		//	350,
+		//	getHieght() - MAIN_WINDOW_HEADER_HEIGHT - 2,
+		//	false
+		//);
+		//tabsButton.create(
+		//	std::wstring(L"ButtonBackward"),
+		//	*this,
+		//	MAIN_WINDOW_BUTTON_FORWARD_POS_X + 20,
+		//	MAIN_WINDOW_BUTTON_FORWARD_POS_Y,
+		//	MAIN_WINDOW_BUTTON_FORWARD_WIDTH + 30,
+		//	MAIN_WINDOW_BUTTON_FORWARD_HEIGHT,
+		//	true
+		//);
 	}
 	void MainWindow::m_registerHandlers()
 	{
