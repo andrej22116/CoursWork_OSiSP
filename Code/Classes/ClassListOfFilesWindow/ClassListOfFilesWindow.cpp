@@ -78,7 +78,7 @@ namespace explorer {
 
 		Gdiplus::Pen borderPen(LISTBOX_COLOR_BORDER_LINE);
 		Gdiplus::Pen borderHoverPen(LISTBOX_COLOR_BORDER_HOVER_LINE);
-		Gdiplus::SolidBrush selectBackground(Gdiplus::Color(mix(getSystemColor(), 1.0, 128)));
+		Gdiplus::SolidBrush selectBackground(Gdiplus::Color(mix(System::GetSystemColor(), 1.0, 128)));
 		Gdiplus::SolidBrush hoverBackground(LISTBOX_COLOR_BACKGROUND_HOVER);
 
 		graphics.DrawLine(&borderPen, 0, 0, 0, LISTBOX_LINE_HEIGHT * _thisCatalog.size() - 1);
@@ -234,6 +234,7 @@ namespace explorer {
 
 	void ListOfFiles::updateList()
 	{
+		_setOfSelectedLines.erase(_setOfSelectedLines.begin(), _setOfSelectedLines.end());
 		if (!_thisDirection.empty()) {
 			try {
 				File file(_thisDirection);

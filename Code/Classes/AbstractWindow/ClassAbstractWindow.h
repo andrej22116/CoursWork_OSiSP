@@ -10,6 +10,8 @@
 
 #include "..\Another\RenderBuffer\RenderBuffer.h"
 
+#include "..\ClassSystem\ClassSystem.h"
+
 #ifndef _CLASS_WINDOW_H_
 #define _CLASS_WINDOW_H_
 
@@ -85,8 +87,6 @@ namespace explorer {
 		bool _scrollbarVertical_IsEnable;
 
 
-		static Gdiplus::Color _systemColor;
-
 	public:
 		Window();
 		~Window();
@@ -149,9 +149,6 @@ namespace explorer {
 		void setVerticalSckrollStatus(int status);
 		int getHorizontalSckrollStatus();
 		int getVerticalSckrollStatus();
-		
-
-		static const Gdiplus::Color& getSystemColor();
 
 
 		/* Handlers */
@@ -176,9 +173,6 @@ namespace explorer {
 		 */
 		static LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 		static UINT workWidthMessages();
-
-		// return system MAJOR and system MINOR versions 
-		static std::pair<int, int> getSystemVersion();
 
 		/*
 		 *	message, METHOD( & your_method );

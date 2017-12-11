@@ -113,6 +113,9 @@
     <Filter Include="Interface\Windows\Buttons\ClassTabLineButton">
       <UniqueIdentifier>{0d1e99b3-789f-4dc4-8d4b-ff5c91a48970}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Interface\System">
+      <UniqueIdentifier>{ca1f2872-2076-4fe9-bb3f-fd80fee978fe}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Code\WinMain.cpp" />
@@ -187,6 +190,9 @@
     </ClCompile>
     <ClCompile Include="Code\Classes\Buttons\ClassTabLineButton\ClassTabLineButton.cpp">
       <Filter>Interface\Windows\Buttons\ClassTabLineButton</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Classes\ClassSystem\ClassSystem.cpp">
+      <Filter>Interface\System</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -267,6 +273,9 @@
     </ClInclude>
     <ClInclude Include="Code\Classes\Buttons\ClassTabLineButton\ClassTabLineButton.h">
       <Filter>Interface\Windows\Buttons\ClassTabLineButton</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Classes\ClassSystem\ClassSystem.h">
+      <Filter>Interface\System</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -5,7 +5,6 @@ namespace explorer {
 	std::map<HWND, Window*> Window::s_windowsMap;
 	std::wstring Window::_className = L"Explorer";
 	ULONG_PTR Window::_gdiplusToken = 0;
-	Gdiplus::Color Window::_systemColor(254, 0, 0, 0);
 
 	Window::Window() :
 		_width(0), _hieght(0), _oldWidth(0), _oldHieght(0),
@@ -213,11 +212,6 @@ namespace explorer {
 		}
 	}
 
-	const Gdiplus::Color& Window::getSystemColor()
-	{
-		return _systemColor;
-	}
-
 	void Window::setRenderBufferSize(int width, int height)
 	{
 		if (width < _width) {
@@ -341,14 +335,7 @@ namespace explorer {
 			case WM_CREATE: { 
 				window->eventCreateWindow();
 
-				DWORD color = 0;
-				BOOL opaque = FALSE;
-
-				HRESULT hr = DwmGetColorizationColor(&color, &opaque);
-				if (SUCCEEDED(hr)) {
-					_systemColor.SetValue(Gdiplus::ARGB(color));
-					//_systemColor = Gdiplus::Color(254, _systemColor.GetRed(), _systemColor.GetGreen(), _systemColor.GetBlue());
-				}
+				System::s_updateSystemColor();
 			} break;
 			case WM_GETMINMAXINFO: {
 				m_WndProcHandler_GetMinMaxInfo(window, hWnd, msg, wParam, lParam);
@@ -452,17 +439,10 @@ namespace explorer {
 				InvalidateRect(hWnd, &rc, FALSE);
 			} break;
 			case WM_DWMCOLORIZATIONCOLORCHANGED: {
-				DWORD color = 0;
-				BOOL opaque = FALSE;
+				System::s_updateSystemColor();
 
-				HRESULT hr = DwmGetColorizationColor(&color, &opaque);
-				if (SUCCEEDED(hr)) {
-					_systemColor.SetValue(Gdiplus::ARGB(color));
-					//_systemColor = Gdiplus::Color(254, _systemColor.GetRed(), _systemColor.GetGreen(), _systemColor.GetBlue());
-
-					for (auto wnd : s_windowsMap) {
-						wnd.second->redrawWindow(false);
-					}
+				for (auto wnd : s_windowsMap) {
+					wnd.second->redrawWindow(false);
 				}
 			} break;
 
@@ -483,16 +463,6 @@ namespace explorer {
 		return msg.wParam;
 	}
 
-	std::pair<int, int> Window::getSystemVersion()
-	{
-		OSVERSIONINFOEX version;
-		ZeroMemory(&version, sizeof(OSVERSIONINFOEX));
-		version.dwOSVersionInfoSize = sizeof(OSVERSIONINFOEX);
-
-		GetVersionEx((OSVERSIONINFO*)(&version));
-
-		return std::pair<int, int>(version.dwMajorVersion, version.dwMinorVersion);
-	}
 
 	void Window::registerHendler(PaintHandler method)
 	{

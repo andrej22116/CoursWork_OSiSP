@@ -62,7 +62,7 @@ namespace explorer {
 	void MainWindow::paintHandler(Gdiplus::Graphics& graphics)
 	{
 		//Gdiplus::SolidBrush brush_2(MAIN_WINDOW_COLOR_BACKGROUND);
-		graphics.Clear(Gdiplus::Color(mix(getSystemColor(), 1.0, 254)));
+		graphics.Clear(Gdiplus::Color(mix(System::GetSystemColor(), 1.0, 254)));
 
 		Gdiplus::SolidBrush brush_2(MAIN_WINDOW_COLOR_BACKGROUND);
 		Gdiplus::Rect region_2(1, 1, this->getWidth() - 2, this->getHieght() - 2);
@@ -123,16 +123,14 @@ namespace explorer {
 
 	void MainWindow::eventCreateWindow()
 	{
-		Gdiplus::Color sysColor(getSystemColor());
+		Gdiplus::Color sysColor(System::GetSystemColor());
 		SetClassLong(
 			getHWND(),
 			GCL_HBRBACKGROUND,
 			(LONG)CreateSolidBrush(RGB(sysColor.GetR(), sysColor.GetG(), sysColor.GetB()))
 		);
 
-		auto version = getSystemVersion();
-		int major = version.first;
-		int minor = version.second;
+		auto&[major, minor] = System::GetSystemVersion();
 
 		if (major == 6 && minor <= 1) {
 			DWM_BLURBEHIND lol;
