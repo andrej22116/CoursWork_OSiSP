@@ -75,6 +75,7 @@ namespace explorer {
 	void Window::setWindowName(std::wstring& name)
 	{
 		_windowName = name;
+		SetWindowText(_hWnd, _windowName.c_str());
 	}
 	void Window::setResizeWhenParentResizeing(bool resize_width, bool resize_height)
 	{

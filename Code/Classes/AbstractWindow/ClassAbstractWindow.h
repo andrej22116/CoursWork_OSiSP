@@ -79,8 +79,6 @@ namespace explorer {
 		std::shared_ptr<RenderBuffer> _renderBuffer;
 		int _scrollbarHorizontalStatus;
 		int _scrollbarVerticalStatus;
-		//int _scrollbarHorizontalMaxStatus;
-		//int _scrollbarVerticalMaxStatus;
 		int _scrollbarHorizontalStepSize;
 		int _scrollbarVerticalStepSize;
 		bool _scrollbarHorizontal_IsEnable;
