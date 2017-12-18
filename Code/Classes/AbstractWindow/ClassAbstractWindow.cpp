@@ -38,10 +38,6 @@ namespace explorer {
 		s_windowsMap.erase(_hWnd);
 		DestroyWindow(_hWnd);
 
-		if (_parent) {
-			_parent->m_removeChildWindow(this);
-		}
-
 		if (s_windowsMap.size() == 0) {
 			Gdiplus::GdiplusShutdown(_gdiplusToken);
 			PostQuitMessage(0);
@@ -315,6 +311,10 @@ namespace explorer {
 			SendMessage(_hWnd, WM_CLOSE, 0, 0);
 			_thisWindowIsCreated = false;
 			s_windowsMap.erase(_hWnd);
+			
+			if (_parent) {
+				_parent->m_removeChildWindow(this);
+			}
 		}
 	}
 
