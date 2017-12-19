@@ -9,6 +9,8 @@ namespace explorer {
 	Window::Window() :
 		_width(0), _hieght(0), _oldWidth(0), _oldHieght(0),
 		_minWidth(50), _minHieght(15),
+		_maxWidth(GetSystemMetrics(SM_CXMAXTRACK)),
+		_maxHieght(GetSystemMetrics(SM_CYMAXTRACK)),
 		_pos_x(0), _pos_y(0),
 		_borderSize(3),
 		_parent(nullptr),
@@ -751,8 +753,8 @@ namespace explorer {
 
 		min_max->ptMinTrackSize.x = wnd->_minWidth;
 		min_max->ptMinTrackSize.y = wnd->_minHieght;
-		min_max->ptMaxTrackSize.x = GetSystemMetrics(SM_CXMAXTRACK);
-		min_max->ptMaxTrackSize.y = GetSystemMetrics(SM_CYMAXTRACK);
+		min_max->ptMaxTrackSize.x = wnd->_maxWidth;//GetSystemMetrics(SM_CXMAXTRACK);
+		min_max->ptMaxTrackSize.y = wnd->_maxHieght;//GetSystemMetrics(SM_CYMAXTRACK);
 	}
 	void Window::m_WndProcHandler_Sizing(Window* wnd, HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	{
@@ -792,6 +794,9 @@ namespace explorer {
 	}
 	void Window::m_WndProcHandler_Move(Window* wnd, HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	{
+		wnd->_pos_x = LOWORD(lParam);
+		wnd->_pos_y = HIWORD(lParam);
+
 		ParentEvent parentEvent;
 		parentEvent.Code = PARENT_MOVE;
 		parentEvent.Pos_X = wnd->_pos_x;
