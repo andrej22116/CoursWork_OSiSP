@@ -232,20 +232,10 @@ namespace explorer {
 
 	void MainWindow::updateBatteryStatusTimerHandler(int timerID)
 	{
-		SYSTEM_POWER_STATUS sps;
-		if (GetSystemPowerStatus(&sps)) {
-			_batteryFound = true;
-			if (sps.BatteryFlag == 255 || sps.BatteryFlag == 128) {
-				killTimer(timerID);
-				_batteryFound = false;
-				return;
-			}
-			if (_batteryStatus == (int)sps.BatteryLifePercent) {
-				return;
-			}
-
-			_isCharging = (bool)sps.ACLineStatus;
-			_batteryStatus = (int)sps.BatteryLifePercent;
+		_batteryFound = System::deviceHaveBattay();
+		if (_batteryFound) {
+			_isCharging = System::batteryCharging();
+			_batteryStatus = System::getBatteryStatus();
 
 			int width = getWidth();
 			int height = getHieght();

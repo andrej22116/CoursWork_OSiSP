@@ -13,6 +13,8 @@ namespace explorer {
 
 		friend Window;
 
+		static bool _haveBattary;
+
 	public:
 		static int GetScreenWidth();
 		static int GetScreenHeight();
@@ -20,6 +22,10 @@ namespace explorer {
 		static const Gdiplus::Color& GetSystemColor();
 		// return system MAJOR and system MINOR versions 
 		static std::pair<int, int> GetSystemVersion();
+
+		static bool deviceHaveBattay();
+		static bool batteryCharging();
+		static int getBatteryStatus();
 
 	private:
 		static void s_updateSystemColor();

@@ -314,8 +314,9 @@ namespace explorer {
 			_thisWindowIsCreated = false;
 			s_windowsMap.erase(_hWnd);
 
-			for (auto&& child : _childList) {
-				child->destroy();
+			while (!_childList.empty()) {
+				_childList.front()->destroy();
+				_childList.pop_front();
 			}
 			
 			if (_parent) {
