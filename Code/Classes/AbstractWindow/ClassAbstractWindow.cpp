@@ -313,6 +313,10 @@ namespace explorer {
 			SendMessage(_hWnd, WM_CLOSE, 0, 0);
 			_thisWindowIsCreated = false;
 			s_windowsMap.erase(_hWnd);
+
+			for (auto&& child : _childList) {
+				child->destroy();
+			}
 			
 			if (_parent) {
 				_parent->m_removeChildWindow(this);
@@ -794,8 +798,12 @@ namespace explorer {
 	}
 	void Window::m_WndProcHandler_Move(Window* wnd, HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	{
+		int oldPosX = wnd->_pos_x;
+		int oldPosY = wnd->_pos_y;
 		wnd->_pos_x = LOWORD(lParam);
 		wnd->_pos_y = HIWORD(lParam);
+
+		wnd->eventMoveWindow(oldPosX, oldPosY);
 
 		ParentEvent parentEvent;
 		parentEvent.Code = PARENT_MOVE;
