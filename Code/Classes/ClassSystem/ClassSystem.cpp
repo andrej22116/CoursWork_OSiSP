@@ -3,6 +3,7 @@
 
 namespace explorer {
 	Gdiplus::Color System::_SystemColor = Gdiplus::Color();
+	bool System::_haveBattary = false;
 
 
 	int System::GetScreenWidth()
@@ -41,6 +42,39 @@ namespace explorer {
 			_SystemColor.SetValue(Gdiplus::ARGB(color));
 			//_systemColor = Gdiplus::Color(254, _systemColor.GetRed(), _systemColor.GetGreen(), _systemColor.GetBlue());
 
+		}
+	}
+
+	bool System::deviceHaveBattay()
+	{
+		SYSTEM_POWER_STATUS sps;
+		if (GetSystemPowerStatus(&sps)) {
+			_haveBattary = true;
+			if (sps.BatteryFlag == 255 || sps.BatteryFlag == 128) {
+				_haveBattary = false;
+			}
+		}
+		else {
+			_haveBattary = false;
+		}
+		return _haveBattary;
+	}
+	bool System::batteryCharging()
+	{
+		if (_haveBattary) {
+			SYSTEM_POWER_STATUS sps;
+			if (GetSystemPowerStatus(&sps)) {
+				return (bool)sps.ACLineStatus;
+			}
+		}
+	}
+	int System::getBatteryStatus()
+	{
+		if (_haveBattary) {
+			SYSTEM_POWER_STATUS sps;
+			if (GetSystemPowerStatus(&sps)) {
+				return (int)sps.BatteryLifePercent;
+			}
 		}
 	}
 
