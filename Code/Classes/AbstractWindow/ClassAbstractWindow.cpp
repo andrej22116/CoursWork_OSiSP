@@ -316,7 +316,6 @@ namespace explorer {
 
 			while (!_childList.empty()) {
 				_childList.front()->destroy();
-				_childList.pop_front();
 			}
 			
 			if (_parent) {
